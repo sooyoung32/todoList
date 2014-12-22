@@ -18,6 +18,7 @@ public class TestBoardService {
 				"D:/workspace/Board_psy/WebContent/WEB-INF/applicationContext.xml");
 		BoardService service = (BoardService) ctx.getBean(BoardService.class);
 
+		
 		try {
 			Board board = new Board();
 			board.setEmail("jinsaja@gmail.com");
