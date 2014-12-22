@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.CommentMapper">
+	
+	<resultMap type="Comment" id="commentResultMap">
+		<result column="COMMENT_NO" property="commentNo"/>
+		<result column="BOARD_NO" property="boardNo"/>
+		<result column="EMAIL" property="email"/>
+		<result column="CONTENT" property="content"/>
+		<result column="DATE_OF_WRITING" property="writingDate"/>
+		<result column="DATE_OF_MODIFY" property="modifyDate"/>
+		<result column="WRITING_IP" property="writingIP"/>
+		<result column="MODIFY_IP" property="modifyIP"/>
+		
+		<association property="writer" javaType="Member" column="EMAIL" select="mapper.MemberMapper.selectMember"/>
+		
+	</resultMap>
+	
+	<insert id="insertComment" parameterType="Comment">
+		INSERT INTO COMMENT VALUES(#{commentNo},#{boardNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP}, #{modifyIP})
+	</insert>
+	
+	<select id="selectCommentListByBoardNo" resultType="Comment" resultMap="commentResultMap" parameterType="int">
+		SELECT * FROM COMMENT WHERE BOARD_NO = #{boardNo}   
+	</select>
+	
+	<select id="selectCommentCountByBoardNo" resultMap="commentResultMap">
+		SELECT COUNT(*) FROM COMMENT WHERE BOARD_NO=#{boardNo}   
+	</select>
+	
+	<select id="selectCommentByCommentNo" resultMap="commentResultMap" resultType="Comment">
+		SELECT * FROM COMMENT WHERE COMMENT_NO = #{commentNo}
+	</select>
+	
+	<update id="updateComment" parameterType="Comment">
+		UPDATE COMMENT SET CONTENT = #{content}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE COMMENT_NO=#{commentNo}
+	</update>
+	
+	<delete id="deleteComment">
+		DELETE FROM COMMENT WHERE COMMENT_NO = #{commentNo}
+	</delete>
+	
+	
+</mapper>
