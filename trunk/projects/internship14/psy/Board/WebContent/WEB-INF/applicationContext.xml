@@ -9,10 +9,11 @@
 	<context:component-scan base-package="service" />
 
 	<bean class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" id="dataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://kware.iptime.org:7777/intern-psy?characterEncoding=utf8" />
-		<property name="username" value="psy" />
-		<property name="password" value="psy1234" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://kware.iptime.org:7777/intern-psy?zeroDateTimeBehavior=convertToNull"/>
+		<property name="username" value="psy"/>
+		<property name="password" value="psy1234"/>
+	
 	</bean>
 
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">

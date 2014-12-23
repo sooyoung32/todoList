@@ -6,10 +6,36 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$('#logout').click(function(){
+			 location.href="/Board_psy/logout.do";
+		});
+		
+		$('#writeForm').click(function(){
+			location.href="/Board_psy/writeForm.do";
+		});
+		
+	});
+	
+
+</script>
 <title>게시판 목록</title>
 </head>
 <body>
 <h1>KWARE 게시판</h1>
+	<div align="left">
+		<c:choose>
+		<c:when test="${empty sessionScope.email}">
+			<input type="button" name="login" id="login" value="로그인" onclick="window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200')">
+		</c:when>
+		<c:when test="${!empty sessionScope.email }">
+			${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="로그아웃">
+		</c:when>
+		</c:choose>
+	
+	</div>
 	<table border="1" style="border-collapse: collapse;" width="50%"  height="500%">
 	<c:if test="${empty boardPage.boardList }">
 		<tr>
@@ -31,10 +57,10 @@
 		<tr>
 			<td>${board.boardNo}<td>${board.writer.name}</td>
 			<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">${board.title}</a></td>
-			<td>${board.files}</td>
+			<td>${fn:length(board.files)}</td>
 			<td>${fn:length(board.comments)}</td><td>${ board.hitCount}</td>
 		</tr>
-	
+		
 		</c:forEach>	
 		<tr>
 				<td colspan="6" align="center">
@@ -54,11 +80,8 @@
 	</c:if>
 	
 	</table>
-
-
-</table>
-
-
+	<input type="hidden" value="${sessionScope.eamil }" name="email">
+	<input type="button" id="writeForm" name="writeForm" value="등록" style="color: navy;">
 
 </body>
 </html>
