@@ -35,8 +35,7 @@ public class MemberController {
 	
 	//회원 여부 확인 Ajax
 	@RequestMapping(value="login.do",method=RequestMethod.POST)
-	@ResponseBody
-	public String login(Member member){
+	public @ResponseBody String login(Member member){
 		String result=null;
 		try {
 			result = service.loginCheck(member.getEmail(), member.getPassword());
@@ -51,13 +50,21 @@ public class MemberController {
 	@RequestMapping(value="loginSuccess.do", method=RequestMethod.POST)
 	public ModelAndView loginSuccess(String email, HttpServletRequest request){
 		Member member = service.selectMember(email); 
-		ModelAndView mv = new ModelAndView("board_list"); 
+		ModelAndView mv = new ModelAndView("redirect:boardList.do?page=1"); 
 		mv.addObject("member", member);
 		HttpSession session = request.getSession(true);
 		session.setAttribute("email", member.getEmail());
 		session.setAttribute("name", member.getName());
 		System.out.println("로그인 세션 확보!");
 		return mv; 
+	}
+	
+	@RequestMapping(value="logout.do", method=RequestMethod.GET)
+	public String logout(HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.invalidate();
+		System.out.println("로그아웃! 세션빠잉");
+		return "redirect:boardList.do?page=1";
 	}
 	
 	
@@ -85,7 +92,7 @@ public class MemberController {
 	
 	
 	//회원가입 성공
-	@RequestMapping(value="join.do", method=RequestMethod.POST)
+	@RequestMapping(value="joinSuccess.do", method=RequestMethod.POST)
 	public String join(Member member, HttpServletRequest request) {
 		service.insertMember(member);
 		return "board_list";

@@ -21,9 +21,9 @@ public class TestBoardService {
 		
 		try {
 			Board board = new Board();
-			board.setEmail("jinsaja@gmail.com");
-			board.setTitle("타이틀111111");
-			board.setContent("본문내용...1");
+			board.setEmail("test@test4");
+			board.setTitle("테스트4");
+			board.setContent("test4");
 //			board.setFamily(3);
 			service.insertBoard(board);
 			System.out.println(board);

@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -16,33 +16,32 @@ $(function(){
 				success:function(result){
 					var msg="";
 					if(result=="unusable"){
-						msg="ÀÌ¹Ì µî·ÏµÈ ÀÌ¸ŞÀÏÀÔ´Ï´Ù";
+						msg="ì´ë¯¸ ë“±ë¡ëœ ì´ë©”ì¼ì…ë‹ˆë‹¤";
 						$('#hidden').val(0);
 					}else{
-						msg="»ç¿ë°¡´ÉÇÑ ÀÌ¸ŞÀÏÀÔ´Ï´Ù";
+						msg="ì‚¬ìš©ê°€ëŠ¥í•œ ì´ë©”ì¼ì…ë‹ˆë‹¤";
 						$('#hidden').val(1);
 					}
 					$('#msg').html(msg);	
 				},
 				error:function(){
-					alert("dupCheck Ajax ¿¡·¯¤Ğ¤Ğ");
+					alert("dupCheck Ajax ì—ëŸ¬ã… ã… ");
 				}
 				
 			});
 		}else{
-			alert("ÀÌ¸ŞÀÏÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä");
+			alert("ì´ë©”ì¼ì„ ì…ë ¥í•´ì£¼ì„¸ìš”");
 		}
 	});
 	$('#button').click(function(){
 		if($('#hidden').val()==0){
-			alert("ÀÌ¸ŞÀÏ Áßº¹È®ÀÎÀ» ÇØÁÖ¼¼¿ä");
+			alert("ì´ë©”ì¼ ì¤‘ë³µí™•ì¸ì„ í•´ì£¼ì„¸ìš”");
 		}
-		if()
 		
 		if($('#password').val()!=$('#checkPassword').val()){
-			alert("ºñ¹Ğ¹øÈ£°¡ °°Áö ¾Ê½À´Ï´Ù");
+			alert("ë¹„ë°€ë²ˆí˜¸ê°€ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		}else{
-			alert("È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù");
+			alert("íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤");
 			document.form.submit();
 			//$('#button').submit();
 		}
@@ -53,25 +52,24 @@ $(function(){
 
 
 </script>
-<title>È¸¿ø°¡ÀÔ È­¸é</title>
+<title>íšŒì›ê°€ì…</title>
 </head>
 <body>
-<form action="/Board_psy/join.do" method="post" name="joinForm">
+<form action="/Board_psy/joinSuccess.do" method="post" name="joinForm">
 	<table border="1">
-		<tr><td>ÀÌ¸§</td><td><input type="text" name="name"></td></tr>
-		<tr><td>ÀÌ¸ŞÀÏ</td><td><input type="text" name="email" id="email"><input type="button" name="dupCheck" id="dupCheck" value="Áßº¹È®ÀÎ"></td></tr>
+		<tr><td>ì´ë¦„</td><td><input type="text" name="name"></td></tr>
+		<tr><td>ì´ë©”ì¼</td><td><input type="text" name="email" id="email"><input type="button" name="dupCheck" id="dupCheck" value="ì¤‘ë³µí™•ì¸"></td></tr>
 		<tr><td colspan="2"><div id="msg"></div></td></tr>
 		
-		<tr><td>ºñ¹Ğ¹øÈ£</td><td><input type="password" name="password" id="password"></td></tr>
-		<tr><td>ºñ¹Ğ¹øÈ£È®ÀÎ</td><td><input type="password" name="checkPassword" id="checkPassword"></td></tr>
+		<tr><td>ë¹„ë°€ë²ˆí˜¸</td><td><input type="password" name="password" id="password"></td></tr>
+		<tr><td>ë¹„ë°€ë²ˆí˜¸í™•ì¸</td><td><input type="password" name="checkPassword" id="checkPassword"></td></tr>
 		
 		<tr>
-			<td colspan="2"><input type="submit" name="button" id="button" value="È¸¿ø°¡ÀÔ">
+			<td colspan="2"><input type="submit" name="button" id="button" value="íšŒì›ê°€ì…">
 			<input type="hidden" value="0" name="hidden" id="hidden">
 			</td>
 		</tr>
 	</table>
 </form>
-
 </body>
 </html>

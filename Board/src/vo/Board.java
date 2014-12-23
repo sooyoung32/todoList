@@ -16,8 +16,8 @@ public class Board extends DBCommon{
 	private int indent; 
 	private int hitCount; 
 	private Member writer; 
-	List<File> files; 
-	List<Comment> comments; 
+	private List<File> files; 
+	private List<Comment> comments; 
 	
 	
 	//getter&setter

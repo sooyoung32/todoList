@@ -6,15 +6,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UploadFile {
 	
-	List<MultipartFile> multipartFile;
+	List<MultipartFile> fileList;
 
-	public List<MultipartFile> getMultipartFile() {
-		return multipartFile;
+	public List<MultipartFile> getFileList() {
+		return fileList;
 	}
 
-	public void setMultipartFile(List<MultipartFile> multipartFile) {
-		this.multipartFile = multipartFile;
-	} 
+	public void setFileList(List<MultipartFile> fileList) {
+		this.fileList = fileList;
+	}
+	
+	
 	
 	
 	
