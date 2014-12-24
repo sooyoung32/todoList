@@ -20,21 +20,21 @@
 				data : data2,
 				success : function(result) {
 					var msg = "";
-					if (result == 'noid') {
+					if (result == 'noID') {
 						msg = "등록되지 않은 ID입니다";
 						alert(msg);
-					} else if (result == 'nopw') {
+					} else if (result == 'noPW') {
 						msg = "비밀번호가 올바르지 않습니다";
 						alert(msg);
 					} else if(result == 'success'){
 						// $('#login').submit();
 						alert("정상적으로 로그인되었습니다.");
-						parent.reload();
-						self.close();
+						window.opener.location.reload();
+						window.close();
 					}
 				},
 				error : function() {
-					alert("로그인 AJAX 에러");
+					alert("왜 에러야ㅠㅠ");
 				}
 			});
 		});
@@ -43,7 +43,7 @@
 
 </head>
 <body>
-	<form action="/Board_psy/loginSuccess.do" id="login" method="post">
+<!-- 	<form action="/Board_psy/loginSuccess.do" method="post"> -->
 		<table border="1">
 			<tr>
 				<td>이메일</td>
@@ -55,7 +55,7 @@
 			</tr>
 			<tr><td colspan="2"><div id="msg"></div></td></tr>
 			<tr>
-				<td colspan="2"><input type="submit" id="login" value="로그인">
+				<td colspan="2"><input type="button" id="login" value="로그인">
 					<a href="#"
 					onclick="window.open('/Board_psy/joinForm.do', '회원가입', 'width=400,height=500')">
 						회원가입 </a></td>
@@ -63,6 +63,6 @@
 
 		</table>
 
-	</form>
+<!-- 	</forSm> -->
 </body>
 </html>

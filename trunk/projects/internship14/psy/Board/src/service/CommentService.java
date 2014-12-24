@@ -17,7 +17,8 @@ public class CommentService {
 	@Autowired
 	CommentMapper commentMapper;
 	
-	public int insertComment(Comment comment, int boardNo) throws UnknownHostException{
+	public int insertComment(Comment comment, int boardNo, String email) throws UnknownHostException{
+		comment.setEmail(email);
 		comment.setBoardNo(boardNo);
 		comment.setWritingDate(new Date());
 		comment.setWritingIP(InetAddress.getLocalHost().toString());
@@ -42,6 +43,10 @@ public class CommentService {
 	
 	public int selectCommentCountByBoardNo(int boardNo){
 		return commentMapper.selectCommentCountByBoardNo();
+	}
+	
+	public int selectCommentLastNo(){
+		return commentMapper.selectCommentLastNo();
 	}
 	
 }

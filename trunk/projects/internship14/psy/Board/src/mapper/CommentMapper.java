@@ -12,6 +12,7 @@ public interface CommentMapper {
 	public List<Comment> selectCommentListByBoardNo(int boardNo);
 	public int selectCommentCountByBoardNo();
 	public Comment selectCommentByCommentNo(int commentNo);
+	public int selectCommentLastNo();
 	
 	
 }
