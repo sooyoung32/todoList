@@ -33,11 +33,10 @@ $(function(){
 	</tr>
 	<tr>
 		<td>내용</td>
-		<td><textarea rows="10" cols="50"></textarea></td>
+		<td><textarea rows="10" cols="50" name="content" id="content"></textarea></td>
 	</tr>
 </table>
-	
-		첨부파일
+	첨부파일
 <table border="1" style="border-collapse:collapse;" width="30%" height="30" id="fileTable">
 	<tr>
 		<td><input type="file" id="file" name="fileList[0]"></td>

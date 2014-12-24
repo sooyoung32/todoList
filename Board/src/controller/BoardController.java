@@ -30,14 +30,14 @@ public class BoardController {
 	private BoardService boardService;
 	@Autowired
 	private FileService fileServie;
-	
+
 	// 페이지 처리
-	public static final int NUM_OF_BOARD = 5;
+	public static final int NUM_OF_BOARD = 15;
 
 	@RequestMapping(value = "boardList.do")
-	public ModelAndView getBoardPage(@RequestParam(value="page", defaultValue="1") int page) {
+	public ModelAndView getBoardPage(@RequestParam(value = "page", defaultValue = "1") int page) {
 		ModelAndView mv = new ModelAndView("board_list");
-		
+
 		int totalBoardCount = boardService.selectBoardCount();
 		int startPage = 0;
 		int endPage = 0;
@@ -93,12 +93,12 @@ public class BoardController {
 	@RequestMapping(value = "write.do", method = RequestMethod.POST)
 	public String write(Board board, HttpServletRequest request, UploadFile uploadFile) {
 		try {
-			int boardNo = boardService.selectLastNo(); 
+			int boardNo = boardService.selectLastNo();
 			List<vo.File> files = uploadFile(uploadFile, request, boardNo);
-			System.out.println(uploadFile);
-			System.out.println(boardNo);
+			System.out.println("업로드파일/"+uploadFile);
+			System.out.println("원글번호/"+boardNo);
 			boardService.insertBoard(board);
-			
+
 			System.out.println(files);
 			for (vo.File file : files) {
 				fileServie.insertFile(file, boardNo);
@@ -106,7 +106,7 @@ public class BoardController {
 		} catch (UnknownHostException e) {
 			System.out.println("글작성 에러 컨트롤러");
 		}
-		
+
 		return "redirect:boardList.do?page=1";
 	}
 
@@ -114,7 +114,7 @@ public class BoardController {
 		List<vo.File> files = new ArrayList<>();
 		List<MultipartFile> fileList = uploadFile.getFileList(); // 클라이언트가 전송한 파일
 		System.err.println(">>" + fileList);
-		
+
 		List<String> filenames = new ArrayList<>();
 
 		if (fileList != null && fileList.size() > 0) {
@@ -133,14 +133,14 @@ public class BoardController {
 
 				try {
 					file.transferTo(uploadedFile); // 업로드 실행.
-					
+
 					voFile = new vo.File();
 					voFile.setBoardNo(boardNo);
 					voFile.setOriginalName(file.getOriginalFilename());
 					voFile.setSavedPath(path + "/" + file.getOriginalFilename());
-					
+
 					files.add(voFile);
-					
+
 					System.out.println("파일 업로드 완료");
 					System.out.println("파일명:" + file.getOriginalFilename());
 				} catch (IllegalStateException | IOException e) {
@@ -150,9 +150,38 @@ public class BoardController {
 
 			}
 		}
-		
+
 		return files;
 
+	}
+
+	@RequestMapping(value = "replyForm.do")
+	public ModelAndView writeReplyForm(int boardNo) {
+		System.out.println(boardNo + "/boardNo");
+		Board board = boardService.selectBoardByBoardNo(boardNo, false);
+
+		ModelAndView mv = new ModelAndView("reply_form");
+		mv.addObject("boardNo", boardNo);
+		mv.addObject("board", board);
+		return mv;
+	}
+	
+	@RequestMapping(value = "reply.do", method = RequestMethod.POST)
+	public String reply(Board board, int boardNo, HttpServletRequest request,UploadFile uploadFile ) throws UnknownHostException {
+		System.out.println("컨트롤러 board//"+board);
+		System.out.println("컨트롤러 보드넘버(원글)//"+boardNo);
+		
+		int replyBoardNo = boardService.selectLastNo();
+		List<vo.File> files = uploadFile(uploadFile, request,replyBoardNo);
+		System.out.println("업로드파일/"+uploadFile);
+		System.out.println("원글번호/"+replyBoardNo);
+		
+		for (vo.File file : files) {
+			fileServie.insertFile(file, replyBoardNo);
+		}
+		
+		boardService.insertReply(board, boardNo);
+		return "redirect:boardList.do?page=1";
 	}
 
 }

@@ -30,6 +30,7 @@ public class BoardService {
 	public int insertBoard(Board board) throws UnknownHostException{
 		int lastNo = mapper.selectLastNo();
 		board.setFamily(lastNo);
+		
 		board.setParent(0);
 		board.setDepth(0);
 		board.setIndent(0);
@@ -38,26 +39,27 @@ public class BoardService {
 		board.setModifyDate(null);
 		board.setWritingIP(InetAddress.getLocalHost().toString());
 		board.setModifyIP(null);
-		
-		System.out.println("insert board Family: "+board.getFamily());
-		
 		return mapper.insertBoard(board);
 	}
 	
 	
 	public int insertReply(Board board, int boardNo) throws UnknownHostException{
 		Board originBoard = mapper.selectBoardByBoardNo(boardNo); 
+		System.out.println("원글 가져오기/"+originBoard);
 		board.setFamily(originBoard.getFamily());
 		board.setParent(originBoard.getBoardNo());
 		board.setDepth(originBoard.getDepth()+1);
+		System.out.println(mapper.updateBoardDepth(board));
+		System.out.println("원글 step//"+originBoard.getDepth());
+		System.out.println("새글 step//"+board.getDepth());
 		board.setIndent(originBoard.getIndent()+1);
 		board.setWritingDate(new Date());
 		board.setModifyDate(null);
 		board.setWritingIP(InetAddress.getLocalHost().toString());
 		board.setModifyIP(null);
 		board.setHitCount(0);
-		mapper.updateBoardDepth(board);
-		return mapper.insertBoardReply(board);
+		System.out.println("답글/"+board);
+		return mapper.insertBoard(board);
 	}
 	
 	public Board selectBoardByBoardNo(int boardNo, boolean isHitCount){

@@ -25,7 +25,7 @@ $(function(){
 					$('#msg').html(msg);	
 				},
 				error:function(){
-					alert("dupCheck Ajax 에러ㅠㅠ");
+					alert("이메일 중복체크 Ajax 에러ㅠㅠ");
 				}
 				
 			});
@@ -40,8 +40,9 @@ $(function(){
 		
 		if($('#password').val()!=$('#checkPassword').val()){
 			alert("비밀번호가 같지 않습니다");
-		}else{
+		}else if($('#password').val()==$('#checkPassword').val()){
 			alert("회원가입이 완료되었습니다");
+			window.close();
 			document.form.submit();
 			//$('#button').submit();
 		}

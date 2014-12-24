@@ -24,15 +24,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="selectCommentListByBoardNo" resultType="Comment" resultMap="commentResultMap" parameterType="int">
-		SELECT * FROM COMMENT WHERE BOARD_NO = #{boardNo}   
+		SELECT * FROM COMMENT WHERE BOARD_NO = #{boardNo} ORDER BY COMMENT_NO DESC
 	</select>
 	
 	<select id="selectCommentCountByBoardNo" resultMap="commentResultMap">
-		SELECT COUNT(*) FROM COMMENT WHERE BOARD_NO=#{boardNo}   
+		SELECT COUNT(*) FROM COMMENT WHERE BOARD_NO=#{boardNo}  
 	</select>
 	
 	<select id="selectCommentByCommentNo" resultMap="commentResultMap" resultType="Comment">
-		SELECT * FROM COMMENT WHERE COMMENT_NO = #{commentNo}
+		SELECT * FROM COMMENT WHERE COMMENT_NO = #{commentNo} 
+	</select>
+	
+	<select id="selectCommentLastNo" resultType="int">
+		SELECT MAX(COMMENT_NO) +1 FROM COMMENT
 	</select>
 	
 	<update id="updateComment" parameterType="Comment">

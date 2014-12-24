@@ -35,28 +35,25 @@ public class MemberController {
 	
 	//회원 여부 확인 Ajax
 	@RequestMapping(value="login.do",method=RequestMethod.POST)
-	public @ResponseBody String login(Member member){
+	public @ResponseBody String login(Member member,HttpServletRequest request){
 		String result=null;
 		try {
 			result = service.loginCheck(member.getEmail(), member.getPassword());
+			
+			if(result=="success"){
+				HttpSession session = request.getSession(true);
+				Member member2 = service.selectMember(member.getEmail());
+				session.setAttribute("email", member2.getEmail());
+				session.setAttribute("name", member2.getName());
+				System.out.println(session.getAttribute("email") +"email");
+				System.out.println(session.getAttribute("name") +"name");
+				System.out.println("로그인 세션 확보!");
+			}
 			System.out.println("login.do/result: "+result);
 		} catch (UnknownHostException e) {
 			System.out.println("컨트롤러 loginCheck 에러 : "+e);
 		}
 		return result; 
-	}
-	
-	//로그인 성공
-	@RequestMapping(value="loginSuccess.do", method=RequestMethod.POST)
-	public ModelAndView loginSuccess(String email, HttpServletRequest request){
-		Member member = service.selectMember(email); 
-		ModelAndView mv = new ModelAndView("redirect:boardList.do?page=1"); 
-		mv.addObject("member", member);
-		HttpSession session = request.getSession(true);
-		session.setAttribute("email", member.getEmail());
-		session.setAttribute("name", member.getName());
-		System.out.println("로그인 세션 확보!");
-		return mv; 
 	}
 	
 	@RequestMapping(value="logout.do", method=RequestMethod.GET)
@@ -95,7 +92,8 @@ public class MemberController {
 	@RequestMapping(value="joinSuccess.do", method=RequestMethod.POST)
 	public String join(Member member, HttpServletRequest request) {
 		service.insertMember(member);
-		return "board_list";
+		System.out.println(member.getEmail() +"회원가입 됐나???");
+		return "join_success";
 	}
 
 }
