@@ -9,18 +9,22 @@ import java.util.List;
 import java.util.Map;
 
 import mapper.BoardMapper;
+import mapper.FileMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import vo.Board;
 import vo.BoardPage;
+import vo.File;
 
 @Component
 public class BoardService {
 	
 	@Autowired
 	private BoardMapper mapper;
+	@Autowired
+	private FileMapper fileMapper;
 	
 	public int selectLastNo(){
 		System.out.println(mapper.selectLastNo());
@@ -30,7 +34,7 @@ public class BoardService {
 	public int insertBoard(Board board) throws UnknownHostException{
 		int lastNo = mapper.selectLastNo();
 		board.setFamily(lastNo);
-		
+		board.setFlag(1);
 		board.setParent(0);
 		board.setDepth(0);
 		board.setIndent(0);
@@ -58,6 +62,7 @@ public class BoardService {
 		board.setWritingIP(InetAddress.getLocalHost().toString());
 		board.setModifyIP(null);
 		board.setHitCount(0);
+		board.setFlag(1);
 		System.out.println("답글/"+board);
 		return mapper.insertBoard(board);
 	}
@@ -77,20 +82,38 @@ public class BoardService {
 		return mapper.selectBoardCount();
 	}
 	
-	public int updateBoard(Board board, int boardNo) throws UnknownHostException{
-		board = mapper.selectBoardByBoardNo(boardNo);
+	public int updateBoard(Board updatedBoard, int boardNo, String[] deletedFileList) throws UnknownHostException{
+		
+		//글 수정
+		Board board = mapper.selectBoardByBoardNo(boardNo);
+		board.setTitle(updatedBoard.getTitle());
+		board.setContent(updatedBoard.getContent());
 		board.setModifyDate(new Date());
 		board.setModifyIP(InetAddress.getLocalHost().toString());
 		boolean isHitCount = false; 
 		if(!isHitCount){
 			board.setHitCount(board.getHitCount());
 		}
+		
+		
 		return mapper.updateBoard(board);
 	}
 	
 	
-	public int deleteBoard(int boardNo){
-		return mapper.deleteBoard(boardNo);
+	public int deleteBoard(Board updatedBoard, int boardNo) throws UnknownHostException{
+		
+		Board board = mapper.selectBoardByBoardNo(boardNo);
+		board.setModifyDate(new Date());
+		board.setModifyIP(InetAddress.getLocalHost().toString());
+		boolean isHitCount = false; 
+		if(!isHitCount){
+			board.setHitCount(board.getHitCount());
+		}
+		
+		board.setFlag(0);
+		
+		System.out.println("업데이트된 게시글//"+board);
+		return mapper.deleteBoard(board);
 	}
 	
 	public List<Board> selectBoardList(int startRow, int endRow){

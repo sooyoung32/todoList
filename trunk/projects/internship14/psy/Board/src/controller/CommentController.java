@@ -39,5 +39,13 @@ public class CommentController {
 		}
 
 	}
+	
+//	@RequestMapping(value = "deleteComment.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String deleteComment(Comment comment, int commentNo){
+//		
+//	}
+	
+	
 
 }

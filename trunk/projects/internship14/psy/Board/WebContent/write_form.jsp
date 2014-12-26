@@ -42,7 +42,7 @@ $(function(){
 		<td><input type="file" id="file" name="fileList[0]"></td>
 	</tr>
 	</table>
-		<input type="button" id="addFile" name="addFile" value="파일추가">
+		<td><input type="button" id="addFile" name="addFile" value="파일추가"></td>
 
 	<input type="hidden" value="${sessionScope.email}" name="email" id="email ">
 </form>

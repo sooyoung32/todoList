@@ -19,9 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="DATE_OF_MODIFY" property="modifyDate" />
 		<result column="WRITING_IP" property="writingIP" />
 		<result column="MODIFY_IP" property="modifyIP" />
+		<result column="FLAG" property="flag"/>
 
 		<association property="writer" javaType="Member" column="EMAIL">
 			<id column="EMAIL" property="email" />
+			<result column="PASSWORD" property="password"/>
 			<result column="NAME" property="name" />
 		</association>
 
@@ -45,7 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		B.PARENT,
 		B.DEPTH,
 		B.INDENT,
-		B.HITCOUNT
+		B.HITCOUNT,
+		B.FLAG
 		FROM BOARD B
 		LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
 		ORDER BY B.FAMILY DESC,
@@ -58,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT
 		B.BOARD_NO,
 		M.NAME,
+		M.PASSWORD,
 		B.TITLE,
 		B.FAMILY,
 		B.PARENT,
@@ -65,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		B.INDENT,
 		B.CONTENT,
 		B.HITCOUNT,
+		B.FLAG,
 		C.CONTENT,
 		F.ORIGINAL_NAME
 		FROM BOARD B
@@ -81,12 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		COALESCE(MAX(BOARD_NO),0) +1 FROM BOARD
 	</select>
 
-	<update id="updateFamily">
-		UPDATE BOARD SET BOARD_NO = #{boardNo} WHERE
-		DEPTH=#{depth}
-	</update>
-
-	<update id="updateBoard">
+	<update id="updateBoard" parameterType="Board">
 UPDATE BOARD 
    SET TITLE          = #{title}
       ,CONTENT        = #{content}
@@ -97,23 +97,12 @@ UPDATE BOARD
 	</update>
 
 	<select id="selectBoardCount" resultType="int">
-SELECT COUNT(*) cnt
-  FROM BOARD
+SELECT COUNT(*) cnt FROM BOARD
 	</select>
 
 	<select id="selectMember" resultType="Member">
 		SELECT * FROM MEMBER WHERE
 		EMAIL = #{email}
-	</select>
-
-	<select id="selectCommentsForBoard" resultType="Comment">
-		SELECT * FROM
-		COMMENT WHERE BOARD_NO=#{boardNo}
-	</select>
-
-	<select id="selectFilesForBoard" resultType="File">
-		SELECT * FROM FILE
-		WHERE BOARD_NO =#{boardNo}
 	</select>
 
 	<insert id="insertBoard" parameterType="Board">
@@ -122,23 +111,28 @@ SELECT COUNT(*) cnt
 		FAMILY,
 		PARENT, DEPTH,
 		INDENT,HITCOUNT,
-		DATE_OF_WRITING, DATE_OF_MODIFY, WRITING_IP,MODIFY_IP
+		DATE_OF_WRITING, DATE_OF_MODIFY, WRITING_IP,MODIFY_IP,FLAG
 
 		) VALUES (
 		#{boardNo}, #{email},#{title},#{content},
 		#{family},
 		#{parent},#{depth},#{indent},#{hitCount},
-		#{writingDate},#{modifyDate},#{writingIP},#{modifyIP})
+		#{writingDate},#{modifyDate},#{writingIP},#{modifyIP},#{flag})
 
 		<selectKey resultType="int" keyProperty="boardNo" order="BEFORE">
 			SELECT COALESCE(MAX(BOARD_NO),0) + 1 FROM BOARD
 		</selectKey>
 	</insert>
 
-	<delete id="deleteBoard">
-		DELETE FROM BOARD WHERE BOARD_NO
-		=#{board_no}
-	</delete>
+	<update id="deleteBoard" parameterType="Board">
+UPDATE BOARD 
+   SET 
+       HITCOUNT       = #{hitCount}
+      ,DATE_OF_MODIFY = #{modifyDate}
+      ,MODIFY_IP      = #{modifyIP}
+      ,FLAG			 =  #{flag}
+ WHERE BOARD_NO       = #{boardNo}
+	</update>
 
 	<insert id="insertBoardReply" parameterType="Board">
 		INSERT INTO BOARD (

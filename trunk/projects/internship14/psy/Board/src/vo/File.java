@@ -6,6 +6,8 @@ public class File {
 	private int boardNo; 
 	private String originalName;
 	private String savedPath;
+	private int flag; 
+	
 	
 	
 	//getter&setter 
@@ -34,12 +36,20 @@ public class File {
 		this.savedPath = savedPath;
 	}
 	
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+	
+	public int getFlag() {
+		return flag;
+	}
 	@Override
 	public String toString() {
-		return "File [fileNo=" + fileNo + ", boardNo=" + boardNo
-				+ ", originalName=" + originalName + ", savedPath=" + savedPath
-				+ "]";
+		return "File [fileNo=" + fileNo + ", boardNo=" + boardNo + ", originalName=" + originalName + ", savedPath="
+				+ savedPath + ", flag=" + flag + "]";
 	}
+	
+	
 	
 	
 	

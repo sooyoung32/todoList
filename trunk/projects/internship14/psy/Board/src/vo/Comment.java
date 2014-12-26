@@ -7,8 +7,20 @@ public class Comment extends DBCommon {
 	private String email; 
 	private String content;
 	private Member writer;
+	private int flag; 
+	
+	
 	
 	//getter&setter
+	
+	
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+	
+	public int getFlag() {
+		return flag;
+	}
 	
 	public Member getWriter() {
 		return writer;
@@ -43,13 +55,14 @@ public class Comment extends DBCommon {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Comment [commentNo=" + commentNo + ", boardNo=" + boardNo
-				+ ", email=" + email + ", content=" + content + "]";
+		return "Comment [commentNo=" + commentNo + ", boardNo=" + boardNo + ", email=" + email + ", content=" + content
+				+ ", writer=" + writer + ", flag=" + flag + "]";
 	}
-
+	
+	
 	
 	
 	
