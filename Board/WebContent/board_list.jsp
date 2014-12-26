@@ -37,6 +37,9 @@
 		</c:choose>
 
 	</div>
+	
+	<div>총게시글 수 : ${boardPage.totalBoardCount}</div>
+	
 	<table border="1" style="border-collapse: collapse;" width="50%"
 		height="500%">
 		<c:if test="${empty boardPage.boardList }">
@@ -45,6 +48,7 @@
 			</tr>
 		</c:if>
 		<c:if test="${!empty boardPage.boardList }">
+		
 			<tr>
 				<td>글번호</td>
 				<td>작성자</td>
@@ -58,16 +62,26 @@
 					<td>${board.boardNo}
 					<td>${board.writer.name}</td>
 					
-					<c:if test="${board.indent == 0 }">
+					<c:if test="${board.indent == 0 && board.flag==1}">
 						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">${board.title}</a>
 						</td>
 					</c:if>
-					<c:if test="${board.indent > 0}">
+					
+					<c:if test="${board.indent == 0 && board.flag==0}">
+						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">삭제된 글 입니다</a></td>
+					</c:if>
+					<c:if test="${board.indent > 0 && board.flag ==1}">
 						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
 							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ㄴ&nbsp;${board.title}</a>
 						</td>
-						
 					</c:if>
+					
+					<c:if test="${board.indent > 0 && board.flag ==0}">
+						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
+							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ㄴ&nbsp;삭제된 글입니다</a>
+						</td>
+					</c:if>
+					
 					<td>${fn:length(board.files)}</td>
 					<td>${fn:length(board.comments)}</td>
 					<td>${ board.hitCount}</td>

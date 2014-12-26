@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,12 +67,12 @@ public class BoardController {
 				endPage = totalPage;
 			}
 
-			BoardPage boardPage = new BoardPage(boardList, startPage, endPage, startRow, endRow, totalPage);
+			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage, boardList);
 			mv.addObject("boardPage", boardPage);
 			return mv;
 
 		} else {
-			BoardPage boardPage = new BoardPage(Collections.<Board> emptyList(), 0, 0, 0, 0, 0);
+			BoardPage boardPage = new BoardPage(0, 0, 0, 0, 0, 0,Collections.<Board> emptyList());
 			mv.addObject("boardPage", boardPage);
 			return mv;
 		}
@@ -95,8 +96,8 @@ public class BoardController {
 		try {
 			int boardNo = boardService.selectLastNo();
 			List<vo.File> files = uploadFile(uploadFile, request, boardNo);
-			System.out.println("업로드파일/"+uploadFile);
-			System.out.println("원글번호/"+boardNo);
+			System.out.println("업로드파일/" + uploadFile);
+			System.out.println("원글번호/" + boardNo);
 			boardService.insertBoard(board);
 
 			System.out.println(files);
@@ -114,7 +115,7 @@ public class BoardController {
 		List<vo.File> files = new ArrayList<>();
 		List<MultipartFile> fileList = uploadFile.getFileList(); // 클라이언트가 전송한 파일
 		System.err.println(">>" + fileList);
-
+		System.out.println("업로드 파일리스트?//" + fileList);
 		List<String> filenames = new ArrayList<>();
 
 		if (fileList != null && fileList.size() > 0) {
@@ -138,7 +139,7 @@ public class BoardController {
 					voFile.setBoardNo(boardNo);
 					voFile.setOriginalName(file.getOriginalFilename());
 					voFile.setSavedPath(path + "/" + file.getOriginalFilename());
-
+					voFile.setFlag(1);
 					files.add(voFile);
 
 					System.out.println("파일 업로드 완료");
@@ -165,23 +166,82 @@ public class BoardController {
 		mv.addObject("board", board);
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "reply.do", method = RequestMethod.POST)
-	public String reply(Board board, int boardNo, HttpServletRequest request,UploadFile uploadFile ) throws UnknownHostException {
-		System.out.println("컨트롤러 board//"+board);
-		System.out.println("컨트롤러 보드넘버(원글)//"+boardNo);
-		
+	public String reply(Board board, int boardNo, HttpServletRequest request, UploadFile uploadFile)
+			throws UnknownHostException {
+		System.out.println("컨트롤러 board//" + board);
+		System.out.println("컨트롤러 보드넘버(원글)//" + boardNo);
+
 		int replyBoardNo = boardService.selectLastNo();
-		List<vo.File> files = uploadFile(uploadFile, request,replyBoardNo);
-		System.out.println("업로드파일/"+uploadFile);
-		System.out.println("원글번호/"+replyBoardNo);
-		
+		List<vo.File> files = uploadFile(uploadFile, request, replyBoardNo);
+		System.out.println("업로드파일/" + uploadFile);
+		System.out.println("원글번호/" + replyBoardNo);
+
 		for (vo.File file : files) {
 			fileServie.insertFile(file, replyBoardNo);
 		}
-		
+
 		boardService.insertReply(board, boardNo);
 		return "redirect:boardList.do?page=1";
 	}
 
+	@RequestMapping(value = "updateForm.do", method = RequestMethod.GET)
+	public ModelAndView updateForm(int boardNo) {
+		Board board = boardService.selectBoardByBoardNo(boardNo, false);
+		ModelAndView mv = new ModelAndView("update_form");
+		mv.addObject("board", board);
+		return mv;
+	}
+
+	@RequestMapping(value = "update.do",  method = {RequestMethod.POST,RequestMethod.GET})	
+	public String update(Board updatedBoard, int boardNo, UploadFile uploadFile, HttpServletRequest request,String[] deletedFileList) throws UnknownHostException{
+		
+	
+		if(deletedFileList != null ){	
+		//파일 삭제 수정
+			for(String s : deletedFileList){
+				int	fileNo = (int) Integer.parseInt(s); 
+				System.out.println("형변환 파일 번호//"+fileNo);
+				
+				vo.File file = fileServie.selectFileByFileNo(fileNo);
+				System.out.println("선택된 파일"+file);
+				int updqtedFile = fileServie.deleteFile(fileNo);
+				System.out.println("파일 삭제 됐나?//"+updqtedFile);
+			}
+		}
+		
+		
+		List<vo.File> files = uploadFile(uploadFile, request, boardNo);
+		boardService.updateBoard(updatedBoard, boardNo, deletedFileList);
+		//파일 업데이트
+		for (vo.File file : files) {
+			fileServie.insertFile(file, boardNo);
+		}
+		return "redirect:boardList.do?page=1";
+	}
+	
+	@RequestMapping(value="deleteForm.do", method = RequestMethod.GET)
+	public ModelAndView deleteForm(int boardNo){
+		System.out.println("글번호//"+boardNo);
+		Board board = boardService.selectBoardByBoardNo(boardNo, false);
+		ModelAndView mv = new ModelAndView("delete_form");
+		mv.addObject("board", board);
+		return mv; 
+	}
+	
+	@RequestMapping(value="delete.do", method = RequestMethod.POST)
+	public String delete(int boardNo, String password) throws UnknownHostException{
+		Board updatedBoard = boardService.selectBoardByBoardNo(boardNo, false);
+		System.out.println("원래 비밀번호있는 사용자 비번//"+updatedBoard);
+		if(updatedBoard.getWriter().getPassword().equals(password)){
+			System.out.println("사용자비번//"+updatedBoard.getWriter().getPassword());
+			System.out.println("입력한비번//"+password);
+			boardService.deleteBoard(updatedBoard, boardNo);
+			return "redirect:boardList.do?page=1";
+		}else{
+			return "delete_fail";
+		}
+	}
+	
 }

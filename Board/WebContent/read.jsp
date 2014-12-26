@@ -46,6 +46,32 @@ $(function(){
 	$('#reply').click(function() {
 		location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 	});
+	
+	$('#cDelete').click(function(){
+		
+		$.ajax({
+			type:"post",
+			url:"/Board_psy/deleteComment.do",
+			data: {commentNo:$('#commentNo').val()},
+			success:function(result){
+				if(result == "Y"){
+					alert("댓글이 삭제되었습니다");
+					location.reload(true);
+				}else if(result == "N"){
+					alert("댓글 삭제시 오류가 발생하였습니다");
+					location.reload(true);
+				}
+			},
+			error:function(){
+				location.reload(true);
+				alert("코멘트 삭제 ajax 에러");
+			}
+			
+		});
+	});
+	
+	
+	
 });
 </script>
 
@@ -61,21 +87,33 @@ $(function(){
 			<td>작성자</td>
 			<td>${board.writer.name}
 		<c:if test="${sessionScope.name eq board.writer.name}">
-			<input type="button" id="modify" name="modify" value="수정" align="right"> 
-			<input type="button" id="delete" name="delete" value="삭제" align="right">
+			<a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}"><input type="button" id="modify" name="modify" value="수정" align="right"></a> 
+			<a href="/Board_psy/deleteForm.do?boardNo=${board.boardNo}"><input type="button" id="delete" name="delete" value="삭제" align="right"></a>
 		</c:if>
 			</td>
 		</tr>
 
 		<tr>
 			<td>제목</td>
-			<td>${board.title}</td>
+				
+				<td><c:if test="${board.flag==1}">
+					${board.title}
+				</c:if>
+				<c:if test="${board.flag==0}">
+					본 글은 삭제되었습니다
+				</c:if></td>
 		</tr>
 		<tr>
 			<td>내용</td>
+			<c:if test="${board.flag==1}">
 			<td>${board.content}</td>
+			</c:if>
+			<c:if test="${board.flag==0}">
+			<td>본 글은 삭제되었습니다</td>
+			</c:if>
 		</tr>
 	</table>
+	<c:if test="${board.flag==1 }">
 	<table border="1" style="border-collapse: collapse;" width="50%"
 		height="50%">
 		<tr>
@@ -88,15 +126,25 @@ $(function(){
 			</c:if>
 			<c:if test="${!empty board.files}">
 				<c:forEach items="${board.files}" var="file">
+					<c:if test="${file.flag ==1}">
 					<tr>
 						<td><a href="/Board_psy/download.do?savedPath=${file.savedPath}">${file.originalName}</a><td>
 					</tr>
+					</c:if>
+					
 				</c:forEach>
 			</c:if>
 		</tr>
 	</table>
 	
 	<input type="button" id="reply" name="reply" value="답글쓰기">
+	</c:if>
+	
+	<c:if test="${board.flag==0}">
+	
+		첨부파일이 없습니다
+	
+	</c:if>
 	
 	<table  border="1" style="border-collapse: collapse;" width="50%" height="50%" >
 		<tr>
@@ -120,9 +168,15 @@ $(function(){
 
 			<c:when test="${!empty board.comments}">
 				<c:forEach items="${board.comments }" var="comment">
-					<tr comment="${comment}">
+					<tr>
 						<td>${comment.writer.name}</td>
 						<td>${comment.content}</td>
+						<c:if test="${sessionScope.name eq comment.writer.name}">
+						<td>
+							<input type="hidden" id="commentNo" name="commentNo" value="${comment.commentNo}">
+							<input type="button" id="cDelete" name="cDelete" value="삭제" align="right">
+						</td>
+						</c:if>
 					</tr>
 
 				</c:forEach>

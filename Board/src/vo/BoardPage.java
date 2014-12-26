@@ -4,6 +4,7 @@ import java.util.List;
 
 public class BoardPage {
 	
+	private int totalBoardCount;
 	private int startPage;
 	private int endPage;
 	private int startRow;
@@ -11,15 +12,25 @@ public class BoardPage {
 	private int totalPage;
 	private List<Board> boardList;	
 	
-	public BoardPage(List<Board> boardList, int startPage, int endPage,
-			int startRow, int endRow, int totalPage) {
+
+	public BoardPage(int totalBoardCount, int startPage, int endPage, int startRow, int endRow, int totalPage,
+			List<Board> boardList) {
 		super();
-		this.boardList = boardList;
+		this.totalBoardCount = totalBoardCount;
 		this.startPage = startPage;
 		this.endPage = endPage;
 		this.startRow = startRow;
 		this.endRow = endRow;
 		this.totalPage = totalPage;
+		this.boardList = boardList;
+	}
+
+	public void setTotalBoardCount(int totalBoardCount) {
+		this.totalBoardCount = totalBoardCount;
+	}
+	
+	public int getTotalBoardCount() {
+		return totalBoardCount;
 	}
 	
 	

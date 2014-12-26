@@ -9,7 +9,7 @@ public interface BoardMapper {
 	
 	public int insertBoard(Board board); 
 	public int updateBoard(Board board);
-	public int deleteBoard(int boardNo);
+	public int deleteBoard(Board board);
 	public Board selectBoardByBoardNo(int boardNo);
 	public List<Board> selectBoardList(Map<String, Object> map);
 	public int selectBoardCount();

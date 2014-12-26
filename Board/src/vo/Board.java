@@ -18,6 +18,7 @@ public class Board extends DBCommon{
 	private Member writer; 
 	private List<File> files; 
 	private List<Comment> comments; 
+	private int flag;
 	
 	
 	//getter&setter
@@ -103,14 +104,23 @@ public class Board extends DBCommon{
 		this.comments = comments;
 	}
 
+	public int getFlag() {
+		return flag;
+	}
+	
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+
 	@Override
 	public String toString() {
-		return "Board [boardNo=" + boardNo + ", email=" + email + ", title="
-				+ title + ", content=" + content + ", family=" + family
-				+ ", parent=" + parent + ", depth=" + depth + ", indent="
-				+ indent + ", hitCount=" + hitCount + ", writer=" + writer
-				+ ", files=" + files + ", comments=" + comments + "]";
+		return "Board [boardNo=" + boardNo + ", email=" + email + ", title=" + title + ", content=" + content
+				+ ", family=" + family + ", parent=" + parent + ", depth=" + depth + ", indent=" + indent
+				+ ", hitCount=" + hitCount + ", writer=" + writer + ", files=" + files + ", comments=" + comments
+				+ ", flag=" + flag + "]";
 	}
+	
+
 	
 	
 	
