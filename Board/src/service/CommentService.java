@@ -20,6 +20,7 @@ public class CommentService {
 	public int insertComment(Comment comment, int boardNo, String email) throws UnknownHostException{
 		comment.setEmail(email);
 		comment.setBoardNo(boardNo);
+		comment.setFlag(1);
 		comment.setWritingDate(new Date());
 		comment.setWritingIP(InetAddress.getLocalHost().toString());
 		return commentMapper.insertComment(comment);
@@ -37,8 +38,12 @@ public class CommentService {
 		return commentMapper.selectCommentListByBoardNo(boardNo);
 	}
 	
-	public int deleteComment(int commentNo){
-		return commentMapper.deleteComment(commentNo);
+	public int deleteComment(int commentNo) throws UnknownHostException{
+		Comment comment = commentMapper.selectCommentByCommentNo(commentNo);
+		comment.setFlag(0);
+		comment.setModifyDate(new Date());
+		comment.setModifyIP(InetAddress.getLocalHost().toString());
+		return commentMapper.deleteComment(comment);
 	}
 	
 	public int selectCommentCountByBoardNo(int boardNo){

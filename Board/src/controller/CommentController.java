@@ -40,11 +40,16 @@ public class CommentController {
 
 	}
 	
-//	@RequestMapping(value = "deleteComment.do", method = RequestMethod.POST)
-//	@ResponseBody
-//	public String deleteComment(Comment comment, int commentNo){
-//		
-//	}
+	@RequestMapping(value = "deleteComment.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteComment(int commentNo) throws UnknownHostException{
+		System.out.println("코멘트번호//"+commentNo);
+		if (commentService.deleteComment(commentNo)==1) {
+			return "Y";
+		}else{
+			return "N";
+		}
+	}
 	
 	
 

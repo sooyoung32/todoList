@@ -38,6 +38,8 @@
 				}
 			});
 		});
+		
+		$(opener.document).find('#email').append('<td><input type="text" name="email" id="email" value="#email"></td>');
 	});
 </script>
 

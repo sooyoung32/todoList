@@ -34,31 +34,55 @@ $(function(){
 		}
 	});
 	$('#button').click(function(){
-		if($('#hidden').val()==0){
-			alert("이메일 중복확인을 해주세요");
+		if ( formCheck() ) {
+			var data2 = {
+					email : $('#email').val(),
+					password : $('#password').val(),
+					name : $('#name').val()
+				};
+				$.ajax({
+					type:"post",
+					url:"/Board_psy/join.do",
+					data:data2,
+					success:function(result){
+						if(result=="Y"){
+							alert("회원가입 성공");
+							$("#email" , opener.document).val($('#email').val());
+							window.close();
+						}else{
+							alert("회원가입 실패");
+						}
+					},
+					error:function(){
+						alert("회원가입 AJAX 에러");
+					}
+				});
 		}
-		
-		if($('#password').val()!=$('#checkPassword').val()){
-			alert("비밀번호가 같지 않습니다");
-		}else if($('#password').val()==$('#checkPassword').val()){
-			alert("회원가입이 완료되었습니다");
-			window.close();
-			document.form.submit();
-			//$('#button').submit();
-		}
-			
 	});
-	
+
 });
+
+var formCheck = function(){
+	if($('#hidden').val()==0){
+		alert("이메일 중복확인을 해주세요");
+		return false;
+	}else if($('#password').val() != $('#checkPassword').val()){
+		alert("비밀번호가 같지 않습니다");
+		return false;
+	}	
+	return true;
+};
+
+
 
 
 </script>
 <title>회원가입</title>
 </head>
 <body>
-<form action="/Board_psy/joinSuccess.do" method="post" name="joinForm">
+<!-- <form action="/Board_psy/joinSuccess.do"  method="post" name="joinForm" > -->
 	<table border="1">
-		<tr><td>이름</td><td><input type="text" name="name"></td></tr>
+		<tr><td>이름</td><td><input type="text" name="name" id="name"></td></tr>
 		<tr><td>이메일</td><td><input type="text" name="email" id="email"><input type="button" name="dupCheck" id="dupCheck" value="중복확인"></td></tr>
 		<tr><td colspan="2"><div id="msg"></div></td></tr>
 		
@@ -66,11 +90,12 @@ $(function(){
 		<tr><td>비밀번호확인</td><td><input type="password" name="checkPassword" id="checkPassword"></td></tr>
 		
 		<tr>
-			<td colspan="2"><input type="submit" name="button" id="button" value="회원가입">
+			<td colspan="2"><input type="button" name="button" id="button" value="회원가입">
 			<input type="hidden" value="0" name="hidden" id="hidden">
 			</td>
 		</tr>
 	</table>
-</form>
+<!-- </form> -->
+
 </body>
 </html>

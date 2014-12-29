@@ -36,21 +36,36 @@ public class BoardController {
 	public static final int NUM_OF_BOARD = 15;
 
 	@RequestMapping(value = "boardList.do")
-	public ModelAndView getBoardPage(@RequestParam(value = "page", defaultValue = "1") int page) {
+	public ModelAndView getBoardPage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey, String searchValue) {
+		System.out.println("page//"+page);
+		System.out.println("searchKey//"+searchKey);
+		System.out.println("searchValue//"+searchValue);
+		
 		ModelAndView mv = new ModelAndView("board_list");
-
-		int totalBoardCount = boardService.selectBoardCount();
+		
+		int totalBoardCount;
 		int startPage = 0;
 		int endPage = 0;
 		int startRow = 0;
 		int endRow = 0;
 		int totalPage = 0;
-		List<Board> boardList;
+		List<Board> boardList;	
 
+		
+		if(searchKey != null && searchValue != null){
+			totalBoardCount = boardService.searchBoardCount(searchKey, searchValue);
+			mv.addObject("searchKey", searchKey);
+			mv.addObject("searchValue", searchValue);
+			
+		}else{
+			totalBoardCount = boardService.selectBoardCount();
+		}
+		
+		System.out.println("totCnt =" + totalBoardCount);
 		if (totalBoardCount > 0) {
 			startRow = (page - 1) * NUM_OF_BOARD;
 			endRow = startRow + NUM_OF_BOARD - 1;
-			boardList = boardService.selectBoardList(startRow, endRow);
+			boardList = boardService.selectBoardList(startRow, endRow, searchKey, searchValue);
 
 			totalPage = totalBoardCount / NUM_OF_BOARD;
 			if (totalBoardCount % NUM_OF_BOARD != 0) {

@@ -1,61 +1,74 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<script type="text/javascript"
-	src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script type="text/javascript">
-	$(function() {
-		$('#logout').click(function() {
-			location.href = "/Board_psy/logout.do";
-		});
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
 
-		$('#writeForm').click(function() {
-			location.href = "/Board_psy/writeForm.do";
-		});
 
-	});
-</script>
-<title>°Ô½ÃÆÇ ¸ñ·Ï</title>
+<title>ê²Œì‹œíŒ ëª©ë¡</title>
+<script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-	<h1>KWARE °Ô½ÃÆÇ</h1>
+<a href="/Board_psy/boardList.do"><h1>KWARE ê²Œì‹œíŒ</h1></a>
+<form cl name="form" action="/Board_psy/boardList.do" id="form" method="post">
+<input type="hidden" name="totalBoardCount" value="${boardPage.totalBoardCount}">
+<input type="hidden" name="page"> 
 	<div align="left">
 		<c:choose>
 			<c:when test="${empty sessionScope.email}">
-				<input type="button" name="login" id="login" value="·Î±×ÀÎ"
-					onclick="window.open('/Board_psy/loginForm.do', '·Î±×ÀÎ', 'width=300, height=200')">
+				<input type="button" name="login" id="login" value="ë¡œê·¸ì¸"
+					onclick="fn_loginOpen()">
 			</c:when>
 			<c:when test="${!empty sessionScope.email}">
-			${sessionScope.name} ´Ô È¯¿µÇÕ´Ï´Ù! <input type="button" name="logout"
-					id="logout" value="·Î±×¾Æ¿ô">
+			${sessionScope.name} ë‹˜ í™˜ì˜í•©ë‹ˆë‹¤! <input type="button" name="logout"
+					id="logout" value="ë¡œê·¸ì•„ì›ƒ">
 			</c:when>
 		</c:choose>
 
 	</div>
 	
-	<div>ÃÑ°Ô½Ã±Û ¼ö : ${boardPage.totalBoardCount}</div>
+	<div>ì´ê²Œì‹œê¸€ ìˆ˜ : ${boardPage.totalBoardCount}</div>
 	
-	<table border="1" style="border-collapse: collapse;" width="50%"
-		height="500%">
+	<table width="1024px" border="0">
+    <tr height=20>
+        <td  width="100%" class="td_right">
+            <select name="searchKey" class="combobox">
+            	 <option value="ALL" <c:if test="${searchKey=='ALL'}">selected</c:if>>ì „ì²´</option>
+                <option value="CONTENT" <c:if test="${searchKey=='CONTENT'}">selected</c:if>>ë‚´ìš©</option>
+                <option value="TITLE"  <c:if test="${searchKey=='TITLE'}">selected</c:if>>ì œëª©</option>                 
+                <option value="NAME"  <c:if test="${searchKey=='NAME'}">selected</c:if>>ì‘ì„±ì</option> 
+            </select>
+
+            <input type="text" name="searchValue" value="${searchValue}" class="txtbox" size="25" />
+            <!-- button onclick="fn_pageMove(1)">ê²€ìƒ‰</button --> 
+            <input type="button" name="searchBtn" value="ê²€ìƒ‰" />         
+        </td>
+    </tr>
+</table>
+	
+	
+	
+	<table border="1" style="border-collapse: collapse;" width="1024px"
+		height="500%" class="boardList">
 		<c:if test="${empty boardPage.boardList }">
 			<tr>
-				<td>°Ô½Ã±ÛÀÌ ¾ø½À´Ï´Ù.</td>
+				<td>ê²Œì‹œê¸€ì´ ì—†ìŠµë‹ˆë‹¤.</td>
 			</tr>
 		</c:if>
 		<c:if test="${!empty boardPage.boardList }">
 		
-			<tr>
-				<td>±Û¹øÈ£</td>
-				<td>ÀÛ¼ºÀÚ</td>
-				<td>Á¦¸ñ</td>
-				<td>Ã·ºÎ</td>
-				<td>´ñ±Û</td>
-				<td>Á¶È¸¼ö</td>
+			<tr align="center">
+				<td>ê¸€ë²ˆí˜¸</td>
+				<td>ì‘ì„±ì</td>
+				<td>ì œëª©</td>
+				<td>ì²¨ë¶€</td>
+				<td>ëŒ“ê¸€</td>
+				<td>ì¡°íšŒìˆ˜</td>
 			</tr>
 			<c:forEach items="${boardPage.boardList}" var="board">
 				<tr>
@@ -68,17 +81,17 @@
 					</c:if>
 					
 					<c:if test="${board.indent == 0 && board.flag==0}">
-						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">»èÁ¦µÈ ±Û ÀÔ´Ï´Ù</a></td>
+						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ì‚­ì œëœ ê¸€ ì…ë‹ˆë‹¤</a></td>
 					</c:if>
 					<c:if test="${board.indent > 0 && board.flag ==1}">
 						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">¤¤&nbsp;${board.title}</a>
+							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ã„´&nbsp;${board.title}</a>
 						</td>
 					</c:if>
 					
 					<c:if test="${board.indent > 0 && board.flag ==0}">
 						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">¤¤&nbsp;»èÁ¦µÈ ±ÛÀÔ´Ï´Ù</a>
+							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ã„´&nbsp;ì‚­ì œëœ ê¸€ì…ë‹ˆë‹¤</a>
 						</td>
 					</c:if>
 					
@@ -91,12 +104,12 @@
 			<tr>
 				<td colspan="6" align="center"><c:if
 						test="${boardPage.startPage>1}">
-						<a href="/Board_psy/boardList.do?page=${boardList.startPage}">[ÀÌÀü]</a>
+						<a href="/Board_psy/boardList.do?page=${boardList.startPage}">[ì´ì „]</a>
 					</c:if> <c:forEach var="num" begin="${boardPage.startPage}"
 						end="${boardPage.endPage}">
-						<a href="/Board_psy/boardList.do?page=${num}">[${num}]</a>
+						<a href="javascript:fn_pageMove(${num})">[${num}]</a>
 					</c:forEach> <c:if test="${boardPage.endPage < boardPage.totalPage}">
-						<a href="/Board_psy/boardList.do?page=${boardPage.endPage+1}">[´ÙÀ½]</a>
+						<a href="/Board_psy/boardList.do?page=${boardPage.endPage+1}">[ë‹¤ìŒ]</a>
 					</c:if></td>
 			</tr>
 
@@ -104,14 +117,49 @@
 		</c:if>
 
 	</table>
-	<input type="hidden" value="${sessionScope.eamil }" name="email">
+	<input type="hidden" value="${sessionScope.email }" name="email">
 	<c:if test="${!empty sessionScope.email}">
-		<input type="button" id="writeForm" name="writeForm" value="±ÛÀÛ¼º"
+		<input type="button" id="writeForm" name="writeForm" value="ê¸€ì‘ì„±"
 			style="color: navy;">
 	</c:if>
 	<c:if test="${empty sessionScope.email }">
-		·Î±×ÀÎ ÈÄ °Ô½Ã±ÛÀ» ÀÛ¼ºÇØ ÁÖ¼¼¿ä! 
+		ë¡œê·¸ì¸ í›„ ê²Œì‹œê¸€ì„ ì‘ì„±í•´ ì£¼ì„¸ìš”! 
 	</c:if>
+</form>
+<script type="text/javascript">
+	$(function() {
+		$('#logout').click(function() {
+			location.href = "/Board_psy/logout.do";
+		});
+
+		$('#writeForm').click(function() {
+			location.href = "/Board_psy/writeForm.do";
+		});
+		$("#form input[name='searchBtn']").click(function(){
+			$("#form  input[name='page']").val(1);
+			document.form.submit();
+		});	
+		$("form#form input.txtbox").unbind("keydown").bind("keydown",function(e){
+			if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
+		});
+		$("form#form input.txtbox").unbind("keyup").bind("keyup",function(e){
+		    if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
+		});
+	});
+	function fn_pageMove(page){
+		$("#form  input[name='page']").val(page);
+		document.form.submit();
+	}
+	var loginOpen = null;
+	function fn_loginOpen(){
+		if ( loginOpen == null || loginOpen.closed) {
+			loginOpen = window.open('/Board_psy/loginForm.do', 'ë¡œê·¸ì¸', 'width=300, height=200');
+		} else {
+			loginOpen.focus();
+		}
+	}
+	
+</script>
 
 </body>
 </html>

@@ -18,6 +18,7 @@ public interface BoardMapper {
 	public Board selectBoardCountByParent(); 
 	public int selectLastNo();
 	public int updateFamily();
-	
+	public List<Board> searchBoardList(Map<String, Object> map);
+	public int searchBoardCount(Map<String, Object> map);
 	
 }

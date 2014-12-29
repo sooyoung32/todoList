@@ -10,7 +10,7 @@
 
 	<bean class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" id="dataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-		<property name="url" value="jdbc:mysql://kware.iptime.org:7777/intern-psy?zeroDateTimeBehavior=convertToNull"/>
+		<property name="url" value="jdbc:mysql://kware.iptime.org:7777/intern-psy?zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true"/>
 		<property name="username" value="psy"/>
 		<property name="password" value="psy1234"/>
 	
