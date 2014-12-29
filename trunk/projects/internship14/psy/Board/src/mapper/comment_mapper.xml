@@ -14,13 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="DATE_OF_MODIFY" property="modifyDate"/>
 		<result column="WRITING_IP" property="writingIP"/>
 		<result column="MODIFY_IP" property="modifyIP"/>
+		<result column="FLAG" property="flag"/>
 		
 		<association property="writer" javaType="Member" column="EMAIL" select="mapper.MemberMapper.selectMember"/>
 		
 	</resultMap>
 	
 	<insert id="insertComment" parameterType="Comment">
-		INSERT INTO COMMENT VALUES(#{commentNo},#{boardNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP}, #{modifyIP})
+		INSERT INTO COMMENT VALUES(#{commentNo},#{boardNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP}, #{modifyIP},#{flag})
 	</insert>
 	
 	<select id="selectCommentListByBoardNo" resultType="Comment" resultMap="commentResultMap" parameterType="int">
@@ -43,9 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		UPDATE COMMENT SET CONTENT = #{content}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE COMMENT_NO=#{commentNo}
 	</update>
 	
-	<delete id="deleteComment">
-		DELETE FROM COMMENT WHERE COMMENT_NO = #{commentNo}
-	</delete>
+	<update id="deleteComment" parameterType="Comment">
+		UPDATE COMMENT SET FLAG = #{flag}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE COMMENT_NO=#{commentNo}
+	</update>
 	
 	
 </mapper>

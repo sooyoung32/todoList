@@ -17,29 +17,20 @@ public class TestBoard {
 		BoardMapper mapper = (BoardMapper) ctx.getBean(BoardMapper.class);
 		MemberMapper memberMapper = (MemberMapper)ctx.getBean(MemberMapper.class);
 		
-//		System.out.println(mapper.selectBoardCount());
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchKey", "ALL");
+		map.put("searchValue", "qqq");
 //		map.put("startRow", 0);
 //		map.put("endRow", 10);
-//		List<Board> list = mapper.selectBoardList(map);
-//		for(Board b : list){
-//			System.out.println(b);
-//		}
+		List<Board> list = mapper.searchBoardList(map);
+	
+		for(Board b : list){
+			System.out.println(b);
+		}
 		
-		Board b = new Board();
-		b.setEmail("soo");
-		b.setContent("sss");
-		b.setTitle("sss");
-		mapper.insertBoard(b);
-		System.out.println(b);
-		
-//		Member m = new Member();
-//		m.setEmail("ï¿½ï¿½ï¿½ï¿½");
-//		m.setName("sooyoung");
-//		m.setPassword("0000");
-//		memberMapper.insertMember(m);
-//		System.out.println(m);
+		System.out.println("º¸µåÄ«¿îÆ®//"+mapper.searchBoardCount(map));
+
 		
 	}
 }

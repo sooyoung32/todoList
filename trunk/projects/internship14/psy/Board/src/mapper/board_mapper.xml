@@ -36,27 +36,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</collection>
 
 	</resultMap>
-
-	<select id="selectBoardList" resultMap="boardResultMap"
-		parameterType="Map" resultType="Board">
-		SELECT
-		B.BOARD_NO,
-		M.NAME,
-		B.TITLE,
-		B.FAMILY,
-		B.PARENT,
-		B.DEPTH,
-		B.INDENT,
-		B.HITCOUNT,
-		B.FLAG
-		FROM BOARD B
-		LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
-		ORDER BY B.FAMILY DESC,
-		B.DEPTH ASC
-		LIMIT #{startRow}, #{endRow}
-		<!-- SELECT * FROM BOARD LIMIT #{startRow}, #{endRow} -->
-	</select>
-
 	<select id="selectBoardByBoardNo" resultMap="boardResultMap">
 		SELECT
 		B.BOARD_NO,
@@ -85,6 +64,93 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT
 		COALESCE(MAX(BOARD_NO),0) +1 FROM BOARD
 	</select>
+	
+	<select id="selectBoardCountByParent">
+		SELECT COUNT(*) FROM BOARD WHERE PARENT = #{parent}
+	</select>
+		
+<!-- 	<select id="selectBoardList" resultMap="boardResultMap" -->
+<!-- 		parameterType="Map" resultType="Board"> -->
+<!-- 		 SELECT -->
+<!-- 				B.BOARD_NO, -->
+<!-- 				M.NAME, -->
+<!-- 				B.TITLE, -->
+<!-- 				B.FAMILY, -->
+<!-- 				B.PARENT, -->
+<!-- 				B.DEPTH, -->
+<!-- 				B.INDENT, -->
+<!-- 				B.HITCOUNT, -->
+<!-- 				B.FLAG -->
+<!-- 		   FROM BOARD B -->
+<!-- 		   LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL -->
+<!-- 		  ORDER BY B.FAMILY DESC, -->
+<!-- 		         B.DEPTH ASC -->
+<!-- 		  LIMIT #{startRow}, #{endRow} -->
+<!-- 	</select> -->
+ 
+ 	<select id="selectBoardList" resultMap="boardResultMap" parameterType="Map" resultType="Board">
+		
+	SELECT
+		 B.BOARD_NO,
+		 M.NAME,
+		 B.TITLE,
+		 B.CONTENT,
+		 B.FAMILY,
+		 B.PARENT,
+		 B.DEPTH,
+		 B.INDENT,
+		 B.HITCOUNT,
+		 B.FLAG
+	FROM BOARD B
+		 LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
+   where 1 = 1
+   <if test="searchValue != null">
+		<if test="searchKey =='ALL'">
+			OR B.TITLE    LIKE '%${searchValue}%'
+			OR B.CONTENT  LIKE '%${searchValue}%'
+			OR M.NAME     LIKE '%${searchValue}%'
+		</if>
+		
+		<if test="searchKey == 'TITLE'">
+		   AND B.TITLE   LIKE '%${searchValue}%'
+		</if>
+		
+		<if test="searchKey == 'CONTENT'">
+			AND B.CONTNET LIKE  '%${searchValue}%'
+		</if>
+		<if test="searchKey == 'NAME'">
+			AND M.NAME LIKE '%${searchValue}%'
+		</if>
+   </if>
+	ORDER BY B.FAMILY DESC, B.DEPTH ASC	
+	LIMIT #{startRow}, #{endRow}
+	
+	</select>
+	
+	<select id="searchBoardCount"  parameterType="Map" resultType="int">
+		SELECT COUNT(*) FROM BOARD B
+			LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
+	<where>
+		<if test="searchKey =='ALL'">
+			   B.TITLE LIKE '%${searchValue}%'
+			OR B.CONTENT LIKE '%${searchValue}%'
+			OR M.NAME LIKE '%${searchValue}%'
+		</if>
+		
+		<if test="searchKey == 'TITLE'">
+			AND B.TITLE LIKE '%${searchValue}%'
+		</if>
+		
+		<if test="searchKey == 'CONTENT'">
+			AND B.CONTNET LIKE  '%${searchValue}%'
+		</if>
+		<if test="searchKey == 'NAME'">
+			AND M.NAME LIKE '%${searchValue}%'
+		</if>
+	</where>
+	</select>
+	
+
 
 	<update id="updateBoard" parameterType="Board">
 UPDATE BOARD 
@@ -151,10 +217,8 @@ UPDATE BOARD
 		b.FAMILY = #{family} ) t )
 	</update>
 
-	<select id="selectBoardCountByParent">
-		SELECT COUNT(*) FROM BOARD WHERE PARENT = #{parent}
-	</select>
 
+	
 </mapper>
 
 

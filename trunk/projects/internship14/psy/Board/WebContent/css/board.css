@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+body{
+	font-family: monospace;
+	text-align:center;
+	
+}
+
+h1 {
+    color: orange;
+    text-align: center;
+}
+
+table tr td.td_right {
+	text-align: right;
+}
+
+
+table tr td.title_layout{
+	
+}

@@ -89,11 +89,21 @@ public class MemberController {
 	
 	
 	//회원가입 성공
-	@RequestMapping(value="joinSuccess.do", method=RequestMethod.POST)
-	public String join(Member member, HttpServletRequest request) {
-		service.insertMember(member);
-		System.out.println(member.getEmail() +"회원가입 됐나???");
-		return "join_success";
+	@RequestMapping(value="join.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String join(String name, String password, String email, HttpServletRequest request) {
+		Member member = new Member(); 
+		member.setEmail(email);
+		member.setPassword(password);
+		member.setName(name);
+		System.out.println("member//"+member);
+		int result = service.insertMember(member);
+		 System.out.println("member//"+member);
+		 if(result ==1){
+			 return "Y";
+		 }else{
+			 return "N";
+		 }
 	}
 
 }
