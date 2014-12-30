@@ -33,7 +33,7 @@ $(function(){
 			alert("이메일을 입력해주세요");
 		}
 	});
-	$('#button').click(function(){
+	$('#join').click(function(){
 		if ( formCheck() ) {
 			var data2 = {
 					email : $('#email').val(),
@@ -78,19 +78,20 @@ var formCheck = function(){
 
 </script>
 <title>회원가입</title>
+<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
 </head>
 <body>
 <!-- <form action="/Board_psy/joinSuccess.do"  method="post" name="joinForm" > -->
 	<table border="1">
-		<tr><td>이름</td><td><input type="text" name="name" id="name"></td></tr>
-		<tr><td>이메일</td><td><input type="text" name="email" id="email"><input type="button" name="dupCheck" id="dupCheck" value="중복확인"></td></tr>
-		<tr><td colspan="2"><div id="msg"></div></td></tr>
+		<tr bgcolor="#F6CEE3"><td>이름</td><td><input type="text" name="name" id="name"></td></tr>
+		<tr bgcolor="#F6CEE3"><td>이메일</td><td><input type="text" name="email" id="email"><input type="button" name="dupCheck" id="dupCheck" value="중복확인"></td></tr>
+		<tr bgcolor="#F6CEE3"><td colspan="2"><div id="msg"></div></td></tr>
 		
-		<tr><td>비밀번호</td><td><input type="password" name="password" id="password"></td></tr>
-		<tr><td>비밀번호확인</td><td><input type="password" name="checkPassword" id="checkPassword"></td></tr>
+		<tr bgcolor="#F6CEE3"><td>비밀번호</td><td><input type="password" name="password" id="password"></td></tr>
+		<tr bgcolor="#F6CEE3"><td>비밀번호확인</td><td><input type="password" name="checkPassword" id="checkPassword"></td></tr>
 		
 		<tr>
-			<td colspan="2"><input type="button" name="button" id="button" value="회원가입">
+			<td colspan="2" style="text-align: center;"><input type="button" name="button" id="join" value="Join">
 			<input type="hidden" value="0" name="hidden" id="hidden">
 			</td>
 		</tr>

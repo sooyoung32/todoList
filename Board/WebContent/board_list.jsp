@@ -13,45 +13,60 @@
 <title>게시판 목록</title>
 <script type="text/javascript" 	src="http://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
+
+
 <body>
-<a href="/Board_psy/boardList.do"><h1>KWARE 게시판</h1></a>
-<form cl name="form" action="/Board_psy/boardList.do" id="form" method="post">
+<form action="/Board_psy/boardList.do" id="form" name="form" method="post">
 <input type="hidden" name="totalBoardCount" value="${boardPage.totalBoardCount}">
 <input type="hidden" name="page"> 
-	<div align="left">
+<table>
+	<tr>
+		<td class="title_layout"><h1>KWARE 게시판</h1></td>
+	</tr>
+	<tr>
+	<td class="user_layout" >
 		<c:choose>
 			<c:when test="${empty sessionScope.email}">
-				<input type="button" name="login" id="login" value="로그인"
+				<input type="button" name="login" id="login" value="Login"
 					onclick="fn_loginOpen()">
 			</c:when>
 			<c:when test="${!empty sessionScope.email}">
 			${sessionScope.name} 님 환영합니다! <input type="button" name="logout"
-					id="logout" value="로그아웃">
+					id="logout" value="Logout">
 			</c:when>
 		</c:choose>
 
-	</div>
-	
-	<div>총게시글 수 : ${boardPage.totalBoardCount}</div>
-	
-	<table width="1024px" border="0">
-    <tr height=20>
-        <td  width="100%" class="td_right">
-            <select name="searchKey" class="combobox">
-            	 <option value="ALL" <c:if test="${searchKey=='ALL'}">selected</c:if>>전체</option>
+	</td>
+</tr>
+
+<tr>
+	<td class="search_layout">
+		<table class="search_table">
+   			 <tr>
+       			 <td class="search_td">
+           		<select name="searchKey" class="combobox">
+            	<option value="ALL" <c:if test="${searchKey=='ALL'}">selected</c:if>>전체</option>
                 <option value="CONTENT" <c:if test="${searchKey=='CONTENT'}">selected</c:if>>내용</option>
                 <option value="TITLE"  <c:if test="${searchKey=='TITLE'}">selected</c:if>>제목</option>                 
                 <option value="NAME"  <c:if test="${searchKey=='NAME'}">selected</c:if>>작성자</option> 
-            </select>
+            	</select>
+            	<input type="text" name="searchValue" value="${searchValue}" class="txtbox" size="25" />
+            	<!-- button onclick="fn_pageMove(1)">검색</button --> 
+            	<input type="button" name="searchBtn" value="검색" />         
+        		</td>
+    		</tr>
+		</table>
+	</td>
+</tr>
+	
+	
+<tr>
+	<td class="totalBoard_layout">총게시글 수 : ${boardPage.totalBoardCount}</td>
+		
+</tr>
 
-            <input type="text" name="searchValue" value="${searchValue}" class="txtbox" size="25" />
-            <!-- button onclick="fn_pageMove(1)">검색</button --> 
-            <input type="button" name="searchBtn" value="검색" />         
-        </td>
-    </tr>
-</table>
-	
-	
+<tr>
+	<td class="list_layout">
 	
 	<table border="1" style="border-collapse: collapse;" width="1024px"
 		height="500%" class="boardList">
@@ -72,32 +87,33 @@
 			</tr>
 			<c:forEach items="${boardPage.boardList}" var="board">
 				<tr>
-					<td>${board.boardNo}
-					<td>${board.writer.name}</td>
+					<td align="center">${board.boardNo}
+					<td align="center">${board.writer.name}</td>
 					
+					<td id="boardList_title">
 					<c:if test="${board.indent == 0 && board.flag==1}">
-						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">${board.title}</a>
-						</td>
+						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">${board.title}</a>
+						
 					</c:if>
 					
 					<c:if test="${board.indent == 0 && board.flag==0}">
-						<td><a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">삭제된 글 입니다</a></td>
+						<span style="font-style: italic; color: gray;">삭제된 글 입니다</span>
 					</c:if>
 					<c:if test="${board.indent > 0 && board.flag ==1}">
-						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
+						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
 							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ㄴ&nbsp;${board.title}</a>
-						</td>
+						
 					</c:if>
 					
 					<c:if test="${board.indent > 0 && board.flag ==0}">
-						<td><c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ㄴ&nbsp;삭제된 글입니다</a>
-						</td>
+						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
+							<span style="font-style: italic; color: gray;">ㄴ&nbsp;삭제된 글입니다 </span>
+						
 					</c:if>
-					
-					<td>${fn:length(board.files)}</td>
-					<td>${fn:length(board.comments)}</td>
-					<td>${ board.hitCount}</td>
+					</td>
+					<td align="center">${fn:length(board.files)}</td>
+					<td align="center">${fn:length(board.comments)}</td>
+					<td align="center">${board.hitCount}</td>
 				</tr>
 
 			</c:forEach>
@@ -117,15 +133,26 @@
 		</c:if>
 
 	</table>
+	</td>
+</tr>	
+	
+<tr>
+	<td class="footer_layout">	
 	<input type="hidden" value="${sessionScope.email }" name="email">
 	<c:if test="${!empty sessionScope.email}">
-		<input type="button" id="writeForm" name="writeForm" value="글작성"
+		<input type="button" id="writeForm" name="writeForm" value="Write"
 			style="color: navy;">
 	</c:if>
 	<c:if test="${empty sessionScope.email }">
-		로그인 후 게시글을 작성해 주세요! 
+		로그인 후 게시글을 작성하세요!
 	</c:if>
+
+	</td>
+</tr>
+
+</table>
 </form>
+</body>
 <script type="text/javascript">
 	$(function() {
 		$('#logout').click(function() {
@@ -135,19 +162,19 @@
 		$('#writeForm').click(function() {
 			location.href = "/Board_psy/writeForm.do";
 		});
-		$("#form input[name='searchBtn']").click(function(){
-			$("#form  input[name='page']").val(1);
+		$("input[name='searchBtn']").click(function(){
+			$("input[name='page']").val(1);
 			document.form.submit();
 		});	
-		$("form#form input.txtbox").unbind("keydown").bind("keydown",function(e){
+		$("input.txtbox").unbind("keydown").bind("keydown",function(e){
 			if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
 		});
-		$("form#form input.txtbox").unbind("keyup").bind("keyup",function(e){
+		$("input.txtbox").unbind("keyup").bind("keyup",function(e){
 		    if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
 		});
 	});
 	function fn_pageMove(page){
-		$("#form  input[name='page']").val(page);
+		$("input[name='page']").val(page);
 		document.form.submit();
 	}
 	var loginOpen = null;
@@ -160,6 +187,4 @@
 	}
 	
 </script>
-
-</body>
 </html>

@@ -9,29 +9,29 @@
 </head>
 <body>
 
-<table border="2">
+<table>
 	<tr>
-		<td class="title_layout">title</td>
+		<td class="back_layout">목록돌아가기</td>
 	</tr>
 	
 	<tr>
-		<td class="user_layout">user정보</td>
+		<td class="read_layout"> 글정보 </td>
 	</tr>
 	
 	<tr>
-		<td class="totalBoard_layout">총게시글</td>
+		<td class="file_layout">파일리스트</td>
 	</tr>
 	
 	<tr>
-		<td class="search_layout">검색</td>
+		<td class="reply_btn">검색 <input type="button" id="reply" value="Reply"> </td>
 	</tr>
 	
 	<tr>
-		<td class="list_layout">글리스트</td>
+		<td class="comment_layout">코멘트 작성</td>
 	</tr>
 
 	<tr>
-		<td class="footer_layout"> 글작성</td>
+		<td class="comment_list">코멘트 <input type="button" id="writeForm" value="Write"></td>
 	</tr>
 	
 </table>

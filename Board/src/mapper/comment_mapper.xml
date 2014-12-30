@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<select id="selectCommentListByBoardNo" resultType="Comment" resultMap="commentResultMap" parameterType="int">
-		SELECT * FROM COMMENT WHERE BOARD_NO = #{boardNo} ORDER BY COMMENT_NO DESC
+		SELECT * FROM COMMENT WHERE BOARD_NO = #{boardNo} AND FLAG = 1 ORDER BY COMMENT_NO DESC
 	</select>
 	
 	<select id="selectCommentCountByBoardNo" resultMap="commentResultMap">
