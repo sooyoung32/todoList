@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>로그인</title>
+<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript">
 	$(function() {
@@ -46,21 +47,21 @@
 </head>
 <body>
 <!-- 	<form action="/Board_psy/loginSuccess.do" method="post"> -->
-		<table border="1">
-			<tr>
+		<table border="1" style="border-collapse: collapse;">
+			<tr bgcolor="#F6CEE3"">
 				<td>이메일</td>
 				<td><input type="text" name="email" id="email"></td>
 			</tr>
-			<tr>
+			<tr bgcolor="#F6CEE3">
 				<td>비밀번호</td>
 				<td><input type="password" name="password" id="password"></td>
 			</tr>
-			<tr><td colspan="2"><div id="msg"></div></td></tr>
-			<tr>
-				<td colspan="2"><input type="button" id="login" value="로그인">
-					<a href="#"
-					onclick="window.open('/Board_psy/joinForm.do', '회원가입', 'width=400,height=500')">
-						회원가입 </a></td>
+			<tr><td colspan="2" id="msg"></td></tr>
+			<tr bgcolor="#F6CEE3">
+				<td colspan="2" style="text-align: center;">
+				<input type="button" id="login" value="Login">
+				<a href="#"	onclick="window.open('/Board_psy/joinForm.do', '회원가입', 'width=400,height=500')">
+						Join </a></td>
 			</tr>
 
 		</table>

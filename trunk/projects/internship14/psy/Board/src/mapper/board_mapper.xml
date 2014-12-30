@@ -103,10 +103,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 B.FLAG
 	FROM BOARD B
 		 LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
-   where 1 = 1
+   WHERE 1 = 1
    <if test="searchValue != null">
 		<if test="searchKey =='ALL'">
-			OR B.TITLE    LIKE '%${searchValue}%'
+			AND  B.TITLE    LIKE '%${searchValue}%'
 			OR B.CONTENT  LIKE '%${searchValue}%'
 			OR M.NAME     LIKE '%${searchValue}%'
 		</if>
@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		
 		<if test="searchKey == 'CONTENT'">
-			AND B.CONTNET LIKE  '%${searchValue}%'
+			AND B.CONTENT LIKE  '%${searchValue}%'
 		</if>
 		<if test="searchKey == 'NAME'">
 			AND M.NAME LIKE '%${searchValue}%'
@@ -142,7 +142,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		
 		<if test="searchKey == 'CONTENT'">
-			AND B.CONTNET LIKE  '%${searchValue}%'
+			AND B.CONTENT LIKE  '%${searchValue}%'
 		</if>
 		<if test="searchKey == 'NAME'">
 			AND M.NAME LIKE '%${searchValue}%'

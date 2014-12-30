@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글 삭제</title>
+<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
 </head>
 <body>
 
