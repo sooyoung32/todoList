@@ -47,6 +47,7 @@ $(function(){
 
 </td></tr>
 <tr><td style="padding: 0.5em;"></td></tr>
+<tr><td style="padding: 0.5em; font-size: x-small;font-style: italic;color: gray;"> 파일은 최대 50M까지 업로드 가능합니다</td></tr>
 <tr><td>
 	<span style="color: gray;">첨부파일</span></td></tr>
 	

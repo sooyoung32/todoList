@@ -120,14 +120,14 @@ public class BoardService {
 		map.put("endRow", endRow - startRow + 1);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-		System.out.println("map//"+map);
+//		System.out.println("map//"+map);
 		return mapper.selectBoardList(map);
 
 	}
 
 	public int searchBoardCount(String searchKey, String searchValue) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("searchBoardCount!!" + searchKey + "//" + searchValue);
+//		System.out.println("searchBoardCount!!" + searchKey + "//" + searchValue);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
 		return mapper.searchBoardCount(map);

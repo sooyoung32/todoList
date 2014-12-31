@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,13 +34,13 @@ public class BoardController {
 	private FileService fileServie;
 
 	// 페이지 처리
-	public static final int NUM_OF_BOARD = 15;
+	public static final int NUM_OF_BOARD = 10;
 
 	@RequestMapping(value = "boardList.do")
 	public ModelAndView getBoardPage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey, String searchValue) {
-		System.out.println("page//"+page);
-		System.out.println("searchKey//"+searchKey);
-		System.out.println("searchValue//"+searchValue);
+//		System.out.println("page//"+page);
+//		System.out.println("searchKey//"+searchKey);
+//		System.out.println("searchValue//"+searchValue);
 		
 		ModelAndView mv = new ModelAndView("board_list");
 		
@@ -66,22 +67,33 @@ public class BoardController {
 			startRow = (page - 1) * NUM_OF_BOARD;
 			endRow = startRow + NUM_OF_BOARD - 1;
 			boardList = boardService.selectBoardList(startRow, endRow, searchKey, searchValue);
-
+			
+			System.out.println("startRow//"+startRow);
+			System.out.println("endRow//"+endRow);
+			
+			
 			totalPage = totalBoardCount / NUM_OF_BOARD;
 			if (totalBoardCount % NUM_OF_BOARD != 0) {
 				totalPage++;
 			}
-
-			startPage = page - 10;
+			
+			System.out.println("totalPage//"+totalPage);
+			
+			
+			startPage = page -10;
 			if (startPage <= 0) {
 				startPage = 1;
 			}
 
-			endPage = page + 10;
+			endPage = page + 9;
 			if (endPage > totalPage) {
 				endPage = totalPage;
 			}
-
+			
+			System.out.println("startPage//"+startPage);
+			System.out.println("endPage//"+endPage);
+			System.out.println("page//"+page);
+			
 			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage, boardList);
 			mv.addObject("boardPage", boardPage);
 			return mv;
@@ -129,8 +141,7 @@ public class BoardController {
 	public List<vo.File> uploadFile(UploadFile uploadFile, HttpServletRequest request, int boardNo) {
 		List<vo.File> files = new ArrayList<>();
 		List<MultipartFile> fileList = uploadFile.getFileList(); // 클라이언트가 전송한 파일
-		System.err.println(">>" + fileList);
-		System.out.println("업로드 파일리스트?//" + fileList);
+		System.out.println("업로드 파일리스트//" + fileList);
 		List<String> filenames = new ArrayList<>();
 
 		if (fileList != null && fileList.size() > 0) {
@@ -144,8 +155,16 @@ public class BoardController {
 
 			vo.File voFile;
 			for (MultipartFile file : fileList) {
-				File uploadedFile = new File(path + "/" + file.getOriginalFilename());
-				filenames.add(file.getOriginalFilename());
+				
+				String genId = UUID.randomUUID().toString(); //파일 중복 이름 처리
+				String originalFileName = file.getOriginalFilename(); //본래 파일 이름
+				String savedFileName = genId+"."+file.getOriginalFilename();
+				String savedPath = path +"/"+savedFileName; //저장될 파일 경로
+						
+				
+				File uploadedFile = new File(savedPath);
+				filenames.add(genId+"."+file.getOriginalFilename());
+				
 
 				try {
 					file.transferTo(uploadedFile); // 업로드 실행.
@@ -153,7 +172,7 @@ public class BoardController {
 					voFile = new vo.File();
 					voFile.setBoardNo(boardNo);
 					voFile.setOriginalName(file.getOriginalFilename());
-					voFile.setSavedPath(path + "/" + file.getOriginalFilename());
+					voFile.setSavedPath(savedPath);
 					voFile.setFlag(1);
 					files.add(voFile);
 
@@ -185,13 +204,13 @@ public class BoardController {
 	@RequestMapping(value = "reply.do", method = RequestMethod.POST)
 	public String reply(Board board, int boardNo, HttpServletRequest request, UploadFile uploadFile)
 			throws UnknownHostException {
-		System.out.println("컨트롤러 board//" + board);
-		System.out.println("컨트롤러 보드넘버(원글)//" + boardNo);
+//		System.out.println("컨트롤러 board//" + board);
+//		System.out.println("컨트롤러 보드넘버(원글)//" + boardNo);
 
 		int replyBoardNo = boardService.selectLastNo();
 		List<vo.File> files = uploadFile(uploadFile, request, replyBoardNo);
-		System.out.println("업로드파일/" + uploadFile);
-		System.out.println("원글번호/" + replyBoardNo);
+//		System.out.println("업로드파일/" + uploadFile);
+//		System.out.println("원글번호/" + replyBoardNo);
 
 		for (vo.File file : files) {
 			fileServie.insertFile(file, replyBoardNo);
@@ -217,12 +236,12 @@ public class BoardController {
 		//파일 삭제 수정
 			for(String s : deletedFileList){
 				int	fileNo = (int) Integer.parseInt(s); 
-				System.out.println("형변환 파일 번호//"+fileNo);
+//				System.out.println("형변환 파일 번호//"+fileNo);
 				
 				vo.File file = fileServie.selectFileByFileNo(fileNo);
-				System.out.println("선택된 파일"+file);
+//				System.out.println("선택된 파일"+file);
 				int updqtedFile = fileServie.deleteFile(fileNo);
-				System.out.println("파일 삭제 됐나?//"+updqtedFile);
+//				System.out.println("파일 삭제 됐나?//"+updqtedFile);
 			}
 		}
 		
@@ -250,8 +269,8 @@ public class BoardController {
 		Board updatedBoard = boardService.selectBoardByBoardNo(boardNo, false);
 		System.out.println("원래 비밀번호있는 사용자 비번//"+updatedBoard);
 		if(updatedBoard.getWriter().getPassword().equals(password)){
-			System.out.println("사용자비번//"+updatedBoard.getWriter().getPassword());
-			System.out.println("입력한비번//"+password);
+//			System.out.println("사용자비번//"+updatedBoard.getWriter().getPassword());
+//			System.out.println("입력한비번//"+password);
 			boardService.deleteBoard(updatedBoard, boardNo);
 			return "redirect:boardList.do?page=1";
 		}else{
