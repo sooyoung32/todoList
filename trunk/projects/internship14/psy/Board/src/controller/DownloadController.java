@@ -19,8 +19,11 @@ public class DownloadController implements ApplicationContextAware {
 	@RequestMapping("download.do")
 	public ModelAndView download(@RequestParam("savedPath") String savedPath) {
 		
-		File file = new File(savedPath); 
-		return new ModelAndView("download", "downloadFile", file);
+		File file = new File(savedPath);
+		ModelAndView mv = new ModelAndView();
+		mv.setView(new DownloadView());
+		mv.addObject("downloadFile", file);
+		return mv;
 		
 	}
 

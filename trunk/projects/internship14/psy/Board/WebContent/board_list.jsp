@@ -111,22 +111,38 @@
 						
 					</c:if>
 					</td>
-					<td align="center">${fn:length(board.files)}</td>
+					<td align="center" width="100px">
+					<c:choose>
+						<c:when test="${!empty board.files }">
+							<c:forEach items="${board.files }" var="file">
+								
+							<a href="/Board_psy/download.do?savedPath=${file.savedPath}">
+								<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a> 
+							</c:forEach>
+						</c:when>
+						<c:when test="${empty board.files }">
+							${fn:length(board.files)}
+						</c:when>
+					</c:choose>
+					</td>
 					<td align="center">${fn:length(board.comments)}</td>
 					<td align="center">${board.hitCount}</td>
 				</tr>
 
 			</c:forEach>
 			<tr>
-				<td colspan="6" align="center"><c:if
-						test="${boardPage.startPage>1}">
+				<td colspan="6" align="center"> 
+				<c:if test="${boardPage.startPage>1}">
 						<a href="/Board_psy/boardList.do?page=${boardList.startPage}">[이전]</a>
-					</c:if> <c:forEach var="num" begin="${boardPage.startPage}"
-						end="${boardPage.endPage}">
+				</c:if> 
+					<c:forEach var="num" begin="${boardPage.startPage}" end="${boardPage.endPage}">
 						<a href="javascript:fn_pageMove(${num})">[${num}]</a>
-					</c:forEach> <c:if test="${boardPage.endPage < boardPage.totalPage}">
-						<a href="/Board_psy/boardList.do?page=${boardPage.endPage+1}">[다음]</a>
-					</c:if></td>
+					</c:forEach>
+				<c:if test="${boardPage.endPage < boardPage.totalPage}">
+						<a href="/Board_psy/boardList.do?page=${boardPage.endPage+2}">[다음]</a>
+				</c:if>
+				
+				</td>
 			</tr>
 
 
