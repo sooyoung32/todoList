@@ -50,6 +50,9 @@ public class BoardController {
 		int startRow = 0;
 		int endRow = 0;
 		int totalPage = 0;
+		int prePage = 0; 
+		int nextPage = 0;
+		int finalPage = 0; 
 		List<Board> boardList;	
 
 		
@@ -63,43 +66,70 @@ public class BoardController {
 		}
 		
 		System.out.println("totCnt =" + totalBoardCount);
-		if (totalBoardCount > 0) {
+		if (totalBoardCount > 0) { //게시글이 있는 경우 
+			
+			//게시글 순서 0-9, 10-19 
 			startRow = (page - 1) * NUM_OF_BOARD;
 			endRow = startRow + NUM_OF_BOARD - 1;
+			
+			//리스트 받기 
 			boardList = boardService.selectBoardList(startRow, endRow, searchKey, searchValue);
 			
 			System.out.println("startRow//"+startRow);
 			System.out.println("endRow//"+endRow);
 			
-			
+			//총 페이지 : 총 게시글 / 10 
 			totalPage = totalBoardCount / NUM_OF_BOARD;
 			if (totalBoardCount % NUM_OF_BOARD != 0) {
 				totalPage++;
 			}
 			
 			System.out.println("totalPage//"+totalPage);
+
+			boolean isNowFirst = page == 1 ? true : false; // 시작 페이지 (전체)
+			boolean isNowFinal = page == finalPage ? true : false; // 마지막 페이지 (전체)
 			
-			
-			startPage = page -10;
+			//시작 페이지 
+			startPage = ((page - 1) / 10) * 10 + 1;
 			if (startPage <= 0) {
 				startPage = 1;
 			}
-
-			endPage = page + 9;
+			
+			
+			finalPage = (totalBoardCount + (totalPage - 1)) / totalPage;
+			
+			endPage =startPage + 10 - 1;
 			if (endPage > totalPage) {
 				endPage = totalPage;
 			}
 			
+
+		    if (isNowFirst) {
+		          prePage = 1; // 이전 페이지 번호
+		    } else {
+		       prePage = (((page - 1) < 1 ? 1 : (page - 1))); // 이전 페이지 번호
+		    }
+
+
+		        if (isNowFinal) {
+		            nextPage = (finalPage); // 다음 페이지 번호
+		        } else {
+		           nextPage = (((page + 1) > finalPage ? finalPage : (page + 1))); // 다음 페이지 번호
+		        }
+
+		    System.out.println("prePage//"+prePage);
+			System.out.println("nextPage//"+nextPage);
 			System.out.println("startPage//"+startPage);
 			System.out.println("endPage//"+endPage);
+			System.out.println("finalPage//"+finalPage);
 			System.out.println("page//"+page);
-			
-			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage, boardList);
+			System.out.println("-------------------------------------");
+			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage, prePage, nextPage, finalPage, boardList);
 			mv.addObject("boardPage", boardPage);
 			return mv;
 
-		} else {
-			BoardPage boardPage = new BoardPage(0, 0, 0, 0, 0, 0,Collections.<Board> emptyList());
+		} else { //게시글이 없는 경우 
+			BoardPage boardPage = new BoardPage(0, 0, 0, 0, 0, 0,0,0,0,Collections.<Board> emptyList());
 			mv.addObject("boardPage", boardPage);
 			return mv;
 		}
