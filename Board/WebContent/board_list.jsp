@@ -132,16 +132,15 @@
 			</c:forEach>
 			<tr>
 				<td colspan="6" align="center"> 
-				<c:if test="${boardPage.startPage>1}">
-						<a href="/Board_psy/boardList.do?page=${boardList.startPage}">[이전]</a>
-				</c:if> 
+					<a href="/Board_psy/boardList.do?page=1">[처음]</a>
+					<a href="/Board_psy/boardList.do?page=${boardList.prePage}">[이전]</a>
+					
 					<c:forEach var="num" begin="${boardPage.startPage}" end="${boardPage.endPage}">
 						<a href="javascript:fn_pageMove(${num})">[${num}]</a>
 					</c:forEach>
-				<c:if test="${boardPage.endPage < boardPage.totalPage}">
-						<a href="/Board_psy/boardList.do?page=${boardPage.endPage+2}">[다음]</a>
-				</c:if>
-				
+					
+					<a href="/Board_psy/boardList.do?page=${boardPage.nextPage}">[다음]</a>
+					<a href="/Board_psy/boardList.do?page=${boardPage.finalPage }">[끝]</a>
 				</td>
 			</tr>
 
