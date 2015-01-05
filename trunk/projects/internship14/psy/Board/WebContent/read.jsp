@@ -73,14 +73,23 @@
 		});
 
 	});
+	
+	
+	function fn_pageMove(page){
+		$("input[name='page']").val(page);
+		document.form.submit();
+	}
+	
 </script>
 
 
 </head>
 <body>
+<form action="/Board_psy/boardList.do" id="form" name="form" method="post">
+<input type="hidden" name="page" >
 <table>
 <tr>
-	<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판 목록</a></td>
+	<td class="back_layout"><a href="javascript:fn_pageMove(${page})">◀게시판 목록</a> ${page} </td>
 </tr>	
 
 <tr><td class="read_layout">
@@ -233,5 +242,11 @@
 		value="${board.boardNo}">
 	<input type="hidden" name="email" id="email"
 		value="${sessionScope.email}">
+	<input type="hidden" name="searchValue" id="searchValue"
+		value="${searchValue}">
+	<input type="hidden" name="searchKey" id="searchKey"
+		value="${searchKey}">
+		
+</form>
 </body>
 </html>

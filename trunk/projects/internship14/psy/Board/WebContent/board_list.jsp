@@ -16,13 +16,21 @@
 
 
 <body>
+<fmt:requestEncoding value="UTF-8" />
 <form action="/Board_psy/boardList.do" id="form" name="form" method="post">
 <input type="hidden" name="totalBoardCount" value="${boardPage.totalBoardCount}">
 <input type="hidden" name="page"> 
+<input type="hidden" name = "prePage" value="${boardPage.prePage}">
+<input type="hidden" name = "nextPage" value="${boardPage.nextPage}">
+
 <table>
 	<tr>
 		<td class="title_layout"><h1>KWARE 게시판</h1></td>
 	</tr>
+	<tr>
+		<td class="back_layout"><a href="/Board_psy/boardList.do">◀처음으로</a></td>
+	</tr>
+	
 	<tr>
 	<td class="user_layout" >
 		<c:choose>
@@ -85,24 +93,24 @@
 				<td>댓글</td>
 				<td>조회수</td>
 			</tr>
+			
+			
 			<c:forEach items="${boardPage.boardList}" var="board">
 				<tr>
 					<td align="center">${board.boardNo}
 					<td align="center">${board.writer.name}</td>
 					
-					<td id="boardList_title">
+					<td id="boardList_title"> 페이지번호 ${boardPage.pageNo} ${searchValue}
 					<c:if test="${board.indent == 0 && board.flag==1}">
-						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">${board.title}</a>
-						
+						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${board.title}</a>
 					</c:if>
 					
 					<c:if test="${board.indent == 0 && board.flag==0}">
 						<span style="font-style: italic; color: gray;">삭제된 글 입니다</span>
 					</c:if>
-					<c:if test="${board.indent > 0 && board.flag ==1}">
+					<c:if test="${board.indent > 0 && board.flag ==1}"> 
 						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true">ㄴ&nbsp;${board.title}</a>
-						
+							<a href="javascript:fn_gotoBoard('${board.boardNo}')">ㄴ&nbsp;${board.title}</a>
 					</c:if>
 					
 					<c:if test="${board.indent > 0 && board.flag ==0}">
@@ -111,18 +119,19 @@
 						
 					</c:if>
 					</td>
-					<td align="center" width="100px">
+					<td align="center" width="100px">	${fn:length(board.files)}
 					<c:choose>
 						<c:when test="${!empty board.files }">
-							<c:forEach items="${board.files }" var="file">
+							<c:forEach items="${board.files}" var="file">
 								
 							<a href="/Board_psy/download.do?savedPath=${file.savedPath}">
 								<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a> 
 							</c:forEach>
 						</c:when>
-						<c:when test="${empty board.files }">
+					
+						<c:otherwise >
 							${fn:length(board.files)}
-						</c:when>
+						</c:otherwise>
 					</c:choose>
 					</td>
 					<td align="center">${fn:length(board.comments)}</td>
@@ -132,15 +141,25 @@
 			</c:forEach>
 			<tr>
 				<td colspan="6" align="center"> 
-					<a href="/Board_psy/boardList.do?page=1">[처음]</a>
-					<a href="/Board_psy/boardList.do?page=${boardList.prePage}">[이전]</a>
+					<a href="javascript:fn_pageMove(${boardPage.startPage})">[처음]</a>
+<%-- 					<a href="/Board_psy/boardList.do?page=${boardPage.prePage}">[이전]</a> --%>
+					<a href="javascript:fn_pageMove(${boardPage.prePage})">[이전]</a>
 					
 					<c:forEach var="num" begin="${boardPage.startPage}" end="${boardPage.endPage}">
-						<a href="javascript:fn_pageMove(${num})">[${num}]</a>
+						<c:choose>
+						<c:when test="${num eq boardPage.pageNo}">
+							<a href="javascript:fn_pageMove(${num})" class="choice" style="font-weight: bold;">[${num}]</a>
+							
+						</c:when>
+						<c:otherwise>
+							<a href="javascript:fn_pageMove(${num})" >[${num}]</a>
+						
+						</c:otherwise>				
+						</c:choose>
 					</c:forEach>
-					
-					<a href="/Board_psy/boardList.do?page=${boardPage.nextPage}">[다음]</a>
-					<a href="/Board_psy/boardList.do?page=${boardPage.finalPage }">[끝]</a>
+						<a href="javascript:fn_pageMove(${boardPage.nextPage})">[다음]</a>
+<%-- 					<a href="/Board_psy/boardList.do?page=${boardPage.nextPage}">[다음]</a> --%>
+					<a href="javascript:fn_pageMove(${boardPage.totalPage})">[끝]</a>
 				</td>
 			</tr>
 
@@ -166,6 +185,8 @@
 </tr>
 
 </table>
+<input type="hidden" name="isHitCount" />
+<input type="hidden" name="boardNo" />
 </form>
 </body>
 <script type="text/javascript">
@@ -192,6 +213,16 @@
 		$("input[name='page']").val(page);
 		document.form.submit();
 	}
+	
+	function fn_gotoBoard(boardNo){
+		$("input[name='page']").val('${boardPage.pageNo}');
+		$("input[name='isHitCount']").val('true');
+		$("input[name='boardNo']").val(boardNo);
+		document.form.action  = "/Board_psy/read.do";
+		document.form.submit();
+	}	
+	
+	
 	var loginOpen = null;
 	function fn_loginOpen(){
 		if ( loginOpen == null || loginOpen.closed) {
