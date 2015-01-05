@@ -1,70 +1,126 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글쓰기</title>
-<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" type="text/css"
+	href="/Board_psy/css/board.css" media="all" />
 </head>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="js/object.js"></script>
+
 <script type="text/javascript">
-$(function(){
-	$('#addFile').click(function(){
-		var fileIndex = $('#fileTable tr').children().length;
-		$('#fileTable').append('<tr><td><input type="file" name="fileList['+fileIndex+']"></td></tr>');
-		
+	$(function() {
+		$('#addFile').click(function() {
+			var fileIndex = $('#fileTable tr').children().length;
+			$('#fileTable').append('<tr fileIndex="' + fileIndex + '"><td><input type="file" name="fileList" id="fileList">'
+				+ '<input class="fileDelete" type="button" value="파일삭제" ></td></tr>');
+			$('.fileDelete').unbind("click").bind("click",function() {
+				this.parentElement.parentElement.remove();
+			});
+
 	});
-	
+
 });
+
+	function showFileSize() {
+
+		// 	var fileArray = $("input[name='fileList']");
+		// 	return false;
+
+		var input;
+
+		if (!window.FileReader) {
+			alert("파일 API가 이 브라우저에서 지원되지 않습니다");
+			return;
+		}
+
+		input = document.getElementsByName('fileList');
+		var size = input.length-1;
+		//files라는 객체가 file 안에 존재함. files또한 리스트여서 그 중에 0번째를 가져오는 것. 
+		for(var i =0; i<input.length ; i++){
+			if (input[i].files[0].size == 0) {
+				
+				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
+				return false;
+			}
+		}
+		document.form.submit();
+
+	}
 </script>
 <body>
-<form action="/Board_psy/write.do" method="post" enctype="multipart/form-data">
+	<form action="/Board_psy/write.do" name="form" id="form" method="post"
+		enctype="multipart/form-data">
 
-<table>
-<tr><td style="text-align: right;" ><input type="submit" id="write" name="write" value="WRITE" ></td></tr>
+		<table>
+			<tr>
+				<td style="text-align: right;">
+				<input type="button" id="write" name="write" value="WRITE" onclick="showFileSize();"></td>
+			</tr>
 
-<tr><td style="padding: 0.5em;"></td></tr>
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
 
-<tr><td class="write_layout">
-<table border="1" style="border-collapse:collapse;" width="650px" height="30">
-	
-	<tr>
-		<td>작성자</td>
-		<td>${sessionScope.name}
-			</td>
-	</tr>
-	
-	<tr>
-		<td>제목</td>
-		<td><input type="text" id="title" name="title" size="80"></td>
-	</tr>
-	<tr>
-		<td>내용</td>
-		<td><textarea rows="10" cols="80" name="content" id="content"></textarea></td>
-	</tr>
-</table>
+			<tr>
+				<td class="write_layout">
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="30">
 
-</td></tr>
-<tr><td style="padding: 0.5em;"></td></tr>
-<tr><td style="padding: 0.5em; font-size: x-small;font-style: italic;color: gray;"> 파일은 최대 50M까지 업로드 가능합니다</td></tr>
-<tr><td>
-	<span style="color: gray;">첨부파일</span></td></tr>
-	
-<tr><td>	
-<table border="1" style="border-collapse:collapse;" width="650px" height="30" id="fileTable">
-	<tr>
-		<td><input type="file" id="file" name="fileList[0]"></td>
-	</tr>
-	</table><td></td>
-		<td><input type="button" id="addFile" name="addFile" value="파일추가"></td>
+						<tr>
+							<td>작성자</td>
+							<td>${sessionScope.name}</td>
+						</tr>
 
-	
-</table>	
+						<tr>
+							<td>제목</td>
+							<td><input type="text" id="title" name="title" size="80"></td>
+						</tr>
+						<tr>
+							<td>내용</td>
+							<td><textarea rows="10" cols="80" name="content"
+									id="content"></textarea></td>
+						</tr>
+					</table>
 
-	<input type="hidden" value="${sessionScope.email}" name="email" id="email ">
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+			<tr>
+				<td
+					style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
+					파일은 최대 50M까지 업로드 가능합니다</td>
+			</tr>
+			<tr>
+				<td><span style="color: gray;">첨부파일</span></td>
+			</tr>
 
-</form>
+			<tr>
+				<td>
+
+
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="30" id="fileTable">
+						<!-- 	<tr> -->
+						<!-- 		<td><input type="file" id="file" name="fileList[0]"></td> -->
+						<!-- 	</tr> -->
+					</table>
+				<td></td>
+
+
+				<td><input type="button" id="addFile" name="addFile"
+					value="파일추가"> <!-- 		<input type="button" id="fileDelete"  value="파일삭제"></td> -->
+		</table>
+
+		<input type="hidden" value="${sessionScope.email}" name="email"
+			id="email ">
+
+	</form>
 
 </body>
 </html>

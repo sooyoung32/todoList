@@ -47,33 +47,65 @@
 			location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 		});
 
-		$('#addFile').click(function(){
+		$('#addFile').click(function() {
 			var fileIndex = $('#fileTable tr').children().length;
-			$('#fileTable').append('<tr><td><input type="file" name="fileList['+fileIndex+']"></td></tr>');
+			$('#fileTable').append('<tr fileIndex="' + fileIndex + '"><td><input type="file" name="fileList" id="fileList">'
+				+ '<input class="fileDelete" type="button" value="파일삭제" ></td></tr>');
+			
+			$('.fileDelete').unbind("click").bind("click",function() {
+				this.parentElement.parentElement.remove();
+			});
+		});
+		$('.deleteFile').unbind("click").bind("click",function() {
+			var fileNo = $('#fileNo').val();
+			alert(fileNo+"-----파일번호");
+			this.parentElement.parentElement.remove();
+			$('#deletedFile').append('<tr><td><input type="hidden" name="deletedFileList" value="'+fileNo+'"></td></tr>');
 			
 		});
+		
+});
+	
+		
+	function showFileSize() {
 
-		$('.deleteFile').click(function() {
-				var fileNo = $(this).prev().val();
-				alert(fileNo +"//파일번호");
-				$(this).remove();
-				$('#deletedFile').append('<tr><td><input type="hidden" name="deletedFileList" value="'+fileNo+'"></td></tr>');
-		});
-	});
+		var input;
+
+		if (!window.FileReader) {
+			alert("파일 API가 이 브라우저에서 지원되지 않습니다");
+			return;
+		}
+
+		input = document.getElementsByName('fileList');
+		var size = input.length-1;
+		//files라는 객체가 file 안에 존재함. files또한 리스트여서 그 중에 0번째를 가져오는 것. 
+		for(var i =0; i<input.length ; i++){
+			if (input[i].files[0].size == 0) {
+				
+				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
+				return false;
+			}
+		}
+		document.form.submit();
+
+	}
+	
+	
+	
 </script>
 
 
 </head>
 <body>
 
-	<form action="/Board_psy/update.do" method="post"	enctype="multipart/form-data">
+	<form action="/Board_psy/update.do" id="form" name="form" method="post"enctype="multipart/form-data">
 <table>
 <tr>
 	<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판 목록</a></td>
 </tr>	
 
 <tr><td style="text-align: right"><a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}">
-						<input type="submit" id="modify2" name="modify" value="Modify" align="right"></a></td></tr>
+						<input type="submit" id="modify2" name="modify" value="Modify" align="right" ></a></td></tr>
 
 
 <tr><td style="padding: 0.5em;"></td></tr>
@@ -112,32 +144,32 @@
 				</c:if>
 			</tr>
 				<c:if test="${!empty board.files}">
-					<td>
 					<c:forEach items="${board.files}" var="file">
-						<c:if test="${file.flag==1}">
-						<li id="deleteTr">  ${file.originalName}
-						<input type="hidden" id="fileNo" value="${file.fileNo}">
-						<input type="button" class="deleteFile" value="삭제">
-						 </li></c:if>
+						<tr><td><c:if test="${file.flag==1}">
+							   ${file.originalName} -- ${file.fileNo}
+							<input type="hidden" id="fileNo" value="${file.fileNo}">
+							<input type="button" class="deleteFile" value="삭제">
+						</c:if></td></tr>
 					</c:forEach>
-						<table id="deletedFile">
+					<table id="deletedFile">
 					
-						</table>
-					</td>
+					</table>
 			</c:if>
-			</tr>
 		</table>
 </td></tr>
 
 <tr><td style="padding: 0.5em;"></td></tr>
+<tr><td style="padding: 0.5em;"></td></tr>
 
 <tr><td>				
 	<table border="1" style="border-collapse: collapse;" width="650px" height="500%" id="fileTable">
-		<tr>
-			<td><input type="file" id="file" name="fileList[0]"></td>
-		</tr>
+<!-- 		<tr> -->
+<!-- 			<td><input type="file" id="file" name="fileList[0]"></td> -->
+<!-- 		</tr> -->
 	</table>
+	<tr><td style="padding: 0.5em;"></td></tr>
 			<input type="button" id="addFile" name="addFile" value="파일추가">
+			<tr><td style="padding: 0.5em;"></td></tr>
 </td></tr>
 			
 			
@@ -166,9 +198,9 @@
 		</table>
 		
 </td></tr>
+</table>		
 		<input type="hidden" name="boardNo" id="boardNo" value="${board.boardNo}"> 
 		<input type="hidden" name="email"  id="email" value="${sessionScope.email}">
-</table>		
 	</form>
 </body>
 </html>
