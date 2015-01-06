@@ -27,9 +27,6 @@
 
 	function showFileSize() {
 
-		// 	var fileArray = $("input[name='fileList']");
-		// 	return false;
-
 		var input;
 
 		if (!window.FileReader) {
@@ -38,18 +35,65 @@
 		}
 
 		input = document.getElementsByName('fileList');
-		var size = input.length-1;
 		//files라는 객체가 file 안에 존재함. files또한 리스트여서 그 중에 0번째를 가져오는 것. 
 		for(var i =0; i<input.length ; i++){
-			if (input[i].files[0].size == 0) {
-				
-				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
+			
+			if(!input[i].files[0]){
+				alert("파일을 다시 확인해 주세요");
 				return false;
 			}
+			
+			if (input[i].files[0].size == 0) {
+				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
+// 				alert("파일을 다시 확인해 주세요");
+				return false;
+			}
+			
+			
 		}
-		document.form.submit();
-
+	
+			
 	}
+	
+	
+	$(function() {
+	    $('.remaining').each(function() {
+	        // count 정보 및 count 정보와 관련된 textarea/input 요소를 찾아내서 변수에 저장한다.
+	        var $count = $('.count', this);
+	        var $input = $(this).prev();
+	        // .text()가 문자열을 반환하기에 이 문자를 숫자로 만들기 위해 1을 곱한다.
+	        var maximumCount = $count.text() * 1;
+	        // update 함수는 keyup, paste, input 이벤트에서 호출한다.
+	        var update = function() {
+	            var before = $count.text() * 1;
+	            var now = maximumCount - $input.val().length;
+	            // 사용자가 입력한 값이 제한 값을 초과하는지를 검사한다.
+	            if (now < 0) {
+	                var str = $input.val();
+	                alert('글자 입력수가 초과하였습니다.');
+	                $input.val(str.substr(0, maximumCount));
+	                now = 0;
+	            }
+	            // 필요한 경우 DOM을 수정한다.
+	            if (before != now) {
+	                $count.text(now);
+	            }
+	        };
+	        // input, keyup, paste 이벤트와 update 함수를 바인드한다
+	        $input.bind('input keyup paste', function() {
+	            setTimeout(update, 0);
+	        });
+	        update();
+	    });
+	});
+	
+	function save(){
+		this.disabled=true;
+		this.value='Sending..';
+		this.form.submit;
+	}
+	
+	
 </script>
 <body>
 	<form action="/Board_psy/write.do" name="form" id="form" method="post"
@@ -58,7 +102,7 @@
 		<table>
 			<tr>
 				<td style="text-align: right;">
-				<input type="button" id="write" name="write" value="WRITE" onclick="showFileSize();"></td>
+				<input type="button" id="write" name="write" value="WRITE" onclick="showFileSize();this.disabled=true;this.value='Sending..'; this.form.submit"></td>
 			</tr>
 
 			<tr>
@@ -82,8 +126,15 @@
 						<tr>
 							<td>내용</td>
 							<td><textarea rows="10" cols="80" name="content"
-									id="content"></textarea></td>
+									id="content"></textarea>
+							<DIV class=remaining>남은 글자수: <SPAN class="count">4000</SPAN></DIV>
+									
+									</td>
 						</tr>
+						
+						
+						
+						
 					</table>
 
 				</td>
