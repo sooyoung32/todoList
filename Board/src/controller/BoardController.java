@@ -21,9 +21,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import service.BoardService;
+import service.CommentService;
 import service.FileService;
 import vo.Board;
 import vo.BoardPage;
+import vo.Comment;
 import vo.UploadFile;
 
 @Controller
@@ -33,6 +35,9 @@ public class BoardController {
 	private BoardService boardService;
 	@Autowired
 	private FileService fileServie;
+	@Autowired
+	private CommentService commentService;
+	
 
 	// 페이지 처리
 	public static final int NUM_OF_BOARD = 15;
@@ -162,6 +167,8 @@ public class BoardController {
 		}
 		
 		mv.addObject("board", board);
+		List<Comment> commentList = commentService.selectCommentListByBoardNo(boardNo);
+		mv.addObject("commentList", commentList);
 		return mv;
 	}
 
