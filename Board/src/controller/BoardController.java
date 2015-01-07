@@ -44,7 +44,8 @@ public class BoardController {
 
 	@RequestMapping(value = "boardList.do")
 	public ModelAndView getBoardPage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey, String searchValue) {
-		ModelAndView mv = new ModelAndView("board_list");
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("board_list");
 		
 		int totalBoardCount;
 		int startPage = 0;
@@ -60,13 +61,13 @@ public class BoardController {
 		
 		if(searchKey != null && searchValue != null){
 			totalBoardCount = boardService.searchBoardCount(searchKey, searchValue);
-			System.out.println("리스트 searchKey//"+searchKey +"//searchValue//"+searchValue);
+//			System.out.println("리스트 searchKey//"+searchKey +"//searchValue//"+searchValue);
 			mv.addObject("searchKey", searchKey);
 			mv.addObject("searchValue", searchValue);
 			
 		}else{
 			totalBoardCount = boardService.selectBoardCount();
-			System.out.println("검색X//"+totalBoardCount);
+//			System.out.println("검색X//"+totalBoardCount);
 		}
 		
 		System.out.println("totCnt =" + totalBoardCount);
@@ -81,16 +82,16 @@ public class BoardController {
 			//리스트 받기 
 			boardList = boardService.selectBoardList(startRow, endRow, searchKey, searchValue);
 			
-			System.out.println("startRow//"+startRow);
-			System.out.println("endRow//"+endRow);
-		
+//			System.out.println("startRow//"+startRow);
+//			System.out.println("endRow//"+endRow);
+
 			//총 페이지 : 총 게시글 / 10 
 			totalPage = totalBoardCount / NUM_OF_BOARD;
 			if (totalBoardCount % NUM_OF_BOARD != 0) {
 				totalPage++;
 			}
 			
-			System.out.println("totalPage//"+totalPage);
+//			System.out.println("totalPage//"+totalPage);
 
 			boolean isNowFirst = pageNo == 1 ? true : false; // 시작 페이지 (전체)
 			boolean isNowFinal = pageNo == totalPage ? true : false; // 마지막 페이지 (전체)
@@ -116,9 +117,6 @@ public class BoardController {
 				}
 				
 			}
-			
-			
-			
 
 		    if (isNowFirst) {
 		          prePage = 1; // 이전 페이지 번호
@@ -133,12 +131,13 @@ public class BoardController {
 		       nextPage = (((pageNo + 1) > totalPage ? totalPage : (pageNo + 1))); // 다음 페이지 번호
 		    }
 		        
-		    System.out.println("prePage//"+prePage);
-			System.out.println("nextPage//"+nextPage);
-			System.out.println("startPage//"+startPage);
-			System.out.println("endPage//"+endPage);
-			System.out.println("pageNo//"+pageNo);
-			System.out.println("-------------------------------------");
+//		    System.out.println("prePage//"+prePage);
+//			System.out.println("nextPage//"+nextPage);
+//			System.out.println("startPage//"+startPage);
+//			System.out.println("endPage//"+endPage);
+//			System.out.println("pageNo//"+pageNo);
+//			System.out.println("-------------------------------------");
+			System.out.println("보드리스트 화면입니다!!");
 			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage, prePage, nextPage, pageNo, boardList);
 			mv.addObject("boardPage", boardPage);
 			return mv;
@@ -291,22 +290,31 @@ public class BoardController {
 
 	@RequestMapping(value = "updateForm.do", method = RequestMethod.GET)
 	public ModelAndView updateForm(int boardNo) {
+		
 		Board board = boardService.selectBoardByBoardNo(boardNo, false);
 		ModelAndView mv = new ModelAndView("update_form");
 		mv.addObject("board", board);
 		return mv;
 	}
 
-	@RequestMapping(value = "update.do",  method = {RequestMethod.POST,RequestMethod.GET})	
+	@RequestMapping(value = "update.do", method = RequestMethod.POST)	
 	public String update(Board updatedBoard, int boardNo, UploadFile uploadFile, HttpServletRequest request,String[] deletedFileList) throws UnknownHostException{
 		
-	
+		System.out.println("-----------------------------------");
+		System.out.println("여긴 오나?");
+		System.out.println("업데이트된 게시판// " +updatedBoard);
+		System.out.println("새로 업로드 파일// " +uploadFile.getFileList());
+		System.out.println("httpRequest// " +request);
+		System.out.println("삭제된 파일 // "+ deletedFileList );
+		System.out.println("-----------------------------------");	
+		
 		if(deletedFileList != null ){	
 		//파일 삭제 수정
 			for(String s : deletedFileList){
 				int	fileNo = (int) Integer.parseInt(s); 
 				vo.File file = fileServie.selectFileByFileNo(fileNo);
-				int updqtedFile = fileServie.deleteFile(fileNo);
+				int updatedFile = fileServie.deleteFile(fileNo);
+				System.out.println("수정: 삭제된 파일 업데이트 : " +file + "//업데이트 수행 결과 : "+ updatedFile);
 			}
 		}
 		
@@ -317,6 +325,7 @@ public class BoardController {
 		for (vo.File file : files) {
 			fileServie.insertFile(file, boardNo);
 		}
+		
 		return "redirect:boardList.do?page=1";
 	}
 	
@@ -329,18 +338,18 @@ public class BoardController {
 		return mv; 
 	}
 	
-	@RequestMapping(value="delete.do", method = RequestMethod.POST)
-	public String delete(int boardNo, String password) throws UnknownHostException{
+	@RequestMapping(value="delete.do")
+	public String delete(int boardNo) throws UnknownHostException{
 		Board updatedBoard = boardService.selectBoardByBoardNo(boardNo, false);
 		System.out.println("원래 비밀번호있는 사용자 비번//"+updatedBoard);
-		if(updatedBoard.getWriter().getPassword().equals(password)){
+//		if(updatedBoard.getWriter().getPassword().equals(password)){
 //			System.out.println("사용자비번//"+updatedBoard.getWriter().getPassword());
 //			System.out.println("입력한비번//"+password);
 			boardService.deleteBoard(updatedBoard, boardNo);
 			return "redirect:boardList.do?page=1";
-		}else{
-			return "delete_fail";
-		}
+//		}else{
+//			return "delete_fail";
+//		}
 	}
 	
 }

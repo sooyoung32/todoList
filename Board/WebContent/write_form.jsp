@@ -37,21 +37,16 @@
 		input = document.getElementsByName('fileList');
 		//files라는 객체가 file 안에 존재함. files또한 리스트여서 그 중에 0번째를 가져오는 것. 
 		for(var i =0; i<input.length ; i++){
-			
 			if(!input[i].files[0]){
 				alert("파일을 다시 확인해 주세요");
 				return false;
 			}
-			
 			if (input[i].files[0].size == 0) {
 				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
-// 				alert("파일을 다시 확인해 주세요");
 				return false;
 			}
-			
-			
 		}
-	
+		return true;
 			
 	}
 	
@@ -88,21 +83,34 @@
 	});
 	
 	function save(){
-		this.disabled=true;
-		this.value='Sending..';
-		this.form.submit;
+		
+		if($('input[name*=title]').val()==""){
+			alert("제목을 입력해 주세요");
+			return false;
+		}
+		
+		if($('textarea[name*=content]').val()==""){
+			alert("내용을 입력해 주세요");
+			return false;
+		}
+		
+		if(showFileSize()){
+			$('#write').attr('disabled', true);
+			$('#write').val('Sending..');
+			$('#form').submit();
+		}
 	}
 	
 	
 </script>
 <body>
-	<form action="/Board_psy/write.do" name="form" id="form" method="post"
-		enctype="multipart/form-data">
+	<form action="/Board_psy/write.do" name="form" id="form" method="post" enctype="multipart/form-data">
 
 		<table>
 			<tr>
 				<td style="text-align: right;">
-				<input type="button" id="write" name="write" value="WRITE" onclick="showFileSize();this.disabled=true;this.value='Sending..'; this.form.submit"></td>
+				<input type="button" id="write" name="write" value="WRITE"  onclick="save();"></td>
+<!-- 					showFileSize();this.disabled=true;this.value='Sending..'; this.form.submit -->
 			</tr>
 
 			<tr>
@@ -111,8 +119,7 @@
 
 			<tr>
 				<td class="write_layout">
-					<table border="1" style="border-collapse: collapse;" width="650px"
-						height="30">
+					<table border="1" style="border-collapse: collapse;" width="650px" height="30">
 
 						<tr>
 							<td>작성자</td>
@@ -125,51 +132,46 @@
 						</tr>
 						<tr>
 							<td>내용</td>
-							<td><textarea rows="10" cols="80" name="content"
-									id="content"></textarea>
-							<DIV class=remaining>남은 글자수: <SPAN class="count">4000</SPAN></DIV>
-									
-									</td>
+							<td><textarea rows="10" cols="80" name="content" id="content"></textarea>
+								<DIV class=remaining>
+									남은 글자수: <SPAN class="count">4000</SPAN>
+								</DIV></td>
 						</tr>
-						
-						
-						
-						
 					</table>
 
 				</td>
 			</tr>
+			
 			<tr>
 				<td style="padding: 0.5em;"></td>
 			</tr>
+			
 			<tr>
-				<td
-					style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
+				<td	style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
 					파일은 최대 50M까지 업로드 가능합니다</td>
 			</tr>
+			
 			<tr>
 				<td><span style="color: gray;">첨부파일</span></td>
 			</tr>
 
-			<tr>
-				<td>
-
-
-					<table border="1" style="border-collapse: collapse;" width="650px"
-						height="30" id="fileTable">
+			<tr><td>
+					<table border="1" style="border-collapse: collapse;" width="650px"	height="30" id="fileTable">
 						<!-- 	<tr> -->
 						<!-- 		<td><input type="file" id="file" name="fileList[0]"></td> -->
 						<!-- 	</tr> -->
-					</table>
-				<td></td>
+					</table> </td></tr>
 
-
-				<td><input type="button" id="addFile" name="addFile"
-					value="파일추가"> <!-- 		<input type="button" id="fileDelete"  value="파일삭제"></td> -->
+				<tr><td><input type="button" id="addFile" name="addFile"value="파일추가">
+				
+				
+				<!-- 		<input type="button" id="fileDelete"  value="파일삭제"></td> -->
+		
+			</td></tr>
+			
 		</table>
 
-		<input type="hidden" value="${sessionScope.email}" name="email"
-			id="email ">
+		<input type="hidden" value="${sessionScope.email}" name="email" 	id="email " >
 
 	</form>
 

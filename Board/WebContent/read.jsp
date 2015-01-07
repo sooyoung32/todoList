@@ -13,19 +13,29 @@
 <script type="text/javascript">
 	$(function() {
 		$('#comment').click(function() {
+			if($('#commentText').val() == ""){
+				alert("덧글을 작성해주세요!");
+				return false;
+			}
+			
+			
 			if ($('#commentText').val() != null) {
 				var data2 = {
 					boardNo : $('#boardNo').val(),
 					email : $('#email').val(),
-					content : $('#commentText').val()
+					content : $('#commentText').val(),
+					ajaxYn: 'Y',
 				};
-
+				
 				$.ajax({
 					type : "post",
 					url : "/Board_psy/insertComment.do",
 					data : data2,
-					success : function(result) {
-						if (result == "Y") {
+					success : function(result ,response) {
+						if(result == "E"){
+							alert("먼저 로그인을 해주세요"); 
+							location.replace("/Board_psy/boardList.do");
+						}else if (result == "Y") {
 							alert("댓글이 입력되었습니다");
 							location.reload(true);
 						} else if (result == "N") {
@@ -47,6 +57,21 @@
 		$('#reply').click(function() {
 			location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 		});
+		
+		
+		$('#delete').click(function(){
+			
+			var $result =confirm("삭제 하시겠습니까?"); 
+			
+			if($result){
+				location.replace("/Board_psy/delete.do?boardNo=${board.boardNo}");
+			}else{
+				
+			}
+			
+		});
+		
+		
 
 		$('.cDelete').click(function() {
 			alert($(this).prev().val() + "//삭제 코멘트번호");
@@ -74,19 +99,34 @@
 		});
 
 		$('.cModify').click(function() {
+			$(this).hide();
 			var cContent = $(this).next().val();
 			var commentNo = $(this).prev().prev().val();
 			alert(cContent + "//코멘트내용//  " + commentNo + "  //코멘트번호");
-
+			
+			var $test = $(this).prev().prev().prev();
+			$test.text("");
+			
+			
 			var $here = $("<div/>");
 			$here.attr("id", "here");
 
 			var $textarea = $("<textarea rows='3' cols='88'/>");
 			$textarea.val(cContent);
-
-			var $button = $('<button/>');
-			$button.text('코멘트');
-
+			
+			var $cancleBtn = $('<button  style="font-weight: bold;"/>');
+			$cancleBtn.text('수정취소');
+			
+			$cancleBtn.click(function(){
+				$test.text(cContent);
+				$here.remove();
+				window.location.href=window.location.href;
+			});
+			
+			
+			var $button = $('<button  style="font-weight: bold; vertical-align: top;"/>');
+			$button.text('덧글수정');
+			
 			$button.click(function() {
 				if ($textarea.val() != null) {
 					alert("수정 코멘트번호--" + commentNo+"수정 content//"+$textarea.val());
@@ -102,8 +142,9 @@
 						success : function(result) {
 							if (result == "Y") {
 								alert("덧글이 수정되었습니다");
-								window.location.reload(true);
 // 								window.location.reload(true);
+// 								history.go(this);
+								window.location.href=window.location.href;
 
 							} else if (result == "N") {
 								alert("덧글 입력시 오류가 발생하였습니다");
@@ -122,9 +163,10 @@
 				}
 
 			});
-
+	
 			$here.append($textarea);
 			$here.append($button);
+			$here.append($cancleBtn);
 
 			$(this).parent().append($here);
 
@@ -176,10 +218,11 @@
 	<form action="/Board_psy/boardList.do" id="form" name="form"
 		method="post">
 		<input type="hidden" name="page">
+		<input type="hidden" name="boardNo" value="${board.boardNo}"/>
 		<table>
 			<tr>
 				<td class="back_layout"><a
-					href="javascript:fn_pageMove(${page})">◀게시판 목록</a> ${page}</td>
+					href="javascript:fn_pageMove(${page})">◀게시판 목록</a></td>
 			</tr>
 
 			<tr>
@@ -193,9 +236,10 @@
 									<a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}"><input
 										type="button" id="modify" name="modify" value="수정"
 										align="right"></a>
-									<a href="/Board_psy/deleteForm.do?boardNo=${board.boardNo}"><input
-										type="button" id="delete" name="delete" value="삭제"
-										align="right"></a>
+<%-- 									<a href="/Board_psy/deleteForm.do?boardNo=${board.boardNo}"> --%>
+									<input type="button" id="delete" name="delete" value="삭제"
+										align="right">
+<!-- 										</a> -->
 								</c:if>
 							</td>
 						</tr>
@@ -246,7 +290,7 @@
 										<c:if test="${file.flag ==1 && !empty sessionScope.email}">
 											<tr>
 												<td id="file_td2"><a
-													href="/Board_psy/download.do?savedPath=${file.savedPath}">${file.originalName}</a>
+													href="/Board_psy/download.do?savedPath=${file.savedPath}"> ▶ &nbsp; ${file.originalName}</a>
 												<td>
 											</tr>
 										</c:if>
@@ -266,7 +310,7 @@
 
 			<c:if test="${board.flag==0}">
 
-				<span id="file_td2">첨부파일이 없습니다</span>
+				<tr><td><span id="file_td2">첨부파일이 없습니다</span></td></tr>
 
 			</c:if>
 
@@ -298,8 +342,7 @@
 
 			<tr>
 				<td class="comment_layout">
-					<table border="1" style="border-collapse: collapse;" width="800px"
-						height="500%">
+					<table border="1" style="border-collapse: collapse;" width="800px"	height="500%">
 
 
 						<tr>
@@ -320,10 +363,14 @@
 				<td style="padding: 0.5em;"></td>
 			</tr>
 
+			
+			
+			
 			<tr>
 				<td class="comment_list">
-					<table border="1" style="border-collapse: collapse;" width="800px"
-						height="500%">
+					
+					<div style="width: 100%; height:350px; overflow:scroll;" >
+					<table border="1" style="border-collapse: collapse;" width="800px">
 						<c:choose>
 							<c:when test="${empty board.comments}">
 								<tr>
@@ -331,14 +378,14 @@
 										없습니다.</td>
 								</tr>
 							</c:when>
-
+					
 							<c:when test="${!empty board.comments}">
 								<c:forEach items="${board.comments }" var="comment">
 									<c:if test="${comment.flag==1 }">
 										<tr>
 											<td id="comment_td">${comment.writer.name}</td>
-											<td id="comment_td2"><div id="content">${comment.content}
-													: ${comment.commentNo}</div> <c:if
+											<td id="comment_td2" class="comment_td2"><div id="content" class="content">${comment.content}
+													</div> <c:if
 													test="${sessionScope.name eq comment.writer.name}">
 													<input type="hidden" name="commentNo"
 														value="${comment.commentNo}" />
@@ -353,11 +400,17 @@
 									</c:if>
 								</c:forEach>
 							</c:when>
-
 						</c:choose>
 					</table>
+						</div>
+					
+					
 				</td>
 			</tr>
+
+
+
+
 
 		</table>
 		<input type="hidden" name="boardNo" id="boardNo"
@@ -366,7 +419,8 @@
 			type="hidden" name="searchValue" id="searchValue"
 			value="${searchValue}"> <input type="hidden" name="searchKey"
 			id="searchKey" value="${searchKey}">
-
+	
+	
 	</form>
 </body>
 </html>

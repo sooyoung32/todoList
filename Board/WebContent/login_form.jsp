@@ -25,7 +25,7 @@
 						msg = "등록되지 않은 ID입니다";
 						alert(msg);
 					} else if (result == 'noPW') {
-						msg = "비밀번호가 올바르지 않습니다";
+						msg = "비밀번호가 올바르지 s않습니다";
 						alert(msg);
 					} else if(result == 'success'){
 						// $('#login').submit();
@@ -48,7 +48,7 @@
 <body>
 <!-- 	<form action="/Board_psy/loginSuccess.do" method="post"> -->
 		<table border="1" style="border-collapse: collapse;">
-			<tr bgcolor="#F6CEE3"">
+			<tr bgcolor="#F6CEE3">
 				<td>이메일</td>
 				<td><input type="text" name="email" id="email"></td>
 			</tr>
