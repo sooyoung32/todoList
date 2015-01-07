@@ -37,4 +37,14 @@
 		<property name="order" value="1" />
 	</bean>
 	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/writeForm.do"/>
+			<mvc:mapping path="/replyForm.do"/>
+			<mvc:mapping path="/download.do"/>
+			<mvc:mapping path="/insertComment.do"/>
+			<bean class="intercepter.LoginIntercepter"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
 </beans>

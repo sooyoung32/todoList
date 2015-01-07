@@ -100,13 +100,16 @@
 					<td align="center">${board.boardNo}
 					<td align="center">${board.writer.name}</td>
 					
-					<td id="boardList_title"> 페이지번호 ${boardPage.pageNo} ${searchValue}
+					<td id="boardList_title">
 					<c:if test="${board.indent == 0 && board.flag==1}">
 						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${board.title}</a>
 					</c:if>
 					
 					<c:if test="${board.indent == 0 && board.flag==0}">
-						<span style="font-style: italic; color: gray;">삭제된 글 입니다</span>
+						<span style="font-style: italic; color: gray; font-size: x-small;">
+						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">삭제된 글입니다</a>
+						
+						</span>
 					</c:if>
 					<c:if test="${board.indent > 0 && board.flag ==1}"> 
 						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
@@ -115,17 +118,25 @@
 					
 					<c:if test="${board.indent > 0 && board.flag ==0}">
 						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<span style="font-style: italic; color: gray;">ㄴ&nbsp;삭제된 글입니다 </span>
+							<span style="font-style: italic; color: gray; font-size: x-small;">
+							<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">
+							ㄴ&nbsp;삭제된 글입니다</a> </span>
 						
 					</c:if>
 					</td>
-					<td align="center" width="100px">	${fn:length(board.files)}
+					<td align="center" width="100px">
+					
 					<c:choose>
 						<c:when test="${!empty board.files }">
 							<c:forEach items="${board.files}" var="file">
+								<c:if test="${!empty sessionScope.email}">
+									<a href="/Board_psy/download.do?savedPath=${file.savedPath}">
+									<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a> 
+								</c:if>
+								<c:if test="${empty sessionScope.email}">
+									<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px">
+								</c:if>
 								
-							<a href="/Board_psy/download.do?savedPath=${file.savedPath}">
-								<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a> 
 							</c:forEach>
 						</c:when>
 					
@@ -133,6 +144,7 @@
 							${fn:length(board.files)}
 						</c:otherwise>
 					</c:choose>
+					
 					</td>
 					<td align="center">${fn:length(board.comments)}</td>
 					<td align="center">${board.hitCount}</td>
@@ -141,9 +153,8 @@
 			</c:forEach>
 			<tr>
 				<td colspan="6" align="center"> 
-					<a href="javascript:fn_pageMove(${boardPage.startPage})">[처음]</a>
-<%-- 					<a href="/Board_psy/boardList.do?page=${boardPage.prePage}">[이전]</a> --%>
-					<a href="javascript:fn_pageMove(${boardPage.prePage})">[이전]</a>
+					<a href="javascript:fn_pageMove(1)"> &nbsp;<<&nbsp; </a>
+					<a href="javascript:fn_pageMove(${boardPage.prePage})"> &nbsp; < &nbsp;</a>
 					
 					<c:forEach var="num" begin="${boardPage.startPage}" end="${boardPage.endPage}">
 						<c:choose>
@@ -157,9 +168,8 @@
 						</c:otherwise>				
 						</c:choose>
 					</c:forEach>
-						<a href="javascript:fn_pageMove(${boardPage.nextPage})">[다음]</a>
-<%-- 					<a href="/Board_psy/boardList.do?page=${boardPage.nextPage}">[다음]</a> --%>
-					<a href="javascript:fn_pageMove(${boardPage.totalPage})">[끝]</a>
+						<a href="javascript:fn_pageMove(${boardPage.nextPage})">&nbsp;>&nbsp;</a>
+					<a href="javascript:fn_pageMove(${boardPage.totalPage})">&nbsp;>>&nbsp;</a>
 				</td>
 			</tr>
 
@@ -173,10 +183,10 @@
 <tr>
 	<td class="footer_layout">	
 	<input type="hidden" value="${sessionScope.email }" name="email">
-	<c:if test="${!empty sessionScope.email}">
+<%-- 	<c:if test="${!empty sessionScope.email}"> --%>
 		<input type="button" id="writeForm" name="writeForm" value="Write"
 			style="color: navy;">
-	</c:if>
+<%-- 	</c:if> --%>
 	<c:if test="${empty sessionScope.email }">
 		로그인 후 게시글을 작성하세요!
 	</c:if>

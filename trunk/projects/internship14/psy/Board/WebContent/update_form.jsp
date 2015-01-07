@@ -11,41 +11,6 @@
 	src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
 	$(function() {
-		$('#comment').click(function() {
-			if ($('#commentText').val() != null) {
-				var data2 = {
-					boardNo : $('#boardNo').val(),
-					email : $('#email').val(),
-					content : $('#commentText').val()
-				};
-
-				$.ajax({
-					type : "post",
-					url : "/Board_psy/insertComment.do",
-					data : data2,
-					success : function(result) {
-						if (result == "Y") {
-							alert("댓글이 입력되었습니다");
-							location.reload(true);
-						} else if (result == "N") {
-							alert("댓글 입력시 오류가 발생하였습니다");
-							location.reload(true);
-						}
-					},
-					error : function() {
-						location.reload(true);
-						alert("코멘트 ajax 에러");
-					}
-
-				});
-			} else {
-				alert("내용을 입력해주세요");
-			}
-		});
-
-		$('#reply').click(function() {
-			location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
-		});
 
 		$('#addFile').click(function() {
 			var fileIndex = $('#fileTable tr').children().length;
@@ -56,13 +21,26 @@
 				this.parentElement.parentElement.remove();
 			});
 		});
+	
 		$('.deleteFile').unbind("click").bind("click",function() {
-			var fileNo = $('#fileNo').val();
+			var fileNo = $(this).prev().val();
 			alert(fileNo+"-----파일번호");
 			this.parentElement.parentElement.remove();
 			$('#deletedFile').append('<tr><td><input type="hidden" name="deletedFileList" value="'+fileNo+'"></td></tr>');
 			
 		});
+		
+// 		$('#modify2').click(function(){
+// 			if(showFileSize()){
+// 				alert("버튼 클릭?");
+// 				$('#modify2').attr('disabled', true);
+// 				$('#modify2').val('Sending..');
+// 				$('#form').submit();
+// // 				$('#form').attr("onsubmit", "return false").submit(); 
+// 				alert("서브밋?");
+// 			}
+// 		});
+		
 		
 });
 	
@@ -73,24 +51,33 @@
 
 		if (!window.FileReader) {
 			alert("파일 API가 이 브라우저에서 지원되지 않습니다");
-			return;
+			return false;
 		}
 
 		input = document.getElementsByName('fileList');
-		var size = input.length-1;
 		//files라는 객체가 file 안에 존재함. files또한 리스트여서 그 중에 0번째를 가져오는 것. 
 		for(var i =0; i<input.length ; i++){
+			
+			if(!input[i].files[0]){
+				alert("파일을 다시 확인해 주세요");
+				return false;
+			}
+			
 			if (input[i].files[0].size == 0) {
-				
 				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
 				return false;
 			}
 		}
-		document.form.submit();
-
+		return true;
+		$('#form').submit();
 	}
 	
-	
+// 	function save(){
+// 		if(showFileSize()){
+// // 			alert("버튼 클릭?");
+// 			$('#form').submit();
+// 			return true;
+// 	}
 	
 </script>
 
@@ -98,14 +85,14 @@
 </head>
 <body>
 
-	<form action="/Board_psy/update.do" id="form" name="form" method="post"enctype="multipart/form-data">
+	<form action="/Board_psy/update.do" id="form" name="form" onsubmit="return showFileSize();" method="post"  enctype="multipart/form-data">
 <table>
 <tr>
 	<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판 목록</a></td>
 </tr>	
 
 <tr><td style="text-align: right"><a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}">
-						<input type="submit" id="modify2" name="modify" value="Modify" align="right" ></a></td></tr>
+						<input type="submit" id="modify2" name="modify" value="Modify" align="right" onclick="save();"></a></td></tr>
 
 
 <tr><td style="padding: 0.5em;"></td></tr>
@@ -138,11 +125,13 @@
 			<tr>
 				<td id="read_td" >첨부파일</td>
 			</tr>
+		
 			<tr>
 				<c:if test="${empty board.files}">
-					<td>첨부파일이 없습니다<td>
+					<td>첨부파일이 없습니다</td>
 				</c:if>
 			</tr>
+				
 				<c:if test="${!empty board.files}">
 					<c:forEach items="${board.files}" var="file">
 						<tr><td><c:if test="${file.flag==1}">
@@ -151,14 +140,16 @@
 							<input type="button" class="deleteFile" value="삭제">
 						</c:if></td></tr>
 					</c:forEach>
+					
 					<table id="deletedFile">
 					
 					</table>
-			</c:if>
+					
+				</c:if>
+				
 		</table>
 </td></tr>
 
-<tr><td style="padding: 0.5em;"></td></tr>
 <tr><td style="padding: 0.5em;"></td></tr>
 
 <tr><td>				
@@ -167,10 +158,11 @@
 <!-- 			<td><input type="file" id="file" name="fileList[0]"></td> -->
 <!-- 		</tr> -->
 	</table>
-	<tr><td style="padding: 0.5em;"></td></tr>
 			<input type="button" id="addFile" name="addFile" value="파일추가">
-			<tr><td style="padding: 0.5em;"></td></tr>
+	
 </td></tr>
+	
+
 			
 			
 <tr><td style="padding: 0.5em;"></td></tr>
