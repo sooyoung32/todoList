@@ -34,8 +34,6 @@ public class CommentController {
 		String isAjax = (String) request.getAttribute("result");
 		
 		System.out.println("에이젝스 //"+isAjax);
-//		boolean isAjax = "Y".equals(request.getParameter("ajaxYn"));
-//		
 		if(("E").equals(isAjax)){
 			result = "E";
 			return result;
@@ -57,7 +55,14 @@ public class CommentController {
 	
 	@RequestMapping(value = "deleteComment.do")
 	@ResponseBody
-	public String deleteComment(int commentNo) throws UnknownHostException{
+	public String deleteComment(int commentNo,HttpServletRequest request) throws UnknownHostException{
+		
+		String isAjax = (String) request.getAttribute("result");
+		System.out.println("에이젝스 //"+isAjax);
+		if(("E").equals(isAjax)){
+			return "E";
+		}
+		
 		System.out.println("삭제 코멘트번호//"+commentNo);
 		if (commentService.deleteComment(commentNo)==1) {
 			return "Y";
@@ -69,7 +74,14 @@ public class CommentController {
 	
 	@RequestMapping(value = "updateComment.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateComment(int commentNo, String content) throws UnknownHostException{
+	public String updateComment(int commentNo, String content, HttpServletRequest request) throws UnknownHostException{
+		
+		String isAjax = (String) request.getAttribute("result");
+		System.out.println("에이젝스 //"+isAjax);
+		if(("E").equals(isAjax)){
+			return "E";
+		}
+		
 		System.out.println("코멘트 번호//"+ commentNo+" ----- 코멘트 수정 내용 //"+ content);
 		if(commentService.updateComment(content, commentNo)==1){
 			return "Y";

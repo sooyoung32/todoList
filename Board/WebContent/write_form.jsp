@@ -22,6 +22,8 @@
 			});
 
 	});
+		
+		
 
 });
 
@@ -82,24 +84,67 @@
 	    });
 	});
 	
+	
+	
+	
+	
 	function save(){
 		
-		if($('input[name*=title]').val()==""){
-			alert("제목을 입력해 주세요");
-			return false;
-		}
+		$.ajax({
+			type : "post",
+			url : "/Board_psy/ajaxLoginCheck.do",
+			data : {ajaxYn: "Y"},
+			success : function(result) {
+				if(result == "E"){
+					alert("먼저 로그인을 해주세요"); 
+//						location.replace("/Board_psy/boardList.do");
+					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+				
+				}else if (result == "Y") {
+					
+					if($('input[name*=title]').val()==""){
+						alert("제목을 입력해 주세요");
+						return false;
+					}
+					
+					if($('textarea[name*=content]').val()==""){
+						alert("내용을 입력해 주세요");
+						return false;
+					}
+					
+					if(showFileSize()){
+						$('#write').attr('disabled', true);
+						$('#write').val('Sending..');
+						$('#form').submit();
+					}
+				}
+			},
+			error : function() {
+				window.location.reload(true);
+				alert("writeCheck ajax 에러");
+			}
+
+		});
 		
-		if($('textarea[name*=content]').val()==""){
-			alert("내용을 입력해 주세요");
-			return false;
-		}
 		
-		if(showFileSize()){
-			$('#write').attr('disabled', true);
-			$('#write').val('Sending..');
-			$('#form').submit();
-		}
+// 		if($('input[name*=title]').val()==""){
+// 			alert("제목을 입력해 주세요");
+// 			return false;
+// 		}
+		
+// 		if($('textarea[name*=content]').val()==""){
+// 			alert("내용을 입력해 주세요");
+// 			return false;
+// 		}
+		
+// 		if(showFileSize()){
+// 			$('#write').attr('disabled', true);
+// 			$('#write').val('Sending..');
+// 			$('#form').submit();
+// 		}
 	}
+	
+	
 	
 	
 </script>
