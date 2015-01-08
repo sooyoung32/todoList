@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,10 +30,15 @@ public class MemberController {
 	//로그인
 	//로그인화면
 	@RequestMapping(value="loginForm.do")
-	public String loginForm() {
-		return "login_form";
+	public ModelAndView loginForm(HttpServletRequest request) {
+		
+		ModelAndView mv = new ModelAndView("login_form");
+		String preAddr = request.getHeader("REFERER");
+		System.out.println("[로그인폼컨트롤러 이전주소] : "+preAddr);
+		mv.addObject("preAddr", preAddr);
+		return mv;
 	}
-	
+		
 	//회원 여부 확인 Ajax
 	@RequestMapping(value="login.do",method=RequestMethod.POST)
 	public @ResponseBody String login(Member member,HttpServletRequest request){
@@ -40,7 +46,14 @@ public class MemberController {
 		try {
 			result = service.loginCheck(member.getEmail(), member.getPassword());
 			
-			if(result=="success"){
+			
+			String preAddr = request.getParameter("preAddr");
+			boolean preAddrCheck = "http://localhost:9088/Board_psy/boardList.do?page=1".equals(preAddr);
+			System.out.println("[에이젝스에서 넘어온 이전주소] : "+ preAddr);
+			System.out.println("[이전주소가 boardList.do에서 온거 확인] : "+preAddrCheck);
+			
+			
+			if(result=="success" && preAddrCheck){
 				HttpSession session = request.getSession(true);
 				Member member2 = service.selectMember(member.getEmail());
 				session.setAttribute("email", member2.getEmail());
@@ -48,12 +61,21 @@ public class MemberController {
 				System.out.println(session.getAttribute("email") +"email");
 				System.out.println(session.getAttribute("name") +"name");
 				System.out.println("로그인 세션 확보!");
+				return "success";
+			}else if (result=="success" && !preAddrCheck){
+				HttpSession session = request.getSession(true);
+				Member member2 = service.selectMember(member.getEmail());
+				session.setAttribute("email", member2.getEmail());
+				session.setAttribute("name", member2.getName());
+				System.out.println(session.getAttribute("email") +"email");
+				System.out.println(session.getAttribute("name") +"name");
+				System.out.println("로그인 세션 확보!");
+				return "success2";
 			}
-			System.out.println("login.do/result: "+result);
 		} catch (UnknownHostException e) {
 			System.out.println("컨트롤러 loginCheck 에러 : "+e);
 		}
-		return result; 
+		return ""; 
 	}
 	
 	@RequestMapping(value="logout.do", method=RequestMethod.GET)

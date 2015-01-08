@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -173,11 +174,31 @@ public class BoardController {
 
 	
 	
-	@RequestMapping(value = "writeForm.do")
-	public String writeForm() {
-		return "write_form";
+	@RequestMapping(value = "ajaxLoginCheck.do")
+	@ResponseBody
+	public String ajaxLoginCheck(HttpServletRequest request) {
+		
+		String isAjax = (String) request.getAttribute("result");
+		System.out.println("[ajaxLoginCheck] "+ "isAjax // "+ isAjax);
+		String result = null;
+		if("E".equals(isAjax)){
+			result = "E";
+			request.setAttribute("comment", "comment");
+			System.out.println("[ajaxLoginCheck result ] "+result);
+			return result;
+		}else{
+			result = "Y";
+			System.out.println("[ajaxLoginCheck result ] "+result);
+			return result;
+		}
 	}
 
+	@RequestMapping(value = "writeForm.do")
+	public String writeForm(){
+		System.out.println("[writeForm 가는길]");
+		return "write_form";
+	}
+	
 	
 	//글쓰기 파일업로드실행
 	@RequestMapping(value = "write.do", method = RequestMethod.POST)

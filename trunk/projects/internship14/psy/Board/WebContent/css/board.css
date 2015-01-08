@@ -4,7 +4,7 @@ body{
 	font-family:나눔고딕;
 }
 
-table{
+table {
 	border-collapse: collapse;
 	
 }
@@ -27,7 +27,7 @@ table tr td.user_layout{
 	font-weight: normal;
 	color: #08088A;
 	padding-bottom: 0.5em;
-	padding-right: 2em;
+	padding-right: 15em;
 	padding-top: 0.5em;
 }
 
@@ -89,7 +89,7 @@ table tr td.totalBoard_layout{
 
 table tr td.search_layout{
 	padding-top: 1em;
-	padding-right: 2em;
+	padding-right: 15em;
 	float: right;
 		
 }
@@ -120,6 +120,8 @@ table tr td.search_layout #search{
 
 
 table tr td.list_layout{
+/* 	 width : 1024px; */
+	 padding-left: 2em;
 	 
 }
 

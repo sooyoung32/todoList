@@ -16,8 +16,8 @@
 
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 	 <!-- one of the properties available; the maximum file size in bytes --> 
-	 	<property name="maxUploadSize"> <value>52428800</value> </property>
-		<property name="defaultEncoding"> <value>UTF-8</value> </property> 
+	 	<property name="maxUploadSize" value="5242880"/> 
+		<property name="defaultEncoding" value="UTF-8"/>
 	</bean>
 
     <bean id="simpleMappingExceptionResolver"
@@ -27,6 +27,7 @@
                 <entry key="MaxUploadSizeExceededException" value="error_fileUpload" />
             </map>
         </property>
+        <property name="order" value="2" />
     </bean>
 
 	<bean
@@ -40,8 +41,13 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/writeForm.do"/>
+			<mvc:mapping path="/ajaxLoginCheck.do"/>
+			<mvc:mapping path="/write.do"/>
 			<mvc:mapping path="/replyForm.do"/>
+			<mvc:mapping path="/reply.do"/>
 			<mvc:mapping path="/download.do"/>
+			<mvc:mapping path="/updateComment.do"/>
+			<mvc:mapping path="/deleteComment.do"/>
 			<mvc:mapping path="/insertComment.do"/>
 			<bean class="intercepter.LoginIntercepter"/>
 		</mvc:interceptor>

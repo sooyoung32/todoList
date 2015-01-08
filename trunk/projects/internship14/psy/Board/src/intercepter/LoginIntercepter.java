@@ -14,17 +14,9 @@ public class LoginIntercepter extends HandlerInterceptorAdapter {
 
 		try {
 			boolean isAjax = "Y".equals(request.getParameter("ajaxYn"));
-//			System.out.println("Ajax??  :" + isAjax);
-//			request.setAttribute("result", "E" );
+			System.out.println("[인터셉터 isAjax 값 Y 확인]:"+isAjax);
 			HttpSession session = request.getSession();
 			
-			// if (isAjax && session.getAttribute("email") == null) {
-			// System.out.println("에이젝스 + 세션 없다 ");
-			// response.sendRedirect("/Board_psy/insertComment2.do");
-			// System.out.println("여기");
-			// return false;
-			// }
-
 			if (!isAjax && session.getAttribute("email") == null) {
 				System.out.println("에이젝스 아니고 세션 없다");
 				response.sendRedirect("/Board_psy/boardList.do");

@@ -13,7 +13,8 @@
 
 			var data2 = {
 				email : $('#email').val(),
-				password : $('#password').val()
+				password : $('#password').val(),
+				preAddr : $('#uri').val()
 			};
 			$.ajax({
 				type : "post",
@@ -31,6 +32,10 @@
 						// $('#login').submit();
 						alert("정상적으로 로그인되었습니다.");
 						window.opener.location.reload();
+						window.close();
+					} else if(result == 'success2'){
+						alert("정상적으로 로그인되었습니다.");
+// 						window.opener.location.reload();
 						window.close();
 					}
 				},
@@ -67,5 +72,7 @@
 		</table>
 
 <!-- 	</forSm> -->
+
+<input type="hidden" id="uri" value="${preAddr}"> 
 </body>
 </html>

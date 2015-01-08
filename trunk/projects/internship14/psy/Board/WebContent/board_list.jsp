@@ -76,8 +76,7 @@
 <tr>
 	<td class="list_layout">
 	
-	<table border="1" style="border-collapse: collapse;" width="1024px"
-		height="500%" class="boardList">
+	<table border="1"   width : 1024px; style="border-collapse: collapse;" class="boardList">
 		<c:if test="${empty boardPage.boardList }">
 			<tr>
 				<td>게시글이 없습니다.</td>
@@ -87,20 +86,20 @@
 		
 			<tr align="center">
 				<td>글번호</td>
-				<td>작성자</td>
-				<td>제목</td>
+				<td width="100px">작성자</td>
+				<td width="300px" >제목</td>
 				<td>첨부</td>
-				<td>댓글</td>
-				<td>조회수</td>
+				<td width="50px">댓글</td>
+				<td width="80px">조회수</td>
 			</tr>
 			
 			
 			<c:forEach items="${boardPage.boardList}" var="board">
 				<tr>
 					<td align="center">${board.boardNo}
-					<td align="center">${board.writer.name}</td>
+					<td align="center" width="100px" >${board.writer.name}</td>
 					
-					<td id="boardList_title">
+					<td id="boardList_title" width="300px">
 					<c:if test="${board.indent == 0 && board.flag==1}">
 						<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${board.title}</a>
 					</c:if>
@@ -113,7 +112,7 @@
 					</c:if>
 					<c:if test="${board.indent > 0 && board.flag ==1}"> 
 						<c:forEach begin="1" end="${board.indent}" >&nbsp;&nbsp;</c:forEach>
-							<a href="javascript:fn_gotoBoard('${board.boardNo}')">ㄴ&nbsp;${board.title}</a>
+							<a href="javascript:fn_gotoBoard('${board.boardNo}')">ㄴ[Re]&nbsp;${board.title}</a>
 					</c:if>
 					
 					<c:if test="${board.indent > 0 && board.flag ==0}">
@@ -129,14 +128,15 @@
 					<c:choose>
 						<c:when test="${!empty board.files }">
 							<c:forEach items="${board.files}" var="file">
-								<c:if test="${!empty sessionScope.email}">
+							<c:choose>	
+								<c:when test="${!empty sessionScope.email  && board.flag == 1}">
 									<a href="/Board_psy/download.do?savedPath=${file.savedPath}">
 									<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a> 
-								</c:if>
-								<c:if test="${empty sessionScope.email}">
+								</c:when>
+								<c:otherwise>
 									<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px">
-								</c:if>
-								
+								</c:otherwise>
+							</c:choose>	
 							</c:forEach>
 						</c:when>
 					
@@ -146,8 +146,8 @@
 					</c:choose>
 					
 					</td>
-					<td align="center">${fn:length(board.comments)}</td>
-					<td align="center">${board.hitCount}</td>
+					<td align="center" width="50px" >${fn:length(board.comments)}</td>
+					<td align="center" width="80px">${board.hitCount}</td>
 				</tr>
 
 			</c:forEach>
@@ -206,7 +206,42 @@
 		});
 
 		$('#writeForm').click(function() {
-			location.href = "/Board_psy/writeForm.do";
+// 			var data2 = {
+// 					ajaxYn: 'Y'
+// 				};
+				$.ajax({
+					type : "post",
+					url : "/Board_psy/ajaxLoginCheck.do",
+					data : {ajaxYn: "Y"},
+					success : function(result) {
+						if(result == "E"){
+							alert("먼저 로그인을 해주세요"); 
+//								location.replace("/Board_psy/boardList.do");
+							loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+						
+						}else if (result == "Y") {
+							location.replace("/Board_psy/writeForm.do");
+// 							window.location.href=window.location.href;
+
+						}
+					},
+					error : function() {
+						window.location.reload(true);
+						alert("writeCheck ajax 에러");
+					}
+
+				});
+			
+			
+			
+			
+// 			if($emailCheck == null){
+// 				 window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+// 			}else {
+// 				location.href = "/Board_psy/writeForm.do";
+// 			}
+			
+			
 		});
 		$("input[name='searchBtn']").click(function(){
 			$("input[name='page']").val(1);
@@ -236,6 +271,7 @@
 	var loginOpen = null;
 	function fn_loginOpen(){
 		if ( loginOpen == null || loginOpen.closed) {
+			
 			loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
 		} else {
 			loginOpen.focus();
