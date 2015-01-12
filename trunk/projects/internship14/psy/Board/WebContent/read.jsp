@@ -287,7 +287,7 @@
 						</tr>
 						<tr>
 							<c:if test="${board.flag==1}">
-								<td colspan="2" id="read_td2"><pre>${board.content}</pre></td>
+								<td colspan="2" id="read_td2">${board.content}</td>
 							</c:if>
 							<c:if test="${board.flag==0}">
 								<td colspan="2" id="read_td2">본 글은 삭제되었습니다</td>
