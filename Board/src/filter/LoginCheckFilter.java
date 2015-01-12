@@ -28,9 +28,9 @@ public class LoginCheckFilter implements Filter {
 		HttpSession session = httpRequest.getSession(false);
 
 		httpRequest.setCharacterEncoding("UTF-8");
-		
+
 		boolean login = false;
-		
+
 		if (session != null) {
 			if (session.getAttribute("email") != null && session.getAttribute("password") != null) {
 				login = true; // 세션변수가 null이 아닐경우 true로 설정.
