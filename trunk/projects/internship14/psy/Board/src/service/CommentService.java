@@ -16,8 +16,8 @@ import vo.Comment;
 public class CommentService {
 	@Autowired
 	CommentMapper commentMapper;
-	
-	public int insertComment(Comment comment, int boardNo, String email) throws UnknownHostException{
+
+	public int insertComment(Comment comment, int boardNo, String email) throws UnknownHostException {
 		comment.setEmail(email);
 		comment.setBoardNo(boardNo);
 		comment.setFlag(1);
@@ -26,32 +26,32 @@ public class CommentService {
 		return commentMapper.insertComment(comment);
 	}
 
-	public int updateComment(String content, int commentNo) throws UnknownHostException{
+	public int updateComment(String content, int commentNo) throws UnknownHostException {
 		Comment comment = commentMapper.selectCommentByCommentNo(commentNo);
 		comment.setContent(content);
 		comment.setModifyDate(new Date());
 		comment.setModifyIP(InetAddress.getLocalHost().toString());
 		return commentMapper.updateComment(comment);
 	}
-	
-	public List<Comment> selectCommentListByBoardNo(int boardNo){
+
+	public List<Comment> selectCommentListByBoardNo(int boardNo) {
 		return commentMapper.selectCommentListByBoardNo(boardNo);
 	}
-	
-	public int deleteComment(int commentNo) throws UnknownHostException{
+
+	public int deleteComment(int commentNo) throws UnknownHostException {
 		Comment comment = commentMapper.selectCommentByCommentNo(commentNo);
 		comment.setFlag(0);
 		comment.setModifyDate(new Date());
 		comment.setModifyIP(InetAddress.getLocalHost().toString());
 		return commentMapper.deleteComment(comment);
 	}
-	
-	public int selectCommentCountByBoardNo(int boardNo){
+
+	public int selectCommentCountByBoardNo(int boardNo) {
 		return commentMapper.selectCommentCountByBoardNo();
 	}
-	
-	public int selectCommentLastNo(){
+
+	public int selectCommentLastNo() {
 		return commentMapper.selectCommentLastNo();
 	}
-	
+
 }

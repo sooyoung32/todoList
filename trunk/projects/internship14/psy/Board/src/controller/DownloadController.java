@@ -18,19 +18,19 @@ public class DownloadController implements ApplicationContextAware {
 
 	@RequestMapping("download.do")
 	public ModelAndView download(@RequestParam("savedPath") String savedPath) {
-		
+
 		File file = new File(savedPath);
 		ModelAndView mv = new ModelAndView();
 		mv.setView(new DownloadView());
 		mv.addObject("downloadFile", file);
 		return mv;
-		
+
 	}
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		
-		this.context = (WebApplicationContext)applicationContext;
+
+		this.context = (WebApplicationContext) applicationContext;
 	}
 
 }

@@ -14,15 +14,15 @@ public class LoginIntercepter extends HandlerInterceptorAdapter {
 
 		try {
 			boolean isAjax = "Y".equals(request.getParameter("ajaxYn"));
-			System.out.println("[인터셉터 isAjax 값 Y 확인]:"+isAjax);
+			System.out.println("[인터셉터 isAjax 값 Y 확인]:" + isAjax);
 			HttpSession session = request.getSession();
-			
+
 			if (!isAjax && session.getAttribute("email") == null) {
 				System.out.println("에이젝스 아니고 세션 없다");
 				response.sendRedirect("/Board_psy/boardList.do");
 				return false;
-			}else if (isAjax && session.getAttribute("email") == null){
-				request.setAttribute("result", "E" );
+			} else if (isAjax && session.getAttribute("email") == null) {
+				request.setAttribute("result", "E");
 			}
 
 		} catch (Exception e) {
@@ -42,8 +42,8 @@ public class LoginIntercepter extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();
 		if (isAjax && session.getAttribute("email") == null) {
 			System.out.println("에이젝스 + 세션 없다 ");
-//			response.sendRedirect("/Board_psy/boardList.do");
-//			request.setAttribute("result", "E");
+			// response.sendRedirect("/Board_psy/boardList.do");
+			// request.setAttribute("result", "E");
 			System.out.println("포스트 핸들러");
 		}
 

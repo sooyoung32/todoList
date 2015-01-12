@@ -12,25 +12,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import vo.Member;
+
 @Component
 public class MemberService {
 	@Autowired
-	MemberMapper memberMapper; 
-	
-	//가입 
+	MemberMapper memberMapper;
+
+	// 가입
 	public int insertMember(Member member) {
 		try {
-		member.setWritingDate(new Date());
-		member.setWritingIP(InetAddress.getLocalHost().toString());
+			member.setWritingDate(new Date());
+			member.setWritingIP(InetAddress.getLocalHost().toString());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		return memberMapper.insertMember(member);
 	}
-	
-	
-	//비번수정
-	public int updateMember(Member member,String newPW) throws UnknownHostException {
+
+	// 비번수정
+	public int updateMember(Member member, String newPW) throws UnknownHostException {
 
 		boolean pwCheck = false;
 		if (memberMapper.selectMember(member.getEmail()).getPassword().equals(member.getPassword())) {
@@ -48,48 +48,44 @@ public class MemberService {
 		return 0;
 	}
 
-	//회원탈퇴
-	public int deleteMember(String email, String pw){
+	// 회원탈퇴
+	public int deleteMember(String email, String pw) {
 		Member member = new Member();
-		if(memberMapper.selectMember(member.getEmail()).getPassword().equals(pw)){
+		if (memberMapper.selectMember(member.getEmail()).getPassword().equals(pw)) {
 			return memberMapper.deleteMember(email);
-		}else{
+		} else {
 			return 0;
 		}
 	}
-	
-	
-	//멤버선택
-	public Member selectMember(String email){
+
+	// 멤버선택
+	public Member selectMember(String email) {
 		return memberMapper.selectMember(email);
 	}
-	
-	//멤버 카운트
-	public int selectMemberCount(){
+
+	// 멤버 카운트
+	public int selectMemberCount() {
 		return memberMapper.selectMemberCount();
 	}
-	
-	//멤버 리스트
-	public List<Member> selectMemberList(){
+
+	// 멤버 리스트
+	public List<Member> selectMemberList() {
 		return memberMapper.selectMemberList();
 	}
-	
-	
-	//로그인 체크
-	public String loginCheck(String email, String password) throws UnknownHostException{
+
+	// 로그인 체크
+	public String loginCheck(String email, String password) throws UnknownHostException {
 		Member member = memberMapper.selectMember(email);
-		if(member==null){
+		if (member == null) {
 			return "noID";
-		}else if(!member.getPassword().equals(password)){
+		} else if (!member.getPassword().equals(password)) {
 			return "noPW";
-		}else {
+		} else {
 			member.setLoginDate(new Date());
 			updateMember(member, password);
 			System.out.println(updateMember(member, password));
-			return "success"; 
+			return "success";
 		}
 	}
-	
-	
-	
+
 }
