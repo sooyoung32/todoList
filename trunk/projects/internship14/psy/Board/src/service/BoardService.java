@@ -31,7 +31,7 @@ public class BoardService {
 		return boardMapper.selectLastNo();
 	}
 
-	public int insertBoard(Board board) throws UnknownHostException {
+	public int writeBoard(Board board) throws UnknownHostException {
 		int lastNo = boardMapper.selectLastNo();
 		board.setFamily(lastNo);
 		board.setFlag(1);
@@ -46,7 +46,7 @@ public class BoardService {
 		return boardMapper.insertBoard(board);
 	}
 
-	public int insertReply(Board board, int boardNo) throws UnknownHostException {
+	public int writeReply(Board board, int boardNo) throws UnknownHostException {
 		Board originBoard = boardMapper.selectBoardByBoardNo(boardNo);
 		System.out.println("원글 가져오기/" + originBoard);
 		board.setFamily(originBoard.getFamily());
@@ -66,7 +66,7 @@ public class BoardService {
 		return boardMapper.insertBoard(board);
 	}
 
-	public Board selectBoardByBoardNo(int boardNo, boolean isHitCount) {
+	public Board readBoardByBoardNo(int boardNo, boolean isHitCount) {
 
 		Board board = boardMapper.selectBoardByBoardNo(boardNo);
 		if (isHitCount) {
@@ -107,7 +107,7 @@ public class BoardService {
 			board.setHitCount(board.getHitCount());
 		}
 
-		board.setFlag(0);
+		board.setFlag(0); //flag가 0이면 글 열람 불가
 
 		System.out.println("업데이트된 게시글//" + board);
 		return boardMapper.deleteBoard(board);
