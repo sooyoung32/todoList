@@ -4,10 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>삭제 실패</title>
+<title>Error 페이지</title>
 </head>
 <body>
-	<h3>비밀번호가 올바르지 않습니다! 다시 시도해주세요</h3>
-	<a href="/Board_psy/boardList.do">목록보기</a>
+
+	<p>불편을 일으켜 죄송합니다. 더 나은 서비스로 보답하겠습니다</p>
+	<a href="/Board_psy/boardList.do?page=1"> 목록가기</a>
+
 </body>
 </html>

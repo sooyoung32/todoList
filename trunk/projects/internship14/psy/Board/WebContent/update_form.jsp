@@ -6,7 +6,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글 수정</title>
-<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" type="text/css"
+	href="/Board_psy/css/board.css" media="all" />
 <script type="text/javascript"
 	src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
@@ -85,114 +86,144 @@
 </head>
 <body>
 
-	<form action="/Board_psy/update.do" id="form" name="form" onsubmit="return showFileSize();" method="post"  enctype="multipart/form-data">
-<table>
-<tr>
-	<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판 목록</a></td>
-</tr>	
-
-<tr><td style="text-align: right"><a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}">
-						<input type="submit" id="modify2" name="modify" value="Modify" align="right" onclick="save();"></a></td></tr>
-
-
-<tr><td style="padding: 0.5em;"></td></tr>
-
-<tr><td class="read_layout">
-
-		<table border="1" style="border-collapse: collapse;" width="650px" height="500%">
+	<form action="/Board_psy/update.do" id="form" name="form"
+		onsubmit="return showFileSize();" method="post"
+		enctype="multipart/form-data">
+		<table>
 			<tr>
-				<td id="read_td">작성자</td>
-				<td >${board.writer.name}
+				<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판
+						목록</a></td>
+			</tr>
+
+			<tr>
+				<td style="text-align: right"><a
+					href="/Board_psy/updateForm.do?boardNo=${board.boardNo}"> <input
+						type="submit" id="modify2" name="modify" value="Modify"
+						align="right" onclick="save();"></a></td>
+			</tr>
+
+
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+
+			<tr>
+				<td class="read_layout">
+
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="500%">
+						<tr>
+							<td id="read_td">작성자</td>
+							<td>${board.writer.name}</td>
+						</tr>
+
+						<tr>
+							<td id="read_td">제목</td>
+							<td><input type="text" id="title" name="title" size="80"
+								value="${board.title}"></td>
+						</tr>
+						<tr>
+							<td id="read_td">내용</td>
+							<td><textarea rows="10" cols="80" name="content"
+									id="content">${board.content}</textarea></td>
+						</tr>
+
+					</table>
 				</td>
 			</tr>
 
 			<tr>
-				<td id="read_td">제목</td>
-				<td><input type="text" id="title" name="title" size="80" value="${board.title}"></td>
+				<td style="padding: 0.5em;"></td>
 			</tr>
+
 			<tr>
-				<td id="read_td">내용</td>
-				<td><textarea rows="10" cols="80" name="content" id="content">${board.content}</textarea></td>
-			</tr>
-
-		</table>
-</td></tr>
-
-<tr><td style="padding: 0.5em;"></td></tr>
-	
-<tr><td class="read_layout" >
-		<table border="1" style="border-collapse: collapse;" width="650px" height="500%">
-			<tr>
-				<td id="read_td" >첨부파일</td>
-			</tr>
-		
-			<tr>
-				<c:if test="${empty board.files}">
-					<td>첨부파일이 없습니다</td>
-				</c:if>
-			</tr>
-				
-				<c:if test="${!empty board.files}">
-					<c:forEach items="${board.files}" var="file">
-						<tr><td><c:if test="${file.flag==1}">
-							   ${file.originalName} -- ${file.fileNo}
-							<input type="hidden" id="fileNo" value="${file.fileNo}">
-							<input type="button" class="deleteFile" value="삭제">
-						</c:if></td></tr>
-					</c:forEach>
-					
-					<table id="deletedFile">
-					
-					</table>
-					
-				</c:if>
-				
-		</table>
-</td></tr>
-
-<tr><td style="padding: 0.5em;"></td></tr>
-
-<tr><td>				
-	<table border="1" style="border-collapse: collapse;" width="650px" height="500%" id="fileTable">
-<!-- 		<tr> -->
-<!-- 			<td><input type="file" id="file" name="fileList[0]"></td> -->
-<!-- 		</tr> -->
-	</table>
-			<input type="button" id="addFile" name="addFile" value="파일추가">
-	
-</td></tr>
-	
-
-			
-			
-<tr><td style="padding: 0.5em;"></td></tr>
-
-<tr><td class="comment_list">
-		<table border="1" style="border-collapse: collapse;" width="650px" height="500%">
-			<c:choose>
-				<c:when test="${empty board.comments}">
-					<tr>
-						<td>댓글이 없습니다.</td>
-					</tr>
-				</c:when>
-
-				<c:when test="${!empty board.comments}">
-					<c:forEach items="${board.comments }" var="comment">
+				<td class="read_layout">
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="500%">
 						<tr>
-							<td id="comment_td">${comment.writer.name}</td>
-							<td id="comment_td2">${comment.content}</td>
+							<td id="read_td">첨부파일</td>
 						</tr>
 
-					</c:forEach>
-				</c:when>
+						<tr>
+							<c:if test="${empty board.files}">
+								<td>첨부파일이 없습니다</td>
+							</c:if>
+						</tr>
 
-			</c:choose>
+						<c:if test="${!empty board.files}">
+							<c:forEach items="${board.files}" var="file">
+								<tr>
+									<td><c:if test="${file.flag==1}">
+							   ${file.originalName} -- ${file.fileNo}
+							<input type="hidden" id="fileNo" value="${file.fileNo}">
+											<input type="button" class="deleteFile" value="삭제">
+										</c:if></td>
+								</tr>
+							</c:forEach>
+
+							<table id="deletedFile">
+
+							</table>
+
+						</c:if>
+
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+
+			<tr>
+				<td>
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="500%" id="fileTable">
+						<!-- 		<tr> -->
+						<!-- 			<td><input type="file" id="file" name="fileList[0]"></td> -->
+						<!-- 		</tr> -->
+					</table> <input type="button" id="addFile" name="addFile" value="파일추가">
+
+				</td>
+			</tr>
+
+
+
+
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+
+			<tr>
+				<td class="comment_list">
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="500%">
+						<c:choose>
+							<c:when test="${empty board.comments}">
+								<tr>
+									<td>댓글이 없습니다.</td>
+								</tr>
+							</c:when>
+
+							<c:when test="${!empty board.comments}">
+								<c:forEach items="${board.comments }" var="comment">
+									<tr>
+										<td id="comment_td">${comment.writer.name}</td>
+										<td id="comment_td2">${comment.content}</td>
+									</tr>
+
+								</c:forEach>
+							</c:when>
+
+						</c:choose>
+					</table>
+
+				</td>
+			</tr>
 		</table>
-		
-</td></tr>
-</table>		
-		<input type="hidden" name="boardNo" id="boardNo" value="${board.boardNo}"> 
-		<input type="hidden" name="email"  id="email" value="${sessionScope.email}">
+		<input type="hidden" name="boardNo" id="boardNo"
+			value="${board.boardNo}"> <input type="hidden" name="email"
+			id="email" value="${sessionScope.email}">
 	</form>
 </body>
 </html>

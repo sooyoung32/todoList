@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	    http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -11,24 +10,27 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<mvc:annotation-driven />
-	
+
 	<context:component-scan base-package="controller" />
 
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	 <!-- one of the properties available; the maximum file size in bytes --> 
-	 	<property name="maxUploadSize" value="52428800"/> 
-		<property name="defaultEncoding" value="UTF-8"/>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="5242880" />
+		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-    <bean id="simpleMappingExceptionResolver"
-          class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-        <property name="exceptionMappings">
-            <map>
-                <entry key="MaxUploadSizeExceededException" value="error_fileUpload" />
-            </map>
-        </property>
-        <property name="order" value="2" />
-    </bean>
+	<bean id="simpleMappingExceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="order" value="2" />
+		<property name="exceptionMappings">
+			<map>
+				<entry key="MaxUploadSizeExceededException" value="error_fileUpload" />
+				<entry key="DatabaseException" value="databaseError" />
+			</map>
+		</property>
+		<property name="defaultErrorView" value="defaultError" />
+	</bean>
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
@@ -37,20 +39,20 @@
 		<property name="suffix" value=".jsp" />
 		<property name="order" value="1" />
 	</bean>
-	
+
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/writeForm.do"/>
-			<mvc:mapping path="/ajaxLoginCheck.do"/>
-			<mvc:mapping path="/write.do"/>
-			<mvc:mapping path="/replyForm.do"/>
-			<mvc:mapping path="/reply.do"/>
-			<mvc:mapping path="/download.do"/>
-			<mvc:mapping path="/updateComment.do"/>
-			<mvc:mapping path="/deleteComment.do"/>
-			<mvc:mapping path="/insertComment.do"/>
-			<bean class="intercepter.LoginIntercepter"/>
+			<mvc:mapping path="/writeForm.do" />
+			<mvc:mapping path="/ajaxLoginCheck.do" />
+			<mvc:mapping path="/write.do" />
+			<mvc:mapping path="/replyForm.do" />
+			<mvc:mapping path="/reply.do" />
+			<mvc:mapping path="/download.do" />
+			<mvc:mapping path="/updateComment.do" />
+			<mvc:mapping path="/deleteComment.do" />
+			<mvc:mapping path="/insertComment.do" />
+			<bean class="intercepter.LoginIntercepter" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+
 </beans>

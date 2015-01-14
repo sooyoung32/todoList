@@ -5,7 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글쓰기</title>
-<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" type="text/css"
+	href="/Board_psy/css/board.css" media="all" />
 </head>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
@@ -121,64 +122,85 @@
 
 </script>
 <body>
-	<form action="/Board_psy/reply.do" id="form" name="form" method="post" enctype="multipart/form-data">
-		
-<table>
-<tr><td style="font-style: italic; color: gray;" >
-		${boardNo} 글의 답글</td></tr>
-		
-<tr><td style="padding: 0.5em;"></td></tr>
+	<form action="/Board_psy/reply.do" id="form" name="form" method="post"
+		enctype="multipart/form-data">
 
-<tr><td class="reply" style="text-align: right;">
-		<input type="button" id="reply" onclick="save();" name="reply" value="WRITE"></td></tr>
-
-<tr><td style="padding: 0.5em;"></td></tr>
-
-<tr><td class="write_layout">		
-		<table border="1" style="border-collapse: collapse;" width="650px"
-			height="30">
+		<table>
 			<tr>
-				<td>작성자</td>
-				<td>${sessionScope.name}</td>
+				<td style="font-style: italic; color: gray;">${boardNo} 글의 답글</td>
 			</tr>
 
 			<tr>
-				<td>제목</td>
-				<td><input type="text" id="title" name="title" size="80"></td>
+				<td style="padding: 0.5em;"></td>
 			</tr>
+
 			<tr>
-				<td>내용</td>
-				<td><textarea rows="10" cols="80" name="content" id="content"></textarea>
-					<DIV class=remaining>남은 글자수: <SPAN class="count">4000</SPAN></DIV>
+				<td class="reply" style="text-align: right;"><input
+					type="button" id="reply" onclick="save();" name="reply"
+					value="WRITE"></td>
+			</tr>
+
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+
+			<tr>
+				<td class="write_layout">
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="30">
+						<tr>
+							<td>작성자</td>
+							<td>${sessionScope.name}</td>
+						</tr>
+
+						<tr>
+							<td>제목</td>
+							<td><input type="text" id="title" name="title" size="80"></td>
+						</tr>
+						<tr>
+							<td>내용</td>
+							<td><textarea rows="10" cols="80" name="content"
+									id="content"></textarea>
+								<DIV class=remaining>
+									남은 글자수: <SPAN class="count">4000</SPAN>
+								</DIV></td>
+						</tr>
+					</table>
+
 				</td>
 			</tr>
-		</table>
-		
-</td></tr>
-<tr><td style="padding: 0.5em;"></td></tr>
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
 
-	<tr>
-		<td	style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
+			<tr>
+				<td
+					style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
 					파일은 최대 50M까지 업로드 가능합니다</td>
-	</tr>
+			</tr>
 
-<tr><td>
-		첨부파일
-		<table border="1" style="border-collapse: collapse;" width="650px"
-			height="30" id="fileTable">
-<!-- 			<tr> -->
-<!-- 				<td><input type="file" id="file" name="fileList[0]"></td> -->
-<!-- 			</tr> -->
+			<tr>
+				<td>첨부파일
+					<table border="1" style="border-collapse: collapse;" width="650px"
+						height="30" id="fileTable">
+						<!-- 			<tr> -->
+						<!-- 				<td><input type="file" id="file" name="fileList[0]"></td> -->
+						<!-- 			</tr> -->
+					</table>
+			<tr>
+				<td><input type="button" id="addFile" name="addFile"
+					value="파일추가"></td>
+			</tr>
+
+			<tr>
+				<td style="padding: 0.5em;"></td>
+			</tr>
+
+
 		</table>
-		<tr><td><input type="button" id="addFile" name="addFile"value="파일추가">
-</td></tr>
-
-<tr><td style="padding: 0.5em;"></td></tr>
-
-
-</table>
 		<input type="hidden" id="boardNo" name="boardNo" value="${boardNo }">
-		<input type="hidden" value="${sessionScope.email}" name="email" id="email ">
+		<input type="hidden" value="${sessionScope.email}" name="email"
+			id="email ">
 	</form>
 
 </body>
