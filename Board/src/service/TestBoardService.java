@@ -24,7 +24,7 @@ public class TestBoardService {
 			board.setTitle("테스트4");
 			board.setContent("test4");
 			// board.setFamily(3);
-			service.insertBoard(board);
+			service.writeBoard(board);
 			System.out.println(board);
 		} catch (UnknownHostException e) {
 			// LOG.log(Level.ALL, e.getMessage());

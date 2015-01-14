@@ -7,6 +7,7 @@ import java.util.List;
 
 import mapper.CommentMapper;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +16,16 @@ import vo.Comment;
 @Component
 public class CommentService {
 	@Autowired
-	CommentMapper commentMapper;
-
-	public int insertComment(Comment comment, int boardNo, String email) throws UnknownHostException {
+	private CommentMapper commentMapper;
+	
+	private Logger logger = Logger.getLogger(CommentService.class); 
+	
+	
+	public int writeComment(Comment comment, int boardNo, String email) throws UnknownHostException {
+		String content = comment.getContent(); 
+		content = content.replaceAll("\r\n", "  ");
+		comment.setContent(content);
+		logger.debug("코멘트서비스  : "+comment.getContent() );
 		comment.setEmail(email);
 		comment.setBoardNo(boardNo);
 		comment.setFlag(1);
@@ -34,7 +42,7 @@ public class CommentService {
 		return commentMapper.updateComment(comment);
 	}
 
-	public List<Comment> selectCommentListByBoardNo(int boardNo) {
+	public List<Comment> readCommentListByBoardNo(int boardNo) {
 		return commentMapper.selectCommentListByBoardNo(boardNo);
 	}
 

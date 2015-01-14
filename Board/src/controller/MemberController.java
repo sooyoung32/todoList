@@ -40,6 +40,25 @@ public class MemberController {
 		mv.addObject("preAddr", preAddr);
 		return mv;
 	}
+	
+	@RequestMapping(value = "ajaxLoginCheck.do")
+	@ResponseBody
+	public String ajaxLoginCheck(HttpServletRequest request) {
+
+		String isAjax = (String) request.getAttribute("result");
+		System.out.println("[ajaxLoginCheck] " + "isAjax // " + isAjax);
+		String result = null;
+		if ("E".equals(isAjax)) {
+			result = "E";
+			System.out.println("[ajaxLoginCheck result ] " + result);
+			return result;
+		} else {
+			result = "Y";
+			System.out.println("[ajaxLoginCheck result ] " + result);
+			return result;
+		}
+	}
+	
 
 	// 회원 여부 확인 Ajax
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
@@ -118,7 +137,7 @@ public class MemberController {
 		member.setPassword(password);
 		member.setName(name);
 		System.out.println("member//" + member);
-		int result = service.insertMember(member);
+		int result = service.joinMember(member);
 		System.out.println("member//" + member);
 		if (result == 1) {
 			return "Y";

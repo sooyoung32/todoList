@@ -19,7 +19,7 @@ public class MemberService {
 	MemberMapper memberMapper;
 
 	// ∞°¿‘
-	public int insertMember(Member member) {
+	public int joinMember(Member member) {
 		try {
 			member.setWritingDate(new Date());
 			member.setWritingIP(InetAddress.getLocalHost().toString());

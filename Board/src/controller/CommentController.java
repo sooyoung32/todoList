@@ -18,15 +18,23 @@ import vo.Comment;
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
-
+	
+	private Logger logger = Logger.getLogger(CommentController.class);
+	
+	
+	
 	@RequestMapping(value = "insertComment.do", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public String insertComment(Comment comment, int boardNo, String email, HttpServletRequest request)
+	public String writeComment(Comment comment, int boardNo, String email, HttpServletRequest request)
 			throws UnknownHostException {
 		System.out.println("ÄÚ¸àÆ® ÄÁÆ®·Ñ·¯");
 		int commentNo = commentService.selectCommentLastNo();
 		comment.setCommentNo(commentNo);
-		// System.out.println("comment°´Ã¼/" + comment);
+//		String content = comment.getContent(); 
+//		content = content.replaceAll("\r\n", "<br>");
+//		comment.setContent(content);
+		
+//		 System.out.println("comment°´Ã¼/" + comment);
 		// System.out.println("boardNo/" + boardNo);
 		// System.out.println("ÄÚ¸àÆ® email/ " + email);
 		// System.out.println("ÄÚ¸àÆ® commentNo/ " + commentNo);
@@ -34,13 +42,14 @@ public class CommentController {
 		String result = null;
 		String isAjax = (String) request.getAttribute("result");
 
-		System.out.println("¿¡ÀÌÁ§½º //" + isAjax);
 		if (("E").equals(isAjax)) {
 			result = "E";
 			return result;
 		}
 
-		int insert = commentService.insertComment(comment, boardNo, email);
+		int insert = commentService.writeComment(comment, boardNo, email);
+//		logger.debug("¾îµð º¾½Ã´Ù:  "+comment.getContent());
+		
 		if (insert == 1) {
 			result = "Y";
 			System.out.println("result/" + result);
