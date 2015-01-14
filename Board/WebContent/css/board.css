@@ -1,27 +1,24 @@
 @CHARSET "UTF-8";
 
-body{
-	font-family:나눔고딕;
+body {
+	font-family: 나눔고딕;
 }
 
 table {
 	border-collapse: collapse;
-	
 }
-
 
 table tr td.title_layout {
 	color: palevioletred;
 	text-align: center;
-	width:1024px;
+	width: 1024px;
 	text-align: left;
 	font-size: 17pt;
 	font-weight: bold;
 	padding-left: 1em;
-	
 }
 
-table tr td.user_layout{
+table tr td.user_layout {
 	text-align: right;
 	font-size: 15pt;
 	font-weight: normal;
@@ -31,351 +28,382 @@ table tr td.user_layout{
 	padding-top: 0.5em;
 }
 
-table tr td.user_layout #logout{
-   border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 13px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+table tr td.user_layout #logout {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 13px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-table tr td.user_layout #login{
-   border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 13px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+table tr td.user_layout #login {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 13px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-table tr td.totalBoard_layout{
-	text-align: left; 
+table tr td.totalBoard_layout {
+	text-align: left;
 	font-size: 12pt;
-	padding-left: 3em;	
+	padding-left: 3em;
 	padding-bottom: 0.5em;
-	
 }
 
-table tr td.search_layout{
+table tr td.search_layout {
 	padding-top: 1em;
 	padding-right: 15em;
 	float: right;
-		
 }
 
-table tr td.search_layout #search{
-   border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 12px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+table tr td.search_layout #search {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 12px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-
-table tr td.list_layout{
-/* 	 width : 1024px; */
-	 padding-left: 2em;
-	 
+table tr td.list_layout {
+	/* 	 width : 1024px; */
+	padding-left: 2em;
 }
 
-table tr td.list_layout #boardList_title{
+table tr td.list_layout #boardList_title {
 	padding-left: 1em;
 }
 
-table tr td.footer_layout{
+table tr td.footer_layout {
 	padding: 2em;
 }
 
-
-table tr td.footer_layout #writeForm{
+table tr td.footer_layout #writeForm {
 	border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 20px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 20px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-
-table tr td.back_layout{
+table tr td.back_layout {
 	padding: 1em;
 	font-size: 12pt;
-	
 }
 
-table tr td.read_layout #read_td{
-	width: 100px;	
+table tr td.read_layout #read_td {
+	width: 100px;
 	text-align: center;
 	background-color: #CEE3F6;
 }
 
-table tr td.read_layout #read_td2{
+table tr td.read_layout #read_td2 {
 	
 }
 
-
-
-table tr td.file_layout #file_td{
+table tr td.file_layout #file_td {
 	text-align: center;
 	background-color: #CEE3F6;
 	padding: 0.2em;
 }
 
-table tr td.file_layout #file_td2{
+table tr td.file_layout #file_td2 {
 	padding: 0.2em;
 }
 
-
-table tr td.reply_btn #reply{
+table tr td.reply_btn #reply {
 	border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 15px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 15px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-
-table tr td.comment_layout #comment_td{
+table tr td.comment_layout #comment_td {
 	width: 100px;
 	background-color: #F6CEE3;
-	text-align: center;	
+	text-align: center;
 }
 
-table tr td.comment_layout #comment{
-  border: 1px solid #46669c;
-   background: #f5d2ee;
-   background: -webkit-gradient(linear, left top, left bottom, from(#eecef0), to(#f5d2ee));
-   background: -webkit-linear-gradient(top, #eecef0, #f5d2ee);
-   background: -moz-linear-gradient(top, #eecef0, #f5d2ee);
-   background: -ms-linear-gradient(top, #eecef0, #f5d2ee);
-   background: -o-linear-gradient(top, #eecef0, #f5d2ee);
-   background-image: -ms-linear-gradient(top, #eecef0 0%, #f5d2ee 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 14px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+table tr td.comment_layout #comment {
+	border: 1px solid #46669c;
+	background: #f5d2ee;
+	background: -webkit-gradient(linear, left top, left bottom, from(#eecef0),
+		to(#f5d2ee));
+	background: -webkit-linear-gradient(top, #eecef0, #f5d2ee);
+	background: -moz-linear-gradient(top, #eecef0, #f5d2ee);
+	background: -ms-linear-gradient(top, #eecef0, #f5d2ee);
+	background: -o-linear-gradient(top, #eecef0, #f5d2ee);
+	background-image: -ms-linear-gradient(top, #eecef0 0%, #f5d2ee 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 14px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-
-table tr td.comment_list #comment_td{
-	width: 100px;	
+table tr td.comment_list #comment_td {
+	width: 100px;
 	background-color: #F6CEE3;
 	text-align: center;
 }
 
-table tr td.comment_list #comment_td2{
+table tr td.comment_list #comment_td2 {
 	padding-left: 0.5em;
 }
 
-#login{
-	  border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 13px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
-}
-#join{
-	 border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 13px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+#login {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 13px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
+#join {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 13px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
+}
 
-table tr td.write_layout table tr td{
+table tr td.write_layout table tr td {
 	width: 100px;
 	text-align: center;;
-	
 }
 
-#write{
+#write {
 	border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 15px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 15px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }
 
-#modify2{
-		border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 15px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
-}
-
-table tr .reply #reply{
+#modify2 {
 	border: 2px solid #114d69;
-   background: #b8dde6;
-   background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5), to(#b8dde6));
-   background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
-   background: -o-linear-gradient(top, #ceeff5, #b8dde6);
-   background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
-   padding: 7.5px 15px;
-   -webkit-border-radius: 14px;
-   -moz-border-radius: 14px;
-   border-radius: 14px;
-   -webkit-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   -moz-box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   box-shadow: rgba(255,255,255,0.4) 0 0px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-   text-shadow: #000000 0 1px 0;
-   color: #06426c;
-   font-size: 15px;
-   font-family: helvetica, serif;
-   text-decoration: none;
-   vertical-align: middle;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 15px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
+}
+
+table tr .reply #reply {
+	border: 2px solid #114d69;
+	background: #b8dde6;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ceeff5),
+		to(#b8dde6));
+	background: -webkit-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -moz-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -ms-linear-gradient(top, #ceeff5, #b8dde6);
+	background: -o-linear-gradient(top, #ceeff5, #b8dde6);
+	background-image: -ms-linear-gradient(top, #ceeff5 0%, #b8dde6 100%);
+	padding: 7.5px 15px;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 0px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #000000 0 1px 0;
+	color: #06426c;
+	font-size: 15px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
 }

@@ -11,6 +11,30 @@
 <script type="text/javascript"
 	src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
+	
+ var ajaxLoginCheck =
+					alert("이거 뜨나???");
+			$.ajax({
+				type : "post",
+				url : "/Board_psy/ajaxLoginCheck.do",
+// 				data : {ajaxYn: "Y",
+// 						boardNo: $('#boardNo').val()
+// 				},
+// 				success : function(result) {
+// 					if(result == "E"){
+// 						alert("먼저 로그인을 해주세요"); 
+// 						loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+// 					}
+// 					else if (result == "Y") {
+// 						location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
+// 					}
+// 				},
+				error : function() {
+					window.location.reload(true);
+					alert("ajaxLoginCheck ajax 에러");
+				}
+			});
+
 	$(function() {
 		$('#comment').click(function() {
 			if($('#commentText').val() == ""){
@@ -29,13 +53,13 @@
 					type : "post",
 					url : "/Board_psy/insertComment.do",
 					data : data2,
-					success : function(result, request) {
+					success : function(result) {
 						if(result == "E"){
 							alert("먼저 로그인을 해주세요"); 
 // 							location.replace("/Board_psy/boardList.do");
 							var loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
 						}else if (result == "Y") {
-							alert("댓글이 입력되었습니다");
+							alert("댓글이 입력되었습니다" + $('#commentText').val());
 							location.reload(true);
 						} else if (result == "N") {
 							alert("댓글 입력시 오류가 발생하였습니다");
@@ -55,32 +79,46 @@
 
 		$('#reply').click(function() {
 			
-			$.ajax({
-				type : "post",
-				url : "/Board_psy/ajaxLoginCheck.do",
-				data : {ajaxYn: "Y",
-						boardNo: $('#boardNo').val()
-				},
-				success : function(result) {
-					if(result == "E"){
-						alert("먼저 로그인을 해주세요"); 
-//							location.replace("/Board_psy/boardList.do");
-						loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
-					}else if (result == "Y") {
-						location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
-// 						location.replace("/Board_psy/replyForm.do");
-//							window.location.href=window.location.href;
-
-					}
-				},
-				error : function() {
-					window.location.reload(true);
-					alert("ajaxLoginCheck ajax 에러");
+			ajaxLoginCheck.data = {ajaxYn: "Y",	boardNo: $('#boardNo').val()};
+			ajaxLoginCheck.success(function(result) {
+				if(result == "E"){
+					alert("먼저 로그인을 해주세요"); 
+					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+				}else if (result == "Y") {
+					location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 				}
+			});		
+			$.ajax(ajaxLoginCheck);
+			
+// 			$.ajax({
+// 				type : "post",
+// 				url : "/Board_psy/ajaxLoginCheck.do",
+// 				data : {ajaxYn: "Y",
+// 						boardNo: $('#boardNo').val()
+// 				},
+// 				success : function(result) {
+// 					if(result == "E"){
+// 						alert("먼저 로그인을 해주세요"); 
+// //							location.replace("/Board_psy/boardList.do");
+// 						loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+// 					}else if (result == "Y") {
+// 						location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
+// // 						location.replace("/Board_psy/replyForm.do");
+// //							window.location.href=window.location.href;
 
-			});
+// 					}
+// 				},
+// 				error : function() {
+// 					window.location.reload(true);
+// 					alert("ajaxLoginCheck ajax 에러");
+// 				}
+
+// 			});
 // 			location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 		});
+		
+		
+		
 		$('#delete').click(function(){
 			
 			var $result =confirm("삭제 하시겠습니까?"); 
@@ -246,8 +284,8 @@
 <body>
 	<form action="/Board_psy/boardList.do" id="form" name="form"
 		method="post">
-		<input type="hidden" name="page">
-		<input type="hidden" name="boardNo" value="${board.boardNo}"/>
+		<input type="hidden" name="page"> <input type="hidden"
+			name="boardNo" value="${board.boardNo}" />
 		<table>
 			<tr>
 				<td class="back_layout"><a
@@ -265,10 +303,10 @@
 									<a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}"><input
 										type="button" id="modify" name="modify" value="수정"
 										align="right"></a>
-<%-- 									<a href="/Board_psy/deleteForm.do?boardNo=${board.boardNo}"> --%>
+									<%-- 									<a href="/Board_psy/deleteForm.do?boardNo=${board.boardNo}"> --%>
 									<input type="button" id="delete" name="delete" value="삭제"
 										align="right">
-<!-- 										</a> -->
+									<!-- 										</a> -->
 								</c:if>
 							</td>
 						</tr>
@@ -319,7 +357,8 @@
 										<c:if test="${file.flag ==1 && !empty sessionScope.email}">
 											<tr>
 												<td id="file_td2"><a
-													href="/Board_psy/download.do?savedPath=${file.savedPath}"> ▶ &nbsp; ${file.originalName}</a>
+													href="/Board_psy/download.do?savedPath=${file.savedPath}">
+														▶ &nbsp; ${file.originalName}</a>
 												<td>
 											</tr>
 										</c:if>
@@ -339,7 +378,9 @@
 
 			<c:if test="${board.flag==0}">
 
-				<tr><td><span id="file_td2">첨부파일이 없습니다</span></td></tr>
+				<tr>
+					<td><span id="file_td2">첨부파일이 없습니다</span></td>
+				</tr>
 
 			</c:if>
 
@@ -351,8 +392,8 @@
 					<table width="800px" height="500%">
 						<tr>
 							<c:if test="${!empty sessionScope.name && board.flag == 1}">
-								<td style="text-align: right; font-size: medium;">
-								<input type="button" id="reply" name="reply" value="Reply"></td>
+								<td style="text-align: right; font-size: medium;"><input
+									type="button" id="reply" name="reply" value="Reply"></td>
 							</c:if>
 							<c:if test="${empty sessionScope.name}">
 								<td
@@ -371,14 +412,17 @@
 
 			<tr>
 				<td class="comment_layout">
-					<table border="1" style="border-collapse: collapse;" width="800px"	height="500%">
+					<table border="1" style="border-collapse: collapse;" width="800px"
+						height="500%">
 
 
 						<tr>
 							<c:if test="${!empty sessionScope.name  && board.flag == 1}">
 								<td id="comment_td">${sessionScope.name }</td>
 								<td><textarea rows="3" cols="88" id="commentText"></textarea>
-								<DIV class=remaining>남은 글자수: <SPAN class="count">2000</SPAN></DIV></td>
+									<DIV class=remaining>
+										남은 글자수: <SPAN class="count">2000</SPAN>
+									</DIV></td>
 								<td><input type="button" id="comment" name="comment"
 									value="Comment"></td>
 							</c:if>
@@ -392,48 +436,50 @@
 				<td style="padding: 0.5em;"></td>
 			</tr>
 
-			
-			
-			
+
+
+
 			<tr>
 				<td class="comment_list">
-					
-					<div style="width: 100%; height:350px; overflow:scroll;" >
-					<table border="1" style="border-collapse: collapse;" width="800px">
-						<c:choose>
-							<c:when test="${empty board.comments}">
-								<tr>
-									<td style="padding-left: 1em; font-style: italic; color: gray;">댓글이
-										없습니다.</td>
-								</tr>
-							</c:when>
-					
-							<c:when test="${!empty board.comments}">
-								<c:forEach items="${board.comments }" var="comment">
-									<c:if test="${comment.flag==1 }">
-										<tr>
-											<td id="comment_td">${comment.writer.name}</td>
-											<td id="comment_td2" class="comment_td2"><div id="content" class="content"><pre>${comment.content}</pre>
-													</div> <c:if
-													test="${sessionScope.name eq comment.writer.name}">
-													<input type="hidden" name="commentNo"
-														value="${comment.commentNo}" />
-													<input type="button" class="cDelete" name="cDelete"
-														value="덧글삭제" />
-													<input type="button" class="cModify" name="cModify"
-														value="덧글수정" />
-													<input type="hidden" name="cContent"
-														value="${comment.content}" />
-												</c:if></td>
-										</tr>
-									</c:if>
-								</c:forEach>
-							</c:when>
-						</c:choose>
-					</table>
-						</div>
-					
-					
+
+					<div style="width: 800px; height: 350px; overflow: scroll;">
+						<table border="1" style="border-collapse: collapse;" width="800px">
+							<c:choose>
+								<c:when test="${empty board.comments}">
+									<tr>
+										<td
+											style="padding-left: 1em; font-style: italic; color: gray;">댓글이
+											없습니다.</td>
+									</tr>
+								</c:when>
+
+								<c:when test="${!empty board.comments}">
+									<c:forEach items="${board.comments }" var="comment">
+										<c:if test="${comment.flag==1 }">
+											<tr>
+												<td id="comment_td">${comment.writer.name}</td>
+												<td id="comment_td2" class="comment_td2">
+												<div id="content" class="content">
+														${comment.content}</div> 
+														<c:if test="${sessionScope.name eq comment.writer.name}">
+														<input type="hidden" name="commentNo"
+															value="${comment.commentNo}" />
+														<input type="button" class="cDelete" name="cDelete"
+															value="덧글삭제" />
+														<input type="button" class="cModify" name="cModify"
+															value="덧글수정" />
+														<input type="hidden" name="cContent"
+															value="${comment.content}" />
+													</c:if></td>
+											</tr>
+										</c:if>
+									</c:forEach>
+								</c:when>
+							</c:choose>
+						</table>
+					</div>
+
+
 				</td>
 			</tr>
 
@@ -448,8 +494,8 @@
 			type="hidden" name="searchValue" id="searchValue"
 			value="${searchValue}"> <input type="hidden" name="searchKey"
 			id="searchKey" value="${searchKey}">
-	
-	
+
+
 	</form>
 </body>
 </html>

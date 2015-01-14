@@ -4,10 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>삭제 실패</title>
+<title>데이타베이스 에러</title>
 </head>
 <body>
-	<h3>비밀번호가 올바르지 않습니다! 다시 시도해주세요</h3>
-	<a href="/Board_psy/boardList.do">목록보기</a>
+
+
+	<h1>죄송합니다.</h1>
+	<br>
+	<h3>데이터베이스에 접속할 수 없습니다. 빠른시일내에 개선하도록 하겠습니다.</h3>
+
 </body>
 </html>
