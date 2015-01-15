@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -171,27 +173,8 @@ public class BoardController {
 		return mv;
 	}
 
-	// @RequestMapping(value = "ajaxLoginCheck.do")
-	// @ResponseBody
-	// public String ajaxLoginCheck(HttpServletRequest request) {
-	//
-	// String isAjax = (String) request.getAttribute("result");
-	// System.out.println("[ajaxLoginCheck] " + "isAjax // " + isAjax);
-	// String result = null;
-	// if ("E".equals(isAjax)) {
-	// result = "E";
-	// System.out.println("[ajaxLoginCheck result ] " + result);
-	// return result;
-	// } else {
-	// result = "Y";
-	// System.out.println("[ajaxLoginCheck result ] " + result);
-	// return result;
-	// }
-	// }
-
 	@RequestMapping(value = "writeForm.do")
 	public String writeForm() {
-		System.out.println("[writeForm 가는길]");
 		return "write_form";
 	}
 
@@ -302,14 +285,33 @@ public class BoardController {
 		return "redirect:boardList.do?page=1";
 	}
 
-	@RequestMapping(value = "updateForm.do", method = RequestMethod.GET)
-	public ModelAndView updateForm(int boardNo) {
-
+	@RequestMapping(value = "ajaxUpdateForm.do")
+	public @ResponseBody Map<Object, Object> ajaxUpdateForm(int boardNo , HttpServletRequest request) {
+		String isAjax = (String) request.getAttribute("result");
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		
+		logger.debug("업데이트에서 에이젝스 값 ////////////////"+isAjax ); 
+		if (!"E".equals(isAjax)) {
+			Board board = boardService.readBoardByBoardNo(boardNo, false);
+			map.put("boardNo",boardNo);
+		} else if("E".equals(isAjax)){
+			map.put("isAjax", "E");
+			logger.debug("map ////////////////////////////   : "+ map);
+		}
+		return map;
+		
+	}
+	
+	@RequestMapping(value = "updateForm.do")
+	public ModelAndView updateForm(int boardNo){
 		Board board = boardService.readBoardByBoardNo(boardNo, false);
 		ModelAndView mv = new ModelAndView("update_form");
 		mv.addObject("board", board);
 		return mv;
 	}
+	
+	
+	
 
 	@RequestMapping(value = "update.do", method = RequestMethod.POST)
 	public String update(Board updatedBoard, int boardNo, UploadFile voUploadFile, HttpServletRequest request,
@@ -346,27 +348,12 @@ public class BoardController {
 		return "redirect:boardList.do?page=1";
 	}
 
-	// @RequestMapping(value = "deleteForm.do", method = RequestMethod.GET)
-	// public ModelAndView deleteForm(int boardNo) {
-	// System.out.println("글번호//" + boardNo);
-	// Board board = boardService.selectBoardByBoardNo(boardNo, false);
-	// ModelAndView mv = new ModelAndView("delete_form");
-	// mv.addObject("board", board);
-	// return mv;
-	// }
-
 	@RequestMapping(value = "delete.do")
 	public String delete(int boardNo) throws UnknownHostException {
 		Board updatedBoard = boardService.readBoardByBoardNo(boardNo, false);
 		System.out.println("원래 비밀번호있는 사용자 비번//" + updatedBoard);
-		// if(updatedBoard.getWriter().getPassword().equals(password)){
-		// System.out.println("사용자비번//"+updatedBoard.getWriter().getPassword());
-		// System.out.println("입력한비번//"+password);
 		boardService.deleteBoard(updatedBoard, boardNo);
 		return "redirect:boardList.do?page=1";
-		// }else{
-		// return "delete_fail";
-		// }
 	}
 
 }
