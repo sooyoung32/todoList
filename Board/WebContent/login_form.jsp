@@ -28,7 +28,7 @@
 						msg = "등록되지 않은 ID입니다";
 						alert(msg);
 					} else if (result == 'noPW') {
-						msg = "비밀번호가 올바르지 s않습니다";
+						msg = "비밀번호가 올바르지 않습니다";
 						alert(msg);
 					} else if(result == 'success'){
 						// $('#login').submit();
@@ -37,7 +37,7 @@
 						window.close();
 					} else if(result == 'success2'){
 						alert("정상적으로 로그인되었습니다.");
-// 						window.opener.location.reload();
+						location.reload();
 						window.close();
 					}
 				},

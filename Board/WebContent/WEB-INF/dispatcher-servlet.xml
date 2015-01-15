@@ -16,7 +16,7 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- one of the properties available; the maximum file size in bytes -->
-		<property name="maxUploadSize" value="5242880" />
+<!-- 		<property name="maxUploadSize" value="5242880" /> -->
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
@@ -31,7 +31,6 @@
 		</property>
 		<property name="defaultErrorView" value="defaultError" />
 	</bean>
-
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		id="viewResolver">
@@ -51,6 +50,8 @@
 			<mvc:mapping path="/updateComment.do" />
 			<mvc:mapping path="/deleteComment.do" />
 			<mvc:mapping path="/insertComment.do" />
+			<mvc:mapping path="/updateForm.do"/>
+			<mvc:mapping path="/ajaxUpdateForm.do"/>
 			<bean class="intercepter.LoginIntercepter" />
 		</mvc:interceptor>
 	</mvc:interceptors>

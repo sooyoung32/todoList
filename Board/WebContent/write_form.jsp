@@ -46,6 +46,9 @@
 			if (input[i].files[0].size == 0) {
 				alert("파일명 " + input[i].files[0].name + " 을 다시 확인해 주세요");
 				return false;
+			} else if(input[i].files[0].size > 5242880){
+				alert("파일명 " + input[i].files[0].name + "의 용량이 초과되었습니다"+"\n"+"다시 선택해 주세요");
+				return false;
 			}
 		}
 		return true;
@@ -84,10 +87,6 @@
 	    });
 	});
 	
-	
-	
-	
-	
 	function save(){
 		
 		$.ajax({
@@ -100,7 +99,7 @@
 //						location.replace("/Board_psy/boardList.do");
 					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
 				
-				}else if (result == "Y") {
+				}else if (result == "GO_TO") {
 					
 					if($('input[name*=title]').val()==""){
 						alert("제목을 입력해 주세요");
@@ -149,13 +148,11 @@
 	
 </script>
 <body>
-	<form action="/Board_psy/write.do" name="form" id="form" method="post"
-		enctype="multipart/form-data">
+	<form action="/Board_psy/write.do" name="form" id="form" method="post" enctype="multipart/form-data">
 
 		<table>
 			<tr>
-				<td style="text-align: right;"><input type="button" id="write"
-					name="write" value="WRITE" onclick="save();"></td>
+				<td style="text-align: right;"><input type="button" id="write"	name="write" value="WRITE" onclick="save();"></td>
 				<!-- 					showFileSize();this.disabled=true;this.value='Sending..'; this.form.submit -->
 			</tr>
 

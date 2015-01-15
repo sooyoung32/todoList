@@ -9,6 +9,7 @@
 <body>
 
 	<p>불편을 일으켜 죄송합니다. 더 나은 서비스로 보답하겠습니다</p>
+	exception message:${defaultError}
 	<a href="/Board_psy/boardList.do?page=1"> 목록가기</a>
 
 </body>
