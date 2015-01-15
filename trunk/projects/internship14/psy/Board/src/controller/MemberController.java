@@ -20,21 +20,13 @@ import vo.Member;
 @Controller
 public class MemberController {
 	private Logger logger = Logger.getLogger(MemberController.class);
-
-	MemberService service;
-
+	
 	@Autowired
-	public void setService(MemberService service) {
-		this.service = service;
-	}
+	private MemberService service;
 
-	// ////////////////////////////////////////////////////////////////////////
-
-	// 로그인
 	// 로그인화면
 	@RequestMapping(value = "loginForm.do")
 	public ModelAndView loginForm(HttpServletRequest request) {
-
 		ModelAndView mv = new ModelAndView("login_form");
 		String preAddr = request.getHeader("REFERER");
 		mv.addObject("preAddr", preAddr);
@@ -53,44 +45,31 @@ public class MemberController {
 			System.out.println("[ajaxLoginCheck result ] " + result);
 			return result;
 		} else {
-			result = "Y";
+			result = "GO_TO";
 			System.out.println("[ajaxLoginCheck result ] " + result);
 			return result;
 		}
 	}
 	
-
 	// 회원 여부 확인 Ajax
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
-	public @ResponseBody
-	String login(Member member, HttpServletRequest request) {
+	public @ResponseBody String login(Member member, HttpServletRequest request) {
 		String result = null;
 		try {
 			result = service.loginCheck(member.getEmail(), member.getPassword());
 
 			String preAddr = request.getParameter("preAddr");
-			System.out.println(preAddr.indexOf("boardList.do"));
 			boolean preAddrCheck = preAddr.indexOf("boardList.do") >= 0;
-			System.out.println("[에이젝스에서 넘어온 이전주소] : " + preAddr);
-			System.out.println("[이전주소가 boardList.do에서 온거 확인] : " + preAddrCheck);
-
+			logger.debug("[에이젝스에서 넘어온 이전주소] : " + preAddr);
+			logger.debug("[이전주소가 boardList.do에서 온거 확인] : " + preAddrCheck);
+			
+			//preAddrCheck이 true이면 보드리스트화면으로 (글쓰기, 답글 등)
 			if (result == "success" && preAddrCheck) {
-				HttpSession session = request.getSession(true);
-				Member member2 = service.selectMember(member.getEmail());
-				session.setAttribute("email", member2.getEmail());
-				session.setAttribute("name", member2.getName());
-				System.out.println(session.getAttribute("email") + "email");
-				System.out.println(session.getAttribute("name") + "name");
-				System.out.println("로그인 세션 확보!");
+				getSession(member, request);
 				return "success";
-			} else if (result == "success" && !preAddrCheck) {
-				HttpSession session = request.getSession(true);
-				Member member2 = service.selectMember(member.getEmail());
-				session.setAttribute("email", member2.getEmail());
-				session.setAttribute("name", member2.getName());
-				System.out.println(session.getAttribute("email") + "email");
-				System.out.println(session.getAttribute("name") + "name");
-				System.out.println("로그인 세션 확보!");
+			}//preAddrCheck이 false면 현재 화면 리로드(댓글 수정 삭제 등) 
+				else if (result == "success" && !preAddrCheck) {
+				getSession(member, request);
 				return "success2";
 			}
 		} catch (UnknownHostException e) {
@@ -99,11 +78,21 @@ public class MemberController {
 		return "";
 	}
 
+	private void getSession(Member member, HttpServletRequest request) {
+		HttpSession session = request.getSession(true);
+		Member member2 = service.selectMember(member.getEmail());
+		session.setAttribute("email", member2.getEmail());
+		session.setAttribute("name", member2.getName());
+		logger.debug(session.getAttribute("email") + "email");
+		logger.debug(session.getAttribute("name") + "name");
+		logger.debug("로그인 세션 확보!");
+	}
+
 	@RequestMapping(value = "logout.do", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		System.out.println("로그아웃! 세션빠잉");
+		logger.debug("로그아웃! 세션빠잉");
 		return "redirect:boardList.do?page=1";
 	}
 
@@ -112,7 +101,6 @@ public class MemberController {
 	// 회원가입 화면
 	@RequestMapping(value = "joinForm.do")
 	public String joinForm() {
-		System.out.println("Test");
 		return "join_form";
 	}
 

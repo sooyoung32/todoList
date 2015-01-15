@@ -18,27 +18,16 @@ import vo.Comment;
 public class CommentController {
 	@Autowired
 	private CommentService commentService;
-	
+
 	private Logger logger = Logger.getLogger(CommentController.class);
-	
-	
-	
+
 	@RequestMapping(value = "insertComment.do", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String writeComment(Comment comment, int boardNo, String email, HttpServletRequest request)
 			throws UnknownHostException {
-		System.out.println("코멘트 컨트롤러");
+		logger.debug("코멘트 컨트롤러");
 		int commentNo = commentService.selectCommentLastNo();
 		comment.setCommentNo(commentNo);
-//		String content = comment.getContent(); 
-//		content = content.replaceAll("\r\n", "<br>");
-//		comment.setContent(content);
-		
-//		 System.out.println("comment객체/" + comment);
-		// System.out.println("boardNo/" + boardNo);
-		// System.out.println("코멘트 email/ " + email);
-		// System.out.println("코멘트 commentNo/ " + commentNo);
-
 		String result = null;
 		String isAjax = (String) request.getAttribute("result");
 
@@ -48,14 +37,13 @@ public class CommentController {
 		}
 
 		int insert = commentService.writeComment(comment, boardNo, email);
-//		logger.debug("어디 봅시다:  "+comment.getContent());
 		
 		if (insert == 1) {
-			result = "Y";
+			result = "C_WRITE_SUCCESS";
 			System.out.println("result/" + result);
 			return result;
 		} else if (insert == 0) {
-			result = "N";
+			result = "C_WRITE_FAIL";
 			System.out.println("result/" + result);
 			return result;
 		}
@@ -75,9 +63,9 @@ public class CommentController {
 
 		System.out.println("삭제 코멘트번호//" + commentNo);
 		if (commentService.deleteComment(commentNo) == 1) {
-			return "Y";
+			return "C_DELETE_SUCCESS";
 		} else {
-			return "N";
+			return "C_DELETE_FAIL";
 		}
 	}
 
@@ -93,9 +81,9 @@ public class CommentController {
 
 		System.out.println("코멘트 번호//" + commentNo + " ----- 코멘트 수정 내용 //" + content);
 		if (commentService.updateComment(content, commentNo) == 1) {
-			return "Y";
+			return "C_UPDATE_SUCCESS";
 		} else {
-			return "N";
+			return "C_UPDATE_FAIL";
 		}
 
 	}
