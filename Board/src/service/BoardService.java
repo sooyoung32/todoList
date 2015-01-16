@@ -11,6 +11,7 @@ import java.util.Map;
 import mapper.BoardMapper;
 import mapper.FileMapper;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +27,10 @@ public class BoardService {
 	@Autowired
 	private FileMapper fileMapper;
 
+	private Logger logger = Logger.getLogger(BoardService.class);
+	
 	public int selectLastNo() {
-		System.out.println(boardMapper.selectLastNo());
+		logger.debug(boardMapper.selectLastNo());
 		return boardMapper.selectLastNo();
 	}
 
@@ -48,13 +51,13 @@ public class BoardService {
 
 	public int writeReply(Board board, int boardNo) throws UnknownHostException {
 		Board originBoard = boardMapper.selectBoardByBoardNo(boardNo);
-		System.out.println("원글 가져오기/" + originBoard);
+		logger.debug("원글 가져오기/" + originBoard);
 		board.setFamily(originBoard.getFamily());
 		board.setParent(originBoard.getBoardNo());
 		board.setDepth(originBoard.getDepth() + 1);
-		System.out.println(boardMapper.updateBoardDepth(board));
-		System.out.println("원글 step//" + originBoard.getDepth());
-		System.out.println("새글 step//" + board.getDepth());
+		boardMapper.updateBoardDepth(board);
+		logger.debug("원글 step//" + originBoard.getDepth());
+		logger.debug("새글 step//" + board.getDepth());
 		board.setIndent(originBoard.getIndent() + 1);
 		board.setWritingDate(new Date());
 		board.setModifyDate(null);
@@ -62,7 +65,7 @@ public class BoardService {
 		board.setModifyIP(null);
 		board.setHitCount(0);
 		board.setFlag(1);
-		System.out.println("답글/" + board);
+		logger.debug("답글/" + board);
 		return boardMapper.insertBoard(board);
 	}
 
@@ -89,6 +92,7 @@ public class BoardService {
 		board.setContent(updatedBoard.getContent());
 		board.setModifyDate(new Date());
 		board.setModifyIP(InetAddress.getLocalHost().toString());
+	
 		boolean isHitCount = false;
 		if (!isHitCount) {
 			board.setHitCount(board.getHitCount());
@@ -120,14 +124,12 @@ public class BoardService {
 		map.put("endRow", endRow - startRow + 1);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-		// System.out.println("map//"+map);
 		return boardMapper.selectBoardList(map);
 
 	}
 
 	public int searchBoardCount(String searchKey, String searchValue) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		// System.out.println("searchBoardCount!!" + searchKey + "//" + searchValue);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
 		return boardMapper.searchBoardCount(map);
