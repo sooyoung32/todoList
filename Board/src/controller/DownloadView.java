@@ -9,22 +9,25 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 public class DownloadView extends AbstractView {
 
+	private Logger logger = Logger.getLogger(DownloadView.class);
+	
 	public DownloadView() {
 		setContentType("applicaiton/download; charset=utf-8");
 	}
-
+	
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		File file = (File) model.get("downloadFile");
-		System.out.println("DownloadView --> file.getPath() : " + file.getPath());
-		System.out.println("DownloadView --> file.getName() : " + file.getName());
+		logger.debug("DownloadView --> file.getPath() : " + file.getPath());
+		logger.debug("DownloadView --> file.getName() : " + file.getName());
 
 		response.setContentType(getContentType());
 		response.setContentLength((int) file.length());

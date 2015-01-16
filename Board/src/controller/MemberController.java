@@ -38,22 +38,24 @@ public class MemberController {
 	public String ajaxLoginCheck(HttpServletRequest request) {
 
 		String isAjax = (String) request.getAttribute("result");
-		System.out.println("[ajaxLoginCheck] " + "isAjax // " + isAjax);
+		logger.debug("[ajaxLoginCheck] " + "isAjax // " + isAjax);
 		String result = null;
 		if ("E".equals(isAjax)) {
 			result = "E";
-			System.out.println("[ajaxLoginCheck result ] " + result);
+			logger.debug("[ajaxLoginCheck result ] " + result);
 			return result;
 		} else {
 			result = "GO_TO";
-			System.out.println("[ajaxLoginCheck result ] " + result);
+			logger.debug("[ajaxLoginCheck result ] " + result);
 			return result;
 		}
 	}
 	
 	// 회원 여부 확인 Ajax
-	@RequestMapping(value = "login.do", method = RequestMethod.POST)
+	@RequestMapping(value = "login.do")
 	public @ResponseBody String login(Member member, HttpServletRequest request) {
+		System.err.println(member);
+		
 		String result = null;
 		try {
 			result = service.loginCheck(member.getEmail(), member.getPassword());
@@ -78,6 +80,7 @@ public class MemberController {
 		return "";
 	}
 
+	
 	private void getSession(Member member, HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
 		Member member2 = service.selectMember(member.getEmail());
@@ -108,7 +111,7 @@ public class MemberController {
 	@RequestMapping(value = "dupCheck.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String dupCheck(String email) {
-		System.out.println("test : dupCheck");
+		logger.debug("test : dupCheck");
 		if (service.selectMember(email) != null) {
 			return "unusable";
 		} else {
@@ -126,7 +129,7 @@ public class MemberController {
 		member.setName(name);
 		System.out.println("member//" + member);
 		int result = service.joinMember(member);
-		System.out.println("member//" + member);
+		logger.debug ("member//" + member);
 		if (result == 1) {
 			return "Y";
 		} else {

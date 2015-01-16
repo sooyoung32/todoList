@@ -21,6 +21,15 @@ public class CommentController {
 
 	private Logger logger = Logger.getLogger(CommentController.class);
 
+	private Boolean ajaxCheck(HttpServletRequest request) {
+		String isAjax = (String) request.getAttribute("result");
+
+		if (("E").equals(isAjax)) {
+			return true;
+		}
+		return false;
+	}
+
 	@RequestMapping(value = "insertComment.do", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public String writeComment(Comment comment, int boardNo, String email, HttpServletRequest request)
@@ -28,40 +37,30 @@ public class CommentController {
 		logger.debug("코멘트 컨트롤러");
 		int commentNo = commentService.selectCommentLastNo();
 		comment.setCommentNo(commentNo);
-		String result = null;
-		String isAjax = (String) request.getAttribute("result");
-
-		if (("E").equals(isAjax)) {
-			result = "E";
-			return result;
-		}
-
-		int insert = commentService.writeComment(comment, boardNo, email);
 		
-		if (insert == 1) {
-			result = "C_WRITE_SUCCESS";
-			System.out.println("result/" + result);
-			return result;
-		} else if (insert == 0) {
-			result = "C_WRITE_FAIL";
-			System.out.println("result/" + result);
-			return result;
+		
+		if(ajaxCheck(request)){
+			return "E";
 		}
-		return result;
-
+		
+		int insert = commentService.writeComment(comment, boardNo, email);
+		if (insert == 1) {
+			return "C_WRITE_SUCCESS";
+		} else if (insert == 0) {
+			return  "C_WRITE_FAIL";
+		}
+		 return "";	
 	}
 
 	@RequestMapping(value = "deleteComment.do")
 	@ResponseBody
 	public String deleteComment(int commentNo, HttpServletRequest request) throws UnknownHostException {
 
-		String isAjax = (String) request.getAttribute("result");
-		System.out.println("에이젝스 //" + isAjax);
-		if (("E").equals(isAjax)) {
+		if(ajaxCheck(request)){
 			return "E";
 		}
 
-		System.out.println("삭제 코멘트번호//" + commentNo);
+		logger.debug("삭제 코멘트번호//" + commentNo);
 		if (commentService.deleteComment(commentNo) == 1) {
 			return "C_DELETE_SUCCESS";
 		} else {
@@ -73,13 +72,11 @@ public class CommentController {
 	@ResponseBody
 	public String updateComment(int commentNo, String content, HttpServletRequest request) throws UnknownHostException {
 
-		String isAjax = (String) request.getAttribute("result");
-		System.out.println("에이젝스 //" + isAjax);
-		if (("E").equals(isAjax)) {
+		if(ajaxCheck(request)){
 			return "E";
 		}
 
-		System.out.println("코멘트 번호//" + commentNo + " ----- 코멘트 수정 내용 //" + content);
+		logger.debug("코멘트 번호//" + commentNo + " ----- 코멘트 수정 내용 //" + content);
 		if (commentService.updateComment(content, commentNo) == 1) {
 			return "C_UPDATE_SUCCESS";
 		} else {
