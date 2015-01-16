@@ -28,7 +28,7 @@ import service.FileService;
 import vo.Board;
 import vo.BoardPage;
 import vo.Comment;
-import vo.UploadFile;
+import vo.MultipartFileList;
 
 @Controller
 public class BoardController {
@@ -52,36 +52,31 @@ public class BoardController {
 		mv.setViewName("board_list");
 
 		int totalBoardCount;
-		int startPage = 0;
-		int endPage = 0;
 		int startRow = 0;
 		int endRow = 0;
+		int startPage = 0;
+		int endPage = 0;
 		int totalPage = 0;
 		int prePage = 0;
 		int nextPage = 0;
 		int pageNo = 0;
 		List<Board> boardList;
 
-		if (searchKey != null && searchValue != null) {
+		if (searchKey != null && searchValue != null) { // 검색결과가 있을때
 			totalBoardCount = boardService.searchBoardCount(searchKey, searchValue);
-			// System.out.println("리스트 searchKey//"+searchKey +"//searchValue//"+searchValue);
 			mv.addObject("searchKey", searchKey);
 			mv.addObject("searchValue", searchValue);
 
 		} else {
 			totalBoardCount = boardService.selectBoardCount();
-			// System.out.println("검색X//"+totalBoardCount);
 		}
 
-		System.out.println("totCnt =" + totalBoardCount);
 		if (totalBoardCount > 0) { // 게시글이 있는 경우
-
 			pageNo = page;
 
 			// 게시글 순서 0-9, 10-19
 			startRow = (page - 1) * NUM_OF_BOARD;
 			endRow = startRow + NUM_OF_BOARD - 1;
-
 			// 리스트 받기
 			boardList = boardService.selectBoardList(startRow, endRow, searchKey, searchValue);
 
@@ -130,13 +125,7 @@ public class BoardController {
 				nextPage = (((pageNo + 1) > totalPage ? totalPage : (pageNo + 1))); // 다음 페이지 번호
 			}
 
-			// System.out.println("prePage//"+prePage);
-			// System.out.println("nextPage//"+nextPage);
-			// System.out.println("startPage//"+startPage);
-			// System.out.println("endPage//"+endPage);
-			// System.out.println("pageNo//"+pageNo);
-			// System.out.println("-------------------------------------");
-			System.out.println("보드리스트 화면입니다!!");
+			logger.debug("보드리스트 화면입니다!!");
 			BoardPage boardPage = new BoardPage(totalBoardCount, startPage, endPage, startRow, endRow, totalPage,
 					prePage, nextPage, pageNo, boardList);
 			mv.addObject("boardPage", boardPage);
@@ -153,23 +142,22 @@ public class BoardController {
 	@RequestMapping(value = "read.do")
 	public ModelAndView readBoard(int boardNo, boolean isHitCount, int page, String searchKey, String searchValue) {
 		Board board = boardService.readBoardByBoardNo(boardNo, isHitCount);
-		String content = board.getContent();
+
+		String content = board.getContent();// teaxArea 줄바꿈 처리
 		content = content.replaceAll("\r\n", "<br>");
-		System.out.println("글읽기 searchKey//" + searchKey + "//searchValue//" + searchValue + "//page//" + page);
 		board.setContent(content);
+
 		ModelAndView mv = new ModelAndView("read");
+
 		if (searchKey != null && searchValue != null) {
 			mv.addObject("searchKey", searchKey);
 			mv.addObject("searchValue", searchValue);
 			mv.addObject("page", page);
 		}
 		mv.addObject("board", board);
-		// mv.addObject("content", content);
 		List<Comment> commentList = commentService.readCommentListByBoardNo(boardNo);
-//		for(Comment c : commentList){
-//			logger.debug("보드 컨드롤러 코멘트 : "+c);
-//		}
 		mv.addObject("commentList", commentList);
+
 		return mv;
 	}
 
@@ -180,12 +168,12 @@ public class BoardController {
 
 	// 글쓰기 파일업로드실행
 	@RequestMapping(value = "write.do")
-	public String write(Board board, HttpServletRequest request, UploadFile uploadFile) {
+	public String write(Board board, HttpServletRequest request, MultipartFileList multiPartFileList) {
 		try {
 			int boardNo = boardService.selectLastNo();
 			// board.getContent().replaceAll("\n", "<br>");
-			List<vo.File> files = uploadFile(uploadFile, request, boardNo);
-			System.out.println("업로드파일/" + uploadFile);
+			List<vo.File> files = fileUpload(multiPartFileList, request, boardNo);
+			System.out.println("업로드파일/" + multiPartFileList);
 			System.out.println("원글번호/" + boardNo);
 			boardService.writeBoard(board);
 
@@ -201,9 +189,9 @@ public class BoardController {
 	}
 
 	// 파일 업로드
-	public List<vo.File> uploadFile(UploadFile voUploadFile, HttpServletRequest request, int boardNo) {
+	public List<vo.File> fileUpload(MultipartFileList multiPartFileList, HttpServletRequest request, int boardNo) {
 		List<vo.File> voFileList = new ArrayList<>();
-		List<MultipartFile> fileListFromClient = voUploadFile.getFileList(); // 클라이언트가 전송한 파일
+		List<MultipartFile> fileListFromClient = multiPartFileList.getFileList(); // 클라이언트가 전송한 파일
 		System.out.println("업로드 파일리스트//" + fileListFromClient);
 		List<String> filenames = new ArrayList<>();
 
@@ -228,7 +216,7 @@ public class BoardController {
 				String savedPath = path + "/" + savedFileName; // 저장될 파일 경로
 				filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
 
-				File uploadedFile = new File(savedPath);
+				File uploadedFile = new File(savedPath); // 서버에 파일 저장.
 
 				try {
 					multiPartFile.transferTo(uploadedFile); // 업로드 실행.
@@ -267,13 +255,13 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "reply.do", method = RequestMethod.POST)
-	public String reply(Board board, int boardNo, HttpServletRequest request, UploadFile uploadFile)
+	public String reply(Board board, int boardNo, HttpServletRequest request, MultipartFileList uploadFile)
 			throws UnknownHostException {
 		// System.out.println("컨트롤러 board//" + board);
 		// System.out.println("컨트롤러 보드넘버(원글)//" + boardNo);
 
 		int replyBoardNo = boardService.selectLastNo();
-		List<vo.File> voFileList = uploadFile(uploadFile, request, replyBoardNo);
+		List<vo.File> voFileList = fileUpload(uploadFile, request, replyBoardNo);
 		// System.out.println("업로드파일/" + uploadFile);
 		// System.out.println("원글번호/" + replyBoardNo);
 
@@ -286,60 +274,56 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "ajaxUpdateForm.do")
-	public @ResponseBody Map<Object, Object> ajaxUpdateForm(int boardNo , HttpServletRequest request) {
+	public @ResponseBody
+	Map<Object, Object> ajaxUpdateLoginCheck(int boardNo, HttpServletRequest request) {
 		String isAjax = (String) request.getAttribute("result");
 		Map<Object, Object> map = new HashMap<Object, Object>();
-		
-		logger.debug("업데이트에서 에이젝스 값 ////////////////"+isAjax ); 
+
+		logger.debug("업데이트에서 에이젝스 값 ////////////////" + isAjax);
 		if (!"E".equals(isAjax)) {
-			Board board = boardService.readBoardByBoardNo(boardNo, false);
-			map.put("boardNo",boardNo);
-		} else if("E".equals(isAjax)){
+			map.put("boardNo", boardNo);
+		} else if ("E".equals(isAjax)) {
 			map.put("isAjax", "E");
-			logger.debug("map ////////////////////////////   : "+ map);
+			logger.debug("map : " + map);
 		}
 		return map;
-		
+
 	}
-	
+
 	@RequestMapping(value = "updateForm.do")
-	public ModelAndView updateForm(int boardNo){
+	public ModelAndView updateForm(int boardNo) {
 		Board board = boardService.readBoardByBoardNo(boardNo, false);
 		ModelAndView mv = new ModelAndView("update_form");
 		mv.addObject("board", board);
 		return mv;
 	}
-	
-	
-	
 
 	@RequestMapping(value = "update.do", method = RequestMethod.POST)
-	public String update(Board updatedBoard, int boardNo, UploadFile voUploadFile, HttpServletRequest request,
+	public String update(Board updatedBoard, int boardNo, MultipartFileList multipartFileList, HttpServletRequest request,
 			String[] deletedFileList) throws UnknownHostException {
 
-		System.out.println("-----------------------------------");
-		System.out.println("여긴 오나?");
-		System.out.println("업데이트된 게시판// " + updatedBoard);
-		System.out.println("새로 업로드 파일// " + voUploadFile.getFileList());
-		System.out.println("httpRequest// " + request);
-		System.out.println("삭제된 파일 // " + deletedFileList);
-		System.out.println("-----------------------------------");
+		logger.debug("-----------------------------------");
+		logger.debug("업데이트된 게시판// " + updatedBoard);
+		logger.debug("새로 업로드 파일// " + multipartFileList.getFileList());
+		logger.debug("httpRequest// " + request);
+		logger.debug("삭제된 파일 // " + deletedFileList);
+		logger.debug("-----------------------------------");
 
 		if (deletedFileList != null) {
 			// 파일 삭제 수정
-
 			int fileNo;
-			int deletedFile;
-			for (String s : deletedFileList) {
-				fileNo = (int) Integer.parseInt(s);
+			int deleteResult;
+			for (String strFileNum : deletedFileList) {
+				fileNo = (int) Integer.parseInt(strFileNum);
 				vo.File voFile = fileServie.selectFileByFileNo(fileNo);
-				deletedFile = fileServie.deleteFile(fileNo);
-				System.out.println("수정: 삭제된 파일 업데이트 : " + voFile + "//업데이트 수행 결과 : " + deletedFile);
+				deleteResult = fileServie.deleteFile(fileNo);
+				logger.debug("수정: 삭제된 파일 업데이트 : " + voFile + "//업데이트 수행 결과 : " + deleteResult);
 			}
 		}
 
-		List<vo.File> voFileList = uploadFile(voUploadFile, request, boardNo);
+		List<vo.File> voFileList = fileUpload(multipartFileList, request, boardNo);
 		boardService.updateBoard(updatedBoard, boardNo, deletedFileList);
+		
 		// 파일 업데이트
 		for (vo.File voFile : voFileList) {
 			fileServie.insertFile(voFile, boardNo);
@@ -351,7 +335,6 @@ public class BoardController {
 	@RequestMapping(value = "delete.do")
 	public String delete(int boardNo) throws UnknownHostException {
 		Board updatedBoard = boardService.readBoardByBoardNo(boardNo, false);
-		System.out.println("원래 비밀번호있는 사용자 비번//" + updatedBoard);
 		boardService.deleteBoard(updatedBoard, boardNo);
 		return "redirect:boardList.do?page=1";
 	}
