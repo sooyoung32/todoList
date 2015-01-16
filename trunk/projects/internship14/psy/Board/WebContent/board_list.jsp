@@ -11,6 +11,7 @@
 
 <title>게시판 목록</title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script>
 </head>
 
 
@@ -34,6 +35,20 @@
 					<c:choose>
 						<c:when test="${empty sessionScope.email}">
 							<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()">
+							<!--
+  									아래는 소셜 플러그인으로 로그인 버튼을 넣는다.
+ 								 이 버튼은 자바스크립트 SDK에 그래픽 기반의 로그인 버튼을 넣어서 클릭시 FB.login() 함수를 실행하게 된다.
+								-->
+ 
+<!-- 									<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button> -->
+<!-- 									<fb:logout-button scope="public_profile,email" onlogout="checkLoginState();"></fb:logout-button> -->
+        							<!-- 로그인한 프로필 사진-->
+<!--       								<fb:profile-pic uid="loggedinuser" size="square" class=" fb_iframe_widget" ><span style="vertical-align: top; width: 0px; height: 0px; overflow: hidden;"></fb:profile-pic> -->
+     								<!-- 로그인한 이름 -->
+<!--       								<fb:name uid="loggedinuser" use-you="no" fb-xfbml-state="parsed"></fb:name> -->
+									<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" onlogin="checkLoginState();"></div>
+									<div id="status"></div>
+
 						</c:when>
 						<c:when test="${!empty sessionScope.email}">
 							${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="Logout">
@@ -173,9 +188,117 @@
 		</table>
 		
 		<input type="hidden" name="isHitCount" /> <input type="hidden" name="boardNo" />
+		
 	</form>
 
+<div id="fb-root" class=" fb_reset"></div>
+         
+
+
+
 <script type="text/javascript">
+
+
+
+//This is called with the results from from FB.getLoginStatus().
+
+
+function statusChangeCallback(response) {
+  console.log('statusChangeCallback');
+  console.log(response);
+  // response 객체는 현재 로그인 상태를 나타내는 정보를 보여준다. 
+  // 앱에서 현재의 로그인 상태에 따라 동작하면 된다.
+  // FB.getLoginStatus().의 레퍼런스에서 더 자세한 내용이 참조 가능하다.
+  if (response.status === 'connected') {
+	  $.ajax({
+		  url: '<c:url value="/fbLogin.do" />',
+		  data: {
+			  fUserID:response.authResponse.userID,
+		  }
+	  });
+	  document.getElementById('status').innerHTML = '로그인되었습니다. ' +  'into this app.';
+  } else if (response.status === 'not_authorized') {
+    // 페이스북에는 로그인 했으나, 앱에는 로그인이 되어있지 않다.
+    document.getElementById('status').innerHTML = 'Please log ' +  'into this app.';
+    
+    
+  } else {
+    // 페이스북에 로그인이 되어있지 않다. 따라서, 앱에 로그인이 되어있는지 여부가 불확실하다.
+    document.getElementById('status').innerHTML = 'Please log ' +  'into Facebook.';
+  }
+}
+
+// 이 함수는 누군가가 로그인 버튼에 대한 처리가 끝났을 때 호출된다.
+// onlogin 핸들러를 아래와 같이 첨부하면 된다.
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
+
+function fbLogIn() {
+	FB.login(function(response){
+	    console.log(response);
+	});
+}
+
+window.fbAsyncInit = function() {
+	FB.init({
+	  appId      : '829852567056773',
+	  cookie     : true,  // 쿠키가 세션을 참조할 수 있도록 허용
+	  xfbml      : true,  // 소셜 플러그인이 있으면 처리
+	  version    : 'v2.2' // 버전 2.2 사용
+	});
+
+// 자바스크립트 SDK를 초기화 했으니, FB.getLoginStatus()를 호출한다.
+//.이 함수는 이 페이지의 사용자가 현재 로그인 되어있는 상태 3가지 중 하나를 콜백에 리턴한다.
+// 그 3가지 상태는 아래와 같다.
+// 1. 앱과 페이스북에 로그인 되어있다. ('connected')
+// 2. 페이스북에 로그인되어있으나, 앱에는 로그인이 되어있지 않다. ('not_authorized')
+// 3. 페이스북에 로그인이 되어있지 않아서 앱에 로그인이 되었는지 불확실하다.
+//
+// 위에서 구현한 콜백 함수는 이 3가지를 다루도록 되어있다.
+
+// 	function showUserInfo(id) {
+// 	     FB.api({
+// 	       method: 'fql.query',
+// 	       query: 'SELECT name, pic_square FROM user WHERE uid='+id
+// 	     },function(response) {
+// 	       document.getElementById('userInfo').innerHTML += (
+// 	         '<img src="' + response[0].pic_square + '"> ' + response[0].name
+// 	       );
+// 	     });
+// 	}
+
+	FB.getLoginStatus(function(response) {
+		statusChangeCallback(response);
+	});
+
+//     FB.login(function(response){
+// 	    // response 객체를 처리하면 된다.
+// 	});
+
+// 	FB.api('/me', function(response) {
+// 	    console.log(JSON.stringify(response));
+// 	});
+// 	FB.logout(function(response) {
+// 	    // 사용자 로그 아웃 이후 콜백처리
+// 	});
+
+};
+
+// 로그인이 성공한 다음에는 간단한 그래프API를 호출한다.
+// 이 호출은 statusChangeCallback()에서 이루어진다.
+function testAPI() {
+  console.log('Welcome!  Fetching your information.... ');
+  FB.api('/me', function(response) {
+    console.log('Successful login for: ' + response.name);
+    document.getElementById('status').innerHTML =
+      'Thanks for logging in, ' + response.name + '!';
+  });
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$(function() {
 		$('#logout').click(function() {
 			location.href = "/Board_psy/logout.do";
