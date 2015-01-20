@@ -30,6 +30,4 @@
 		<property name="basePackage" value="mapper" />
 	</bean>
 
-
-
 </beans>
