@@ -8,6 +8,7 @@ import java.util.List;
 import mapper.BoardMapper;
 import mapper.MemberMapper;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,9 @@ import vo.Member;
 @Component
 public class MemberService {
 	@Autowired
-	MemberMapper memberMapper;
-
+	private MemberMapper memberMapper;
+	private Logger logger =Logger.getLogger(MemberService.class);
+	
 	// 가입
 	public int joinMember(Member member) {
 		try {
@@ -30,22 +32,28 @@ public class MemberService {
 	}
 
 	// 비번수정
-	public int updateMember(Member member, String newPW) throws UnknownHostException {
+	public int updateMember(Member member, String password) throws UnknownHostException {
 
-		boolean pwCheck = false;
-		if (memberMapper.selectMember(member.getEmail()).getPassword().equals(member.getPassword())) {
-			pwCheck = true;
-		} else {
-			pwCheck = false;
-		}
-
-		if (pwCheck) {
-			member.setPassword(newPW);
-			member.setModifyDate(new Date());
-			member.setModifyIP(InetAddress.getLocalHost().toString());
-			return memberMapper.updateMember(member);
-		}
-		return 0;
+//		boolean pwCheck = false;
+//		if (memberMapper.selectMember(member.getEmail()).getPassword().equals(member.getPassword())) {
+//			pwCheck = true;
+//		} else {
+//			pwCheck = false;
+//		}
+//
+//		if (pwCheck) {
+//			member.setPassword(newPW);
+//			member.setModifyDate(new Date());
+//			member.setModifyIP(InetAddress.getLocalHost().toString());
+//			return memberMapper.updateMember(member);
+//		}
+//		return 0;
+		member.setPassword(password);
+		member.setModifyDate(new Date());
+		member.setModifyIP(InetAddress.getLocalHost().toString());
+		logger.debug("멤버 서비스 페북 업데이트 : "+member);
+		return memberMapper.updateMember(member);
+		
 	}
 
 	// 회원탈퇴
@@ -87,5 +95,11 @@ public class MemberService {
 			return "success";
 		}
 	}
+	
+	public Member selectFbMember(String fbUserId){
+		return memberMapper.selectFbMember(fbUserId);
+	}
+	
+	
 
 }
