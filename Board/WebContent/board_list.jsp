@@ -9,9 +9,13 @@
 <link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
 
 
-<title>게시판 목록</title>
+<title>게시판 목록 </title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script type="text/javascript" id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="../js/jquery.bpopup.min.js"></script>
+<script src="http:////cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+<!-- <script type="text/javascript" id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script> -->
 </head>
 
 
@@ -32,27 +36,40 @@
 
 			<tr>
 				<td class="user_layout">
+				
+					<div id="popup">
+   						 <span class="button b-close"><span>X</span></span>
+   						 <p>처음부터 팝업 문서에 포함되어 있는 div - 클릭시 레이어로 나옴.</p>
+					</div>
+					<div id="popup2">
+  						 <span class="button b-close"><span>X</span></span>
+   						 <div class="content"></div>
+					</div>
+      					
+					
+      					<div class="fb-login-button" 
+      						data-scope="public_profile,email"
+      						data-max-rows="1" 
+      						data-size="large" 
+      						data-show-faces="true" 
+      						data-auto-logout-link="true" 
+      						data-default-audience = "friends"
+      						onlogin="facebookLogin();"
+      					></div>
+						<div><input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()"></div>
+				
+					<span class="button small pop1">레이어팝업!!</span>
+				
+<!-- 				<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" onclick="fbLogin();"></div> -->
+						<div id="status"></div>
 					<c:choose>
-						<c:when test="${empty sessionScope.email}">
-							<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()">
-							<!--
-  									아래는 소셜 플러그인으로 로그인 버튼을 넣는다.
- 								 이 버튼은 자바스크립트 SDK에 그래픽 기반의 로그인 버튼을 넣어서 클릭시 FB.login() 함수를 실행하게 된다.
-								-->
- 
-<!-- 									<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button> -->
-<!-- 									<fb:logout-button scope="public_profile,email" onlogout="checkLoginState();"></fb:logout-button> -->
-        							<!-- 로그인한 프로필 사진-->
-<!--       								<fb:profile-pic uid="loggedinuser" size="square" class=" fb_iframe_widget" ><span style="vertical-align: top; width: 0px; height: 0px; overflow: hidden;"></fb:profile-pic> -->
-     								<!-- 로그인한 이름 -->
-<!--       								<fb:name uid="loggedinuser" use-you="no" fb-xfbml-state="parsed"></fb:name> -->
-									<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" onlogin="checkLoginState();"></div>
-									<div id="status"></div>
-
-						</c:when>
-						<c:when test="${!empty sessionScope.email}">
+					
+					<c:when test="${empty sessionScope.email}">
+						<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()">
+					</c:when>
+					<c:when test="${!empty sessionScope.email}">
 							${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="Logout">
-						</c:when>
+					</c:when>
 					</c:choose>
 				</td>
 			</tr>
@@ -140,6 +157,7 @@
 												</c:forEach>
 											</c:when>
 
+
 											<c:otherwise>
 												${fn:length(board.files)}
 											</c:otherwise>
@@ -179,7 +197,7 @@
 				<td class="footer_layout">
 					<input type="hidden" value="${sessionScope.email }" name="email"> 
 					<input type="button" id="writeForm"	name="writeForm" value="Write" style="color: navy;">
-					<c:if test="${empty sessionScope.email }">
+					<c:if test="${empty sessionScope.email}">
 						로그인 후 게시글을 작성하세요!
 					</c:if>
 				</td>
@@ -197,168 +215,246 @@
 
 
 <script type="text/javascript">
+	
+;(function($) {
+    $(function() {
+        var $p1 = $('#popup'),
+            $p2 = $('#popup2');
+            // i = 0;
 
+        $('body').on('click', '.small', function(e) {
+            e.preventDefault();
+            var popup = $(this).hasClass('pop1') ? $p1 : $p2,
+                content = $('.content'),
+                self = $(this);
+
+            popup.bPopup(self.data('bpopup') || {});
+     });
+
+ });
+})(jQuery);
 
 
 //This is called with the results from from FB.getLoginStatus().
 
 
-function statusChangeCallback(response) {
-  console.log('statusChangeCallback');
-  console.log(response);
-  // response 객체는 현재 로그인 상태를 나타내는 정보를 보여준다. 
-  // 앱에서 현재의 로그인 상태에 따라 동작하면 된다.
-  // FB.getLoginStatus().의 레퍼런스에서 더 자세한 내용이 참조 가능하다.
-  if (response.status === 'connected') {
-	  $.ajax({
-		  url: '<c:url value="/fbLogin.do" />',
-		  data: {
-			  fUserID:response.authResponse.userID,
-		  }
-	  });
-	  document.getElementById('status').innerHTML = '로그인되었습니다. ' +  'into this app.';
-  } else if (response.status === 'not_authorized') {
-    // 페이스북에는 로그인 했으나, 앱에는 로그인이 되어있지 않다.
-    document.getElementById('status').innerHTML = 'Please log ' +  'into this app.';
-    
-    
-  } else {
-    // 페이스북에 로그인이 되어있지 않다. 따라서, 앱에 로그인이 되어있는지 여부가 불확실하다.
-    document.getElementById('status').innerHTML = 'Please log ' +  'into Facebook.';
-  }
-}
 
-// 이 함수는 누군가가 로그인 버튼에 대한 처리가 끝났을 때 호출된다.
-// onlogin 핸들러를 아래와 같이 첨부하면 된다.
-function checkLoginState() {
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
-}
+	function statusChangeCallback(response) {
+		console.log('statusChangeCallback');
+		console.log(response);
 
-function fbLogIn() {
-	FB.login(function(response){
-	    console.log(response);
-	});
-}
+		if (response.status === 'connected') {
+// 			FB.api('/me',function(user) {
+// 			console.log('Successful login for: '+ user.name);
+// 			console.log(JSON.stringify(user));
+// 			document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ user.name	+ ' , '	+ user.email+ ' ! ';
+// 				$.ajax({
+// 					url : '<c:url value="/fbLogin.do" />',
+// 					data : {
+// 							fbUserId : response.authResponse.userID,
+// 							fbToken : response.authResponse.accessToken,
+// 							name : user.name,
+// 							email : user.email
+// 						},
+// 					success : function(result) {
+// 					if (result == "success") {
+// 						alert("로긴석세스 : "+result);
+// 		// 				location.reload();
+// 					} else {
+// 						alert("페북 로그인 중 오류 발생");
+// 		// 				location.reload();
+// 					}
+// 				  },
+// 	  			  error : function() {
+//   			      alert("페북 로그인 에이젝스 처리중 에러가 발생했습니다");
+// 						location.reload();
+// 					}
 
-window.fbAsyncInit = function() {
-	FB.init({
-	  appId      : '829852567056773',
-	  cookie     : true,  // 쿠키가 세션을 참조할 수 있도록 허용
-	  xfbml      : true,  // 소셜 플러그인이 있으면 처리
-	  version    : 'v2.2' // 버전 2.2 사용
-	});
+// 				});
+// 			});
 
-// 자바스크립트 SDK를 초기화 했으니, FB.getLoginStatus()를 호출한다.
-//.이 함수는 이 페이지의 사용자가 현재 로그인 되어있는 상태 3가지 중 하나를 콜백에 리턴한다.
-// 그 3가지 상태는 아래와 같다.
-// 1. 앱과 페이스북에 로그인 되어있다. ('connected')
-// 2. 페이스북에 로그인되어있으나, 앱에는 로그인이 되어있지 않다. ('not_authorized')
-// 3. 페이스북에 로그인이 되어있지 않아서 앱에 로그인이 되었는지 불확실하다.
-//
-// 위에서 구현한 콜백 함수는 이 3가지를 다루도록 되어있다.
+		} else if (response.status === 'not_authorized') {
+			document.getElementById('status').innerHTML = 'Please log '
+		} else {
+			document.getElementById('status').innerHTML = 'Please log '	+ 'into Facebook.';
+		
+		}
+	}
 
-// 	function showUserInfo(id) {
-// 	     FB.api({
-// 	       method: 'fql.query',
-// 	       query: 'SELECT name, pic_square FROM user WHERE uid='+id
-// 	     },function(response) {
-// 	       document.getElementById('userInfo').innerHTML += (
-// 	         '<img src="' + response[0].pic_square + '"> ' + response[0].name
-// 	       );
-// 	     });
-// 	}
 
-	FB.getLoginStatus(function(response) {
-		statusChangeCallback(response);
-	});
+	function facebookLogin(){
+		FB.login(function(response){
+			FB.api('/me',function(user) {
+				console.log('Successful login for: '+ user.name);
+				console.log(JSON.stringify(user));
+				document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ user.name	+ ' , '	+ user.email+ ' ! ';
+					$.ajax({
+						url : '<c:url value="/fbLogin.do" />',
+						data : {
+								fbUserId : response.authResponse.userID,
+								fbToken : response.authResponse.accessToken,
+								name : user.name,
+								email : user.email
+							},
+						success : function(result) {
+						if (result == "success") {
+							alert("로긴석세스 : "+result);
+							location.reload();
+						} else {
+							alert("페북 로그인 중 오류 발생");
+			// 				location.reload();
+						}
+					  },
+		  			  error : function() {
+	  			      alert("페북 로그인 에이젝스 처리중 에러가 발생했습니다");
+							location.reload();
+						}
 
-//     FB.login(function(response){
-// 	    // response 객체를 처리하면 된다.
-// 	});
+					});
+				});
+		})
+	}
 
-// 	FB.api('/me', function(response) {
-// 	    console.log(JSON.stringify(response));
-// 	});
-// 	FB.logout(function(response) {
-// 	    // 사용자 로그 아웃 이후 콜백처리
-// 	});
+	function checkLoginState() {
+		FB.getLoginStatus(function(response) {
+			statusChangeCallback(response);
+		});
+	}
 
-};
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId : '829852567056773',
+			cookie : true, // 쿠키가 세션을 참조할 수 있도록 허용
+			xfbml : true, // 소셜 플러그인이 있으면 처리
+			version : 'v2.1' // 버전 2.1 사용
+		});
 
-// 로그인이 성공한 다음에는 간단한 그래프API를 호출한다.
-// 이 호출은 statusChangeCallback()에서 이루어진다.
-function testAPI() {
-  console.log('Welcome!  Fetching your information.... ');
-  FB.api('/me', function(response) {
-    console.log('Successful login for: ' + response.name);
-    document.getElementById('status').innerHTML =
-      'Thanks for logging in, ' + response.name + '!';
-  });
-}
+		FB.getLoginStatus(function(response) {
+			statusChangeCallback(response);
+		});
+		
+		FB.Event.subscribe('auth.logout', function() {
+			alert("로그아웃");
+			// 		location.replace("/Board_psy/logout.do");
+			$.ajax({
+				url : '<c:url value="/fbLogout.do" />',
+				success : function(result) {
+					if (result == "logout") {
+						alert("로그아웃 성공 : " + result);
+						location.reload();
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					} else {
+						alert("페북 로그아웃 중 오류 발생");
+						location.reload();
+					}
+				},
+				error : function() {
+					alert("페북 로그아웃 에이젝스 처리중 에러가 발생했습니다");
+					location.reload();
+				}
+
+			});
+
+		});
+		
+		
+		
+		
+		
+		
+		
+	};
+	
+	
+	
+	// 로그인이 성공한 다음에는 간단한 그래프API를 호출한다.
+	// 이 호출은 statusChangeCallback()에서 이루어진다.
+
+	function testAPI() {
+		console.log('Welcome!  Fetching your information.... ');
+		FB.api('/me',function(response) {
+			console.log('Successful login for: '+ response.name);
+			document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ response.name + '!';
+		});
+	}
+
+	(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id))
+			return;
+		js = d.createElement(s);
+		js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$(function() {
 		$('#logout').click(function() {
 			location.href = "/Board_psy/logout.do";
 		});
 
-		$('#writeForm').click(function() {
-				$.ajax({
-					type : "post",
-					url : "/Board_psy/ajaxLoginCheck.do",
-					data : {ajaxYn: "Y"},
-					success : function(result) {
-						if(result == "E"){
-							alert("먼저 로그인을 해주세요"); 
-							loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
-						
-						}else if (result == "GO_TO") {
-							location.replace("/Board_psy/writeForm.do");
+		$('#writeForm').click(
+				function() {
+					$.ajax({
+						type : "post",
+						url : "/Board_psy/ajaxLoginCheck.do",
+						data : {
+							ajaxYn : "Y"
+						},
+						success : function(result) {
+							if (result == "E") {
+								alert("먼저 로그인을 해주세요");
+								loginOpen = window.open(
+										'/Board_psy/loginForm.do', '로그인',
+										'width=300, height=200');
+
+							} else if (result == "GO_TO") {
+								location.replace("/Board_psy/writeForm.do");
+							}
+						},
+						error : function() {
+							window.location.reload(true);
+							alert("writeCheck ajax 에러");
 						}
-					},
-					error : function() {
-						window.location.reload(true);
-						alert("writeCheck ajax 에러");
-					}
-				});	
-		});
-		$("input[name='searchBtn']").click(function(){
+					});
+				});
+		$("input[name='searchBtn']").click(function() {
 			$("input[name='page']").val(1);
 			document.form.submit();
-		});	
-		$("input.txtbox").unbind("keydown").bind("keydown",function(e){
-			if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
 		});
-		$("input.txtbox").unbind("keyup").bind("keyup",function(e){
-		    if (e.keyCode == 13) $("#form input[name='searchBtn']").click();
+		$("input.txtbox").unbind("keydown").bind("keydown", function(e) {
+			if (e.keyCode == 13)
+				$("#form input[name='searchBtn']").click();
+		});
+		$("input.txtbox").unbind("keyup").bind("keyup", function(e) {
+			if (e.keyCode == 13)
+				$("#form input[name='searchBtn']").click();
 		});
 	});
-	function fn_pageMove(page){
+	function fn_pageMove(page) {
 		$("input[name='page']").val(page);
 		document.form.submit();
 	}
-	
-	function fn_gotoBoard(boardNo){
+
+	function fn_gotoBoard(boardNo) {
 		$("input[name='page']").val('${boardPage.pageNo}');
 		$("input[name='isHitCount']").val('true');
 		$("input[name='boardNo']").val(boardNo);
-		document.form.action  = "/Board_psy/read.do";
+		document.form.action = "/Board_psy/read.do";
 		document.form.submit();
-	}	
-	
-	
+	}
+
 	var loginOpen = null;
-	function fn_loginOpen(){
-		if ( loginOpen == null || loginOpen.closed) {
-			
-			loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+	function fn_loginOpen() {
+		if (loginOpen == null || loginOpen.closed) {
+
+			loginOpen = window.open('/Board_psy/loginForm.do', '로그인',
+					'width=300, height=200');
 		} else {
 			loginOpen.focus();
 		}
 	}
-	
 </script>
 </body>
 </html>

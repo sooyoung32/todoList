@@ -61,8 +61,7 @@
 							success : function(result) {
 								if (result == "Y") {
 									alert("회원가입 성공");
-									$("#email", opener.document).val(
-											$('#email').val());
+									$("#email", opener.document).val($('#email').val());
 									window.close();
 								} else {
 									alert("회원가입 실패");
