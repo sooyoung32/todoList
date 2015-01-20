@@ -155,6 +155,7 @@ public class BoardController {
 			mv.addObject("page", page);
 		}
 		mv.addObject("board", board);
+		logger.debug("°Ô½Ã±Û "+ board);
 		List<Comment> commentList = commentService.readCommentListByBoardNo(boardNo);
 		mv.addObject("commentList", commentList);
 
