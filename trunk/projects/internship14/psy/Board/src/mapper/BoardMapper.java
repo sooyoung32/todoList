@@ -21,4 +21,6 @@ public interface BoardMapper {
 	public List<Board> searchBoardList(Map<String, Object> map);
 	public int searchBoardCount(Map<String, Object> map);
 	
+	
+	
 }

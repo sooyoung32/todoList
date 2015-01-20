@@ -21,6 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="MODIFY_IP" property="modifyIP" />
 		<result column="FLAG" property="flag" />
 
+
 		<association property="writer" javaType="Member" column="EMAIL">
 			<id column="EMAIL" property="email" />
 			<result column="PASSWORD" property="password" />
