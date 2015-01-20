@@ -12,6 +12,7 @@ public interface MemberMapper {
 	public Member selectMember(String email);
 	public List<Member> selectMemberList();
 	public int selectMemberCount();
+	public Member selectFbMember(String fbUserId); 
 	
 	
 }
