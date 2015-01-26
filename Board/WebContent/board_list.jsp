@@ -12,12 +12,40 @@
 <title>게시판 목록 </title>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="../js/jquery.bpopup.min.js"></script>
+<script src="http://cfs.tistory.com/custom/blog/173/1736984/skin/images/jquery.bpopup.min.js"></script>
 <script src="http:////cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
 <!-- <script type="text/javascript" id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script> -->
 </head>
+<script type="text/javascript">
 
+function go_popup() {
+		$('#popup').bPopup();
+};
+</script>
+</script>
+
+<style type="text/css">
+
+.Pstyle {
+	opacity: 0;
+	display: none;
+	position: relative;
+	width: auto;
+	border: 5px solid #fff;
+	padding: 20px;
+	background-color: #fff;
+}
+
+.b-close {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	padding: 5px;
+	display: inline-block;
+	cursor: pointer;
+}
+</style>
 
 <body>
 	<fmt:requestEncoding value="UTF-8" />
@@ -36,39 +64,37 @@
 
 			<tr>
 				<td class="user_layout">
-				
-					<div id="popup">
-   						 <span class="button b-close"><span>X</span></span>
-   						 <p>처음부터 팝업 문서에 포함되어 있는 div - 클릭시 레이어로 나옴.</p>
-					</div>
-					<div id="popup2">
-  						 <span class="button b-close"><span>X</span></span>
-   						 <div class="content"></div>
-					</div>
-      					
 					
-      					<div class="fb-login-button" 
-      						data-scope="public_profile,email"
-      						data-max-rows="1" 
-      						data-size="large" 
-      						data-show-faces="true" 
-      						data-auto-logout-link="true" 
-      						data-default-audience = "friends"
-      						onlogin="facebookLogin();"
-      					></div>
-						<div><input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()"></div>
-				
-					<span class="button small pop1">레이어팝업!!</span>
 				
 <!-- 				<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" onclick="fbLogin();"></div> -->
-						<div id="status"></div>
 					<c:choose>
 					
 					<c:when test="${empty sessionScope.email}">
-						<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()">
+						<input type="button" value="로그인" onclick="go_popup()">
+							<div id="popup" class="Pstyle">
+							<span class="b-close">X</span>
+							<div class="content" style="height: auto; width: auto;">
+      						<div class="fb-login-button" 
+      							data-scope="public_profile,email"
+      							data-max-rows="1" 
+      							data-size="large" 
+      							data-show-faces="true" 
+      							data-auto-logout-link="false" 
+      							data-default-audience = "friends"
+      			
+      							onlogin="facebookLogin();"
+      						></div>
+							<div id="status"></div>
+						
+							<div><input type="button" name="login" id="login" value="KwareLogin" onclick="fn_loginOpen()"></div>
+							<br>케이웨어 계정으로 로그인
+						</div>
+					</div>
+<!-- 						<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()"> -->
 					</c:when>
 					<c:when test="${!empty sessionScope.email}">
 							${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="Logout">
+																<a href="#" onclick="FB.logout();" id="FBLogout">[Facebook logout]</a><br>
 					</c:when>
 					</c:choose>
 				</td>
@@ -274,9 +300,9 @@
 // 			});
 
 		} else if (response.status === 'not_authorized') {
-			document.getElementById('status').innerHTML = 'Please log '
+// 			document.getElementById('status').innerHTML = 'Please log '
 		} else {
-			document.getElementById('status').innerHTML = 'Please log '	+ 'into Facebook.';
+// 			document.getElementById('status').innerHTML = 'Please log '	+ 'into Facebook.';
 		
 		}
 	}
@@ -312,7 +338,7 @@
 
 					});
 				});
-		})
+		});
 	}
 
 	function checkLoginState() {
@@ -333,49 +359,52 @@
 			statusChangeCallback(response);
 		});
 		
-		FB.Event.subscribe('auth.logout', function() {
-			alert("로그아웃");
-			// 		location.replace("/Board_psy/logout.do");
-			$.ajax({
-				url : '<c:url value="/fbLogout.do" />',
-				success : function(result) {
-					if (result == "logout") {
-						alert("로그아웃 성공 : " + result);
-						location.reload();
+		
+	FB.Event.subscribe('auth.logout', function() {
+			
+			var result = confirm('현재 Facebook으로 로그인 된 모든 사이트에서 로그 아웃하시겠습니까?'
+								+ 'Yes면 모두 로그아웃 No면 Kware Board에서만 로그아웃');
 
-					} else {
-						alert("페북 로그아웃 중 오류 발생");
+			if (result) {
+				//yes
+				location.href = "/Board_psy/logout.do";
+			} else {
+				$.ajax({
+					url : '<c:url value="/fbLogout.do" />',
+					success : function(result) {
+						if (result == "logout") {
+							alert("로그아웃 성공 : " + result);
+							location.reload();
+
+						} else {
+							alert("페북 로그아웃 중 오류 발생");
+							location.reload();
+						}
+					},
+					error : function() {
+						alert("페북 로그아웃 에이젝스 처리중 에러가 발생했습니다");
 						location.reload();
 					}
-				},
-				error : function() {
-					alert("페북 로그아웃 에이젝스 처리중 에러가 발생했습니다");
-					location.reload();
-				}
 
-			});
+				});
+				location.replace('index.php');
+				
+			}
 
 		});
-		
-		
-		
-		
-		
-		
-		
 	};
 	
 	
-	
+
 	// 로그인이 성공한 다음에는 간단한 그래프API를 호출한다.
 	// 이 호출은 statusChangeCallback()에서 이루어진다.
 
 	function testAPI() {
 		console.log('Welcome!  Fetching your information.... ');
-		FB.api('/me',function(response) {
+		FB.api(	'/me',	function(response) {
 			console.log('Successful login for: '+ response.name);
-			document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ response.name + '!';
-		});
+						document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ response.name + '!';
+			});
 	}
 
 	(function(d, s, id) {
@@ -388,11 +417,40 @@
 		fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
 
+	
+	function fnOpenNormalDialog() {
+	    $("#dialog-confirm").html("FB으로 로그인된 모든 계정에 로그아웃하시겠습니까?");
+
+	    // Define the Dialog and its properties.
+	    $("#dialog-confirm").dialog({
+	        resizable: false,
+	        modal: true,
+	        title: "Modal",
+	        height: 250,
+	        width: 400,
+	        buttons: {
+	            "Yes": function () {
+	                
+	                $(this).dialog('close');
+	            },
+	                "No": function () {
+	                
+	                $(this).dialog('close');
+	                
+	            }
+	        }
+	    });
+	}
+	
+	$('FBLogout').click(fnOpenNormalDialog());
+	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$(function() {
 		$('#logout').click(function() {
 			location.href = "/Board_psy/logout.do";
 		});
+	
 
 		$('#writeForm').click(
 				function() {
