@@ -95,9 +95,9 @@ public class MemberController {
 	@RequestMapping(value = "logout.do", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-//		session.removeAttribute("email");
-//		session.removeAttribute("name");
-		session.invalidate();
+		session.removeAttribute("email");
+		session.removeAttribute("name");
+//		session.invalidate();
 		logger.debug("·Î±×¾Æ¿ô! ¼¼¼ÇºüÀ×");
 		return "redirect:boardList.do?page=1";
 	}
