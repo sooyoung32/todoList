@@ -10,11 +10,16 @@
 
 
 <title>게시판 목록 </title>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://cfs.tistory.com/custom/blog/173/1736984/skin/images/jquery.bpopup.min.js"></script>
-<script src="http:////cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" type="text/css" />
 
+<script src="http://code.jquery.com/jquery-1.10.3.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+
+<script src="http://cfs.tistory.com/custom/blog/173/1736984/skin/images/jquery.bpopup.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+<script src="js/jquery.easy-confirm-dialog.js"></script>
 <!-- <script type="text/javascript" id="facebook-jssdk" src="http://connect.facebook.net/en_US/sdk.js"></script> -->
 </head>
 <script type="text/javascript">
@@ -23,7 +28,7 @@ function go_popup() {
 		$('#popup').bPopup();
 };
 </script>
-</script>
+
 
 <style type="text/css">
 
@@ -65,6 +70,15 @@ function go_popup() {
 			<tr>
 				<td class="user_layout">
 					
+					<span id="signinButton">
+ 						 <span class="g-signin"
+   							 data-callback="signinCallback"
+    				    	 data-clientid="13608227291-010l8ejltdeajig3d9ardslq6uo3ng5a.apps.googleusercontent.com"
+   							 data-cookiepolicy="single_host_origin"
+   							 data-requestvisibleactions="http://schemas.google.com/AddActivity"
+    						 data-scope="https://www.googleapis.com/auth/plus.login">
+ 					 	</span>
+					</span>
 				
 <!-- 				<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true" onclick="fbLogin();"></div> -->
 					<c:choose>
@@ -78,14 +92,13 @@ function go_popup() {
       							data-scope="public_profile,email"
       							data-max-rows="1" 
       							data-size="large" 
-      							data-show-faces="true" 
+      							data-show-faces="false" 
       							data-auto-logout-link="false" 
       							data-default-audience = "friends"
-      			
       							onlogin="facebookLogin();"
       						></div>
 							<div id="status"></div>
-						
+							<p></p>
 							<div><input type="button" name="login" id="login" value="KwareLogin" onclick="fn_loginOpen()"></div>
 							<br>케이웨어 계정으로 로그인
 						</div>
@@ -93,8 +106,9 @@ function go_popup() {
 <!-- 						<input type="button" name="login" id="login" value="Login" onclick="fn_loginOpen()"> -->
 					</c:when>
 					<c:when test="${!empty sessionScope.email}">
-							${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="Logout">
-																<a href="#" onclick="FB.logout();" id="FBLogout">[Facebook logout]</a><br>
+							${sessionScope.name} 님 환영합니다! <input type="button" name="logout" id="logout" value="Logout"/>
+						<div id="dialog-confirm"></div>
+<!-- 																<a href="#" onclick="FB.logout();" id="FBLogout">[Facebook logout]</a><br> -->
 					</c:when>
 					</c:choose>
 				</td>
@@ -260,44 +274,64 @@ function go_popup() {
  });
 })(jQuery);
 
+////////////////////////////////////////////////////////////////////google login 
+    
+    //자바 스크립트 파일 비동기 로드 
+    (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/client:plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+
+	//로그인 처리
+    function signinCallback(authResult) {
+    	  if (authResult['access_token']) {
+    	    // 승인 성공
+    	    // 사용자가 승인되었으므로 로그인 버튼 숨김. 예:
+    	    document.getElementById('signinButton').setAttribute('style', 'display: none');
+    	  } else if (authResult['error']) {
+    	    // 오류가 발생했습니다.
+    	    // 가능한 오류 코드:
+    	    //   "access_denied" - 사용자가 앱에 대한 액세스 거부
+    	    //   "immediate_failed" - 사용자가 자동으로 로그인할 수 없음
+    	    // console.log('오류 발생: ' + authResult['error']);
+    	  }
+    	}
+
+    //액세스 토큰 취소 및 앱 연결 해제
+    function disconnectUser(access_token) {
+    	  var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' +
+    	      access_token;
+
+    	  // 비동기 GET 요청을 수행합니다.
+    	  $.ajax({
+    	    type: 'GET',
+    	    url: revokeUrl,
+    	    async: false,
+    	    contentType: "application/json",
+    	    dataType: 'jsonp',
+    	    success: function(nullResponse) {
+    	      // 사용자가 연결 해제되었으므로 작업을 수행합니다.
+    	      // 응답은 항상 정의되지 않음입니다.
+    	    },
+    	    error: function(e) {
+    	      // 오류 처리
+    	      // console.log(e);
+    	      // 실패한 경우 사용자가 수동으로 연결 해제하게 할 수 있습니다.
+    	      // https://plus.google.com/apps
+    	    }
+    	  });
+    	}
+    	// 버튼 클릭으로 연결 해제를 실행할 수 있습니다.
+    	$('#revokeButton').click(disconnectUser);
 
 //This is called with the results from from FB.getLoginStatus().
-
-
 
 	function statusChangeCallback(response) {
 		console.log('statusChangeCallback');
 		console.log(response);
 
 		if (response.status === 'connected') {
-// 			FB.api('/me',function(user) {
-// 			console.log('Successful login for: '+ user.name);
-// 			console.log(JSON.stringify(user));
-// 			document.getElementById('status').innerHTML = 'Thanks for logging in, '	+ user.name	+ ' , '	+ user.email+ ' ! ';
-// 				$.ajax({
-// 					url : '<c:url value="/fbLogin.do" />',
-// 					data : {
-// 							fbUserId : response.authResponse.userID,
-// 							fbToken : response.authResponse.accessToken,
-// 							name : user.name,
-// 							email : user.email
-// 						},
-// 					success : function(result) {
-// 					if (result == "success") {
-// 						alert("로긴석세스 : "+result);
-// 		// 				location.reload();
-// 					} else {
-// 						alert("페북 로그인 중 오류 발생");
-// 		// 				location.reload();
-// 					}
-// 				  },
-// 	  			  error : function() {
-//   			      alert("페북 로그인 에이젝스 처리중 에러가 발생했습니다");
-// 						location.reload();
-// 					}
-
-// 				});
-// 			});
 
 		} else if (response.status === 'not_authorized') {
 // 			document.getElementById('status').innerHTML = 'Please log '
@@ -362,13 +396,13 @@ function go_popup() {
 		
 	FB.Event.subscribe('auth.logout', function() {
 			
-			var result = confirm('현재 Facebook으로 로그인 된 모든 사이트에서 로그 아웃하시겠습니까?'
-								+ 'Yes면 모두 로그아웃 No면 Kware Board에서만 로그아웃');
+// 			var result = confirm('현재 Facebook으로 로그인 된 모든 사이트에서 로그 아웃하시겠습니까?'
+// 								+ 'Yes면 모두 로그아웃 No면 Kware Board에서만 로그아웃');
 
-			if (result) {
-				//yes
-				location.href = "/Board_psy/logout.do";
-			} else {
+// 			if (result) {
+// 				//yes
+// 				location.href = "/Board_psy/logout.do";
+// 			} else {
 				$.ajax({
 					url : '<c:url value="/fbLogout.do" />',
 					success : function(result) {
@@ -389,7 +423,7 @@ function go_popup() {
 				});
 				location.replace('index.php');
 				
-			}
+// 			}
 
 		});
 	};
@@ -419,39 +453,70 @@ function go_popup() {
 
 	
 	function fnOpenNormalDialog() {
-	    $("#dialog-confirm").html("FB으로 로그인된 모든 계정에 로그아웃하시겠습니까?");
-
-	    // Define the Dialog and its properties.
-	    $("#dialog-confirm").dialog({
+		 $("#dialog-confirm").html("FB으로 로그인된 모든 계정에서 로그아웃 하시겠습니까?");
+		$("#dialog-confirm").dialog({
 	        resizable: false,
 	        modal: true,
-	        title: "Modal",
+// 	        title: "Logout",
 	        height: 250,
 	        width: 400,
 	        buttons: {
 	            "Yes": function () {
-	                
+	                callback(true);
 	                $(this).dialog('close');
 	            },
-	                "No": function () {
-	                
+	            "No": function () {
+	                callback(false);
 	                $(this).dialog('close');
 	                
 	            }
 	        }
 	    });
+
+	    // Define the Dialog and its properties.
 	}
 	
-	$('FBLogout').click(fnOpenNormalDialog());
+	
+	function callback(value) {
+	    if (value) {
+	    	FB.logout();
+	        alert("Confirmed");
+	    } else {
+	    	location.href = "/Board_psy/logout.do";
+	        alert("Rejected");
+	    }
+	}
+	
+// 	$('FBLogout').click(fnOpenNormalDialog());
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	$(function() {
-		$('#logout').click(function() {
-			location.href = "/Board_psy/logout.do";
+		
+		$('#logout').click(function(){
+			 $("#dialog-confirm").html("FB으로 로그인된 모든 계정에서 로그아웃 하시겠습니까?");
+				$("#dialog-confirm").dialog({
+			        resizable: false,
+			        modal: true,
+		 	        title: "Logout",
+			        height: 250,
+			        width: 400,
+			        buttons: {
+			            "Yes": function () {
+			                callback(true);
+			                $(this).dialog('close');
+			            },
+			            "No": function () {
+			                callback(false);
+			                $(this).dialog('close');
+			                
+			            }
+			        }
+			    });
 		});
-	
-
+		
+		
+			
 		$('#writeForm').click(
 				function() {
 					$.ajax({
@@ -463,9 +528,7 @@ function go_popup() {
 						success : function(result) {
 							if (result == "E") {
 								alert("먼저 로그인을 해주세요");
-								loginOpen = window.open(
-										'/Board_psy/loginForm.do', '로그인',
-										'width=300, height=200');
+								loginOpen = window.open('/Board_psy/loginForm.do', '로그인','width=300, height=200');
 
 							} else if (result == "GO_TO") {
 								location.replace("/Board_psy/writeForm.do");

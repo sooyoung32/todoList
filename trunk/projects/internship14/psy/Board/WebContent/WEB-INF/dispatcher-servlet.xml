@@ -10,11 +10,13 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<mvc:annotation-driven />
+<!-- 	<context:component-scan base-package="kr.co.kware.Board_psy.controller" /> -->
+	<context:component-scan base-package="kr.co.kware.boardpsy">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	</context:component-scan>
 
-	<context:component-scan base-package="controller" />
-
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- one of the properties available; the maximum file size in bytes -->
 <!-- 		<property name="maxUploadSize" value="5242880" /> -->
 		<property name="defaultEncoding" value="UTF-8" />
@@ -52,7 +54,7 @@
 			<mvc:mapping path="/insertComment.do" />
 			<mvc:mapping path="/updateForm.do"/>
 			<mvc:mapping path="/ajaxUpdateForm.do"/>
-			<bean class="intercepter.LoginIntercepter" />
+			<bean class="kr.co.kware.boardpsy.intercepter.LoginIntercepter" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 

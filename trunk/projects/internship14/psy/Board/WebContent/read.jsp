@@ -104,7 +104,34 @@
 					</tr>
 
 				</c:if>
-
+					<tr>
+						<td style="padding: 0.5em;"></td>
+					</tr>
+					
+						<tr>
+							<td>
+							<div class="fb-like" 
+								data-href="http://localhost:8088/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=1&searchKey=&searchValue=" 
+								data-layout="standard" 
+								data-action="like" 
+								data-colorscheme="light"
+								data-show-faces="false" 
+								data-share="true"></div>
+							<div id="fb-root"></div>
+							
+							
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<div class="fb-comments" 
+								data-href="http://localhost:8088/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=1&searchKey=&searchValue=" 
+								data-numposts="5"
+								data-colorscheme="light"></div>
+							</td>
+						</tr>
+					
 					<tr>
 						<td style="padding: 0.5em;"></td>
 					</tr>
@@ -188,7 +215,9 @@
 					</div>
 				</td>
 			</tr>
+
 		</table>
+		
 		<input type="hidden" name="boardNo" id="boardNo"value="${board.boardNo}"> 
 		<input type="hidden" name="email"	id="email" value="${sessionScope.email}"> 
 		<input type="hidden" name="searchValue" id="searchValue" value="${searchValue}"> 
@@ -197,13 +226,29 @@
 	
 <script type="text/javascript">
  
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+ 
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=829852567056773&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+ 
 	var defaultAjaxDataSet = {
 		type : "post",
 		success : function(result) {
 			if (result == "E") {
 				alert("먼저 로그인을 해주세요");
-				loginOpen = window.open('/Board_psy/loginForm.do', '로그인',
-						'width=300, height=200');
+				loginOpen = window.open('/Board_psy/loginForm.do', '로그인','width=300, height=200');
 			} else if (result == "GO_TO") {
 				location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
 			} else if (result == "C_WRITE_SUCCESS") {
@@ -267,7 +312,7 @@
 		
 	var updateAjaxDataSet = {
 			type : "post",
-			url : "/Board_psy/ajaxUpdateForm.do",
+			url : "/Board_psy/ajaxUpdateLoginCheck.do",
 			data : {
 				ajaxYn : "Y",
 				boardNo : $('#boardNo').val()
