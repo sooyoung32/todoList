@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.kware.boardpsy.board.BoardMapper">
+
+	<resultMap type="kr.co.kware.boardpsy.board.Board" id="boardResultMap">
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="EMAIL" property="email" />
+		<result column="TITLE" property="title" />
+		<result column="CONTENT" property="content" />
+		<result column="FAMILY" property="family" />
+		<result column="PARENT" property="parent" />
+		<result column="DEPTH" property="depth" />
+		<result column="INDENT" property="indent" />
+		<result column="HITCOUNT" property="hitCount" />
+		<result column="DATE_OF_WRITING" property="writingDate" />
+		<result column="DATE_OF_MODIFY" property="modifyDate" />
+		<result column="WRITING_IP" property="writingIP" />
+		<result column="MODIFY_IP" property="modifyIP" />
+		<result column="FLAG" property="flag" />
+
+
+		<association property="writer" javaType="kr.co.kware.boardpsy.member.Member" column="EMAIL">
+			<id column="EMAIL" property="email" />
+			<result column="PASSWORD" property="password" />
+			<result column="NAME" property="name" />
+		</association>
+
+		<collection property="comments" ofType="kr.co.kware.boardpsy.comment.Comment" column="BOARD_NO"
+			javaType="ArrayList" select="kr.co.kware.boardpsy.comment.CommentMapper.selectCommentListByBoardNo">
+		</collection>
+
+		<collection property="files" ofType="kr.co.kware.boardpsy.file.File" column="BOARD_NO"
+			javaType="ArrayList" select="kr.co.kware.boardpsy.file.FileMapper.selectFileByBoardNo">
+		</collection>
+
+	</resultMap>
+	<select id="selectBoardByBoardNo" resultMap="boardResultMap">
+		SELECT
+		B.BOARD_NO,
+		M.NAME,
+		M.PASSWORD,
+		B.TITLE,
+		B.FAMILY,
+		B.PARENT,
+		B.DEPTH,
+		B.INDENT,
+		B.CONTENT,
+		B.HITCOUNT,
+		B.FLAG,
+		C.CONTENT,
+		F.ORIGINAL_NAME
+		FROM
+		BOARD B
+		LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
+		LEFT OUTER JOIN
+		COMMENT C ON B.BOARD_NO = C.BOARD_NO
+		LEFT OUTER JOIN FILE F ON
+		B.BOARD_NO = F.BOARD_NO
+		WHERE B.BOARD_NO = #{boardNo}
+		<!-- SELECT * BOARD WHERE BOARD_NO = #{boardNo} -->
+	</select>
+
+	<select id="selectLastNo" resultType="int">
+		SELECT
+		COALESCE(MAX(BOARD_NO),0) +1 FROM BOARD
+	</select>
+
+	<select id="selectBoardCountByParent">
+		SELECT COUNT(*) FROM BOARD WHERE PARENT = #{parent}
+	</select>
+
+	<!-- <select id="selectBoardList" resultMap="boardResultMap" -->
+	<!-- parameterType="Map" resultType="Board"> -->
+	<!-- SELECT -->
+	<!-- B.BOARD_NO, -->
+	<!-- M.NAME, -->
+	<!-- B.TITLE, -->
+	<!-- B.FAMILY, -->
+	<!-- B.PARENT, -->
+	<!-- B.DEPTH, -->
+	<!-- B.INDENT, -->
+	<!-- B.HITCOUNT, -->
+	<!-- B.FLAG -->
+	<!-- FROM BOARD B -->
+	<!-- LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL -->
+	<!-- ORDER BY B.FAMILY DESC, -->
+	<!-- B.DEPTH ASC -->
+	<!-- LIMIT #{startRow}, #{endRow} -->
+	<!-- </select> -->
+
+	<select id="selectBoardList" resultMap="boardResultMap"
+		parameterType="Map" resultType="kr.co.kware.boardpsy.board.Board">
+
+		SELECT
+		B.BOARD_NO,
+		M.NAME,
+		B.TITLE,
+		B.CONTENT,
+		B.FAMILY,
+		B.PARENT,
+		B.DEPTH,
+		B.INDENT,
+		B.HITCOUNT,
+		B.FLAG
+		FROM BOARD B
+		LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
+		WHERE 1 = 1
+		<if test="searchValue != null">
+			<if test="searchKey =='ALL'">
+				AND B.TITLE LIKE '%${searchValue}%'
+				OR B.CONTENT LIKE '%${searchValue}%'
+				OR M.NAME LIKE '%${searchValue}%'
+			</if>
+
+			<if test="searchKey == 'TITLE'">
+				AND B.TITLE LIKE '%${searchValue}%'
+			</if>
+
+			<if test="searchKey == 'CONTENT'">
+				AND B.CONTENT LIKE '%${searchValue}%'
+			</if>
+			<if test="searchKey == 'NAME'">
+				AND M.NAME LIKE '%${searchValue}%'
+			</if>
+		</if>
+		ORDER BY B.FAMILY DESC, B.DEPTH ASC
+		LIMIT #{startRow}, #{endRow}
+
+	</select>
+
+	<select id="searchBoardCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*) FROM BOARD B
+		LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL
+		<where>
+			<if test="searchKey =='ALL'">
+				B.TITLE LIKE '%${searchValue}%'
+				OR B.CONTENT LIKE '%${searchValue}%'
+				OR M.NAME LIKE '%${searchValue}%'
+			</if>
+
+			<if test="searchKey == 'TITLE'">
+				AND B.TITLE LIKE '%${searchValue}%'
+			</if>
+
+			<if test="searchKey == 'CONTENT'">
+				AND B.CONTENT LIKE '%${searchValue}%'
+			</if>
+			<if test="searchKey == 'NAME'">
+				AND M.NAME LIKE '%${searchValue}%'
+			</if>
+		</where>
+	</select>
+
+
+
+	<update id="updateBoard" parameterType="kr.co.kware.boardpsy.board.Board">
+		UPDATE BOARD
+		SET TITLE = #{title}
+		,CONTENT = #{content}
+		,HITCOUNT = #{hitCount}
+		,DATE_OF_MODIFY = #{modifyDate}
+		,MODIFY_IP = #{modifyIP}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<select id="selectBoardCount" resultType="int">
+		SELECT COUNT(*) FROM BOARD
+	</select>
+
+	<select id="selectMember" resultType="kr.co.kware.boardpsy.member.Member">
+		SELECT * FROM MEMBER WHERE
+		EMAIL = #{email}
+	</select>
+
+	<insert id="insertBoard" parameterType="kr.co.kware.boardpsy.board.Board">
+		INSERT INTO BOARD (
+		BOARD_NO, EMAIL,TITLE,CONTENT,
+		FAMILY,
+		PARENT, DEPTH,
+		INDENT,HITCOUNT,
+		DATE_OF_WRITING, DATE_OF_MODIFY,
+		WRITING_IP,MODIFY_IP,FLAG
+
+		) VALUES (
+		#{boardNo},
+		#{email},#{title},#{content},
+		#{family},
+		#{parent},#{depth},#{indent},#{hitCount},
+		#{writingDate},#{modifyDate},#{writingIP},#{modifyIP},#{flag})
+
+		<selectKey resultType="int" keyProperty="boardNo" order="BEFORE">
+			SELECT COALESCE(MAX(BOARD_NO),0) + 1 FROM BOARD
+		</selectKey>
+	</insert>
+
+	<update id="deleteBoard" parameterType="kr.co.kware.boardpsy.board.Board">
+		UPDATE BOARD
+		SET
+		HITCOUNT = #{hitCount}
+		,DATE_OF_MODIFY = #{modifyDate}
+		,MODIFY_IP = #{modifyIP}
+		,FLAG = #{flag}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<insert id="insertBoardReply" parameterType="kr.co.kware.boardpsy.board.Board">
+		INSERT INTO BOARD (
+		EMAIL,TITLE,CONTENT,FAMILY,PARENT, DEPTH,
+		INDENT,HITCOUNT,DATE_OF_WRITING, DATE_OF_MODIFY, WRITING_IP,MODIFY_IP
+		) VALUES
+		(#{email},#{title},#{content},#{family},#{parent},#{depth},
+		#{indent},#{hitCount},#{writingDate},#{modifyDate},#{writingIP},#{modifyIP})
+	</insert>
+
+	<update id="updateBoardDepth" parameterType="kr.co.kware.boardpsy.board.Board">
+		UPDATE BOARD
+		SET
+		DEPTH = DEPTH + 1
+		WHERE DEPTH >= #{depth}
+		AND BOARD_NO in ( select *
+		from ( select BOARD_NO from BOARD b where
+		b.FAMILY = #{family} ) t )
+	</update>
+
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
