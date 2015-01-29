@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.kware.boardpsy.comment.CommentMapper">
+
+	<resultMap type="kr.co.kware.boardpsy.comment.Comment" id="commentResultMap">
+		<result column="COMMENT_NO" property="commentNo" />
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="EMAIL" property="email" />
+		<result column="CONTENT" property="content" />
+		<result column="DATE_OF_WRITING" property="writingDate" />
+		<result column="DATE_OF_MODIFY" property="modifyDate" />
+		<result column="WRITING_IP" property="writingIP" />
+		<result column="MODIFY_IP" property="modifyIP" />
+		<result column="FLAG" property="flag" />
+
+		<association property="writer" javaType="kr.co.kware.boardpsy.member.Member" column="EMAIL"
+			select="kr.co.kware.boardpsy.member.MemberMapper.selectMember" />
+
+	</resultMap>
+
+	<insert id="insertComment" parameterType="kr.co.kware.boardpsy.comment.Comment">
+		INSERT INTO COMMENT
+		VALUES(#{commentNo},#{boardNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP},
+		#{modifyIP},#{flag})
+	</insert>
+
+	<select id="selectCommentListByBoardNo" resultType="kr.co.kware.boardpsy.comment.Comment"
+		resultMap="commentResultMap" parameterType="int">
+		SELECT * FROM COMMENT WHERE
+		BOARD_NO = #{boardNo} AND FLAG = 1 ORDER BY COMMENT_NO DESC
+	</select>
+
+	<select id="selectCommentCountByBoardNo" resultMap="commentResultMap">
+		SELECT
+		COUNT(*) FROM COMMENT WHERE BOARD_NO=#{boardNo}
+	</select>
+
+	<select id="selectCommentByCommentNo" resultMap="commentResultMap"
+		resultType="kr.co.kware.boardpsy.comment.Comment">
+		SELECT * FROM COMMENT WHERE COMMENT_NO = #{commentNo}
+	</select>
+
+	<select id="selectCommentLastNo" resultType="int">
+		SELECT
+		MAX(COMMENT_NO) +1 FROM COMMENT
+	</select>
+
+	<update id="updateComment" parameterType="kr.co.kware.boardpsy.comment.Comment">
+		UPDATE COMMENT SET
+		CONTENT = #{content}, DATE_OF_MODIFY=#{modifyDate},
+		MODIFY_IP=#{modifyIP} WHERE COMMENT_NO=#{commentNo}
+	</update>
+
+	<update id="deleteComment" parameterType="kr.co.kware.boardpsy.comment.Comment">
+		UPDATE COMMENT SET FLAG
+		= #{flag}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE
+		COMMENT_NO=#{commentNo}
+	</update>
+
+
+</mapper>
