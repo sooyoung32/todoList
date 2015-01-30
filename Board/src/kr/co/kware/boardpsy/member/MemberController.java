@@ -23,19 +23,18 @@ public class MemberController {
 	@Autowired
 	private MemberService memberServiceImpl;
 
-	
 	@RequestMapping(value = "loginForm.do")
 	public ModelAndView loginForm(HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView("login_form");
-		String preAddr = request.getHeader("REFERER"); //인터셉터위해 이전 url 알기
+		String preAddr = request.getHeader("REFERER"); // 인터셉터위해 이전 url 알기
 		mv.addObject("preAddr", preAddr);
 		return mv;
 	}
 
-	
-	//ajax 데이터 값 map을 통해 여러개 갈 수 있는것을 보여주기위해. 
+	// ajax 데이터 값 map을 통해 여러개 갈 수 있는것을 보여주기위해.
 	@RequestMapping(value = "ajaxUpdateLoginCheck.do")
-	public @ResponseBody Map<Object, Object> ajaxUpdateLoginCheck(int boardNo, HttpServletRequest request) {
+	public @ResponseBody
+	Map<Object, Object> ajaxUpdateLoginCheck(int boardNo, HttpServletRequest request) {
 		String isAjax = (String) request.getAttribute("result");
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
@@ -48,8 +47,8 @@ public class MemberController {
 		}
 		return map;
 	}
-	
-	//writeForm, write,reply,replyForm 에이젝스로 인터셉터 처리.
+
+	// writeForm, write,reply,replyForm 에이젝스로 인터셉터 처리.
 	@RequestMapping(value = "ajaxLoginCheck.do")
 	@ResponseBody
 	public String ajaxLoginCheck(HttpServletRequest request) {
@@ -68,7 +67,6 @@ public class MemberController {
 		}
 	}
 
-	
 	@RequestMapping(value = "login.do")
 	public @ResponseBody
 	String login(Member member, HttpServletRequest request) {
@@ -83,23 +81,28 @@ public class MemberController {
 		logger.debug("[이전주소가 boardList.do에서 온거 확인] : " + preAddrCheck);
 
 		// preAddrCheck이 true이면 보드리스트화면으로 (글쓰기, 답글 등)
-		if (result == "success" && preAddrCheck) {
-			getSession(member, request);
+		if (result == "noID"){
+			return "noID";
+		}else if (result =="noPW"){
+			return "noPW";
+		}else if (result == "success" && preAddrCheck) {
+			setSession(member, request);
 			return "success";
 		}// preAddrCheck이 false면 현재 화면 리로드(댓글 수정 삭제 등)
-		else if (result == "success" && !preAddrCheck) {
-			getSession(member, request);
+		  else if (result == "success" && !preAddrCheck) {
+			setSession(member, request);
 			return "success2";
 		}
 		return "";
 	}
 
-	private void getSession(Member member, HttpServletRequest request) {
+	private void setSession(Member member, HttpServletRequest request) {
 		HttpSession session = request.getSession(true);
 		Member member2 = memberServiceImpl.getMemberbyEmail(member.getEmail());
 		session.setAttribute("email", member2.getEmail());
 		session.setAttribute("name", member2.getName());
-		session.setMaxInactiveInterval(60*60);
+		//TODO setSession 할때 member 자체를 담는다. 
+		session.setMaxInactiveInterval(60 * 60);
 		logger.debug(session.getAttribute("email") + "email");
 		logger.debug(session.getAttribute("name") + "name");
 		logger.debug("로그인 세션 확보!");
@@ -110,7 +113,7 @@ public class MemberController {
 		HttpSession session = request.getSession();
 		session.removeAttribute("email");
 		session.removeAttribute("name");
-//		session.invalidate();
+		// session.invalidate();
 		logger.debug("로그아웃! 세션빠잉");
 		return "redirect:boardList.do?page=1";
 	}
@@ -160,23 +163,24 @@ public class MemberController {
 			throws UnknownHostException {
 
 		Member member = memberServiceImpl.getMemberbyEmail(email);
-		logger.debug("페북 유져 아이디로 찾은 멤버 : " + member);
+		logger.debug("페북 이메일로 찾은 멤버 : " + member);
 		Member newFbMember = new Member();
-		if (member == null || "".equals(member)) {
+		
+		if (member == null) {   //FB계정 이메일이 Kware멤버에 존재하지 않을때
 			newFbMember.setFbToken(fbToken);
 			newFbMember.setFbUserId(fbUserId);
 			newFbMember.setName(name);
 			newFbMember.setIsFB("Y");
 			newFbMember.setEmail(email);
-//			newFbMember.setPassword("S");
+			// newFbMember.setPassword("S");
 			newFbMember.setLoginDate(new Date());
 			memberServiceImpl.joinMember(newFbMember);
-		} else {
-
-			member.setFbToken(fbToken);
+		} else {									//Kware 멤버에 존재할때
+ 			member.setFbToken(fbToken);
 			member.setFbUserId(fbUserId);
 			member.setIsFB("Y");
 			member.setLoginDate(new Date());
+			logger.debug("멤버 비밀번호 : " + member.getPassword());
 			memberServiceImpl.modifyMember(member, member.getPassword());
 		}
 
@@ -184,21 +188,19 @@ public class MemberController {
 		session.setAttribute("name", member.getName());
 		session.setAttribute("email", member.getEmail());
 		session.setAttribute("userId", member.getFbUserId());
-		logger.debug("페북유저 아이디: " + session.getAttribute("email"));
+		logger.debug("세션 받나..? 페북 유저 아이디: " + session.getAttribute("email"));
 		return "success";
 	}
-	
-	
+
 	@RequestMapping(value = "fbLogout.do")
 	@ResponseBody
-	public String fbLogout(HttpServletRequest request){
-		HttpSession session = request.getSession(); 
+	public String fbLogout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
 		session.removeAttribute("email");
 		session.removeAttribute("name");
 		session.removeAttribute("userId");
 		logger.debug("여기오는건가.. " + request.getSession());
 		return "logout";
 	}
-	
 
 }
