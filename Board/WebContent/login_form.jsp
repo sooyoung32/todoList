@@ -9,6 +9,36 @@
 	href="/Board_psy/css/board.css" media="all" />
 <script type="text/javascript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+
+
+</head>
+<body>
+	<!-- 	<form action="/Board_psy/loginSuccess.do" method="post"> -->
+	<table border="1" style="border-collapse: collapse;">
+		<tr bgcolor="#F6CEE3">
+			<td>이메일</td>
+			<td><input type="text" name="email" id="email"></td>
+		</tr>
+		<tr bgcolor="#F6CEE3">
+			<td>비밀번호</td>
+			<td><input type="password" name="password" id="password"></td>
+		</tr>
+		<tr>
+			<td colspan="2"><div id="msg" style="font-style: oblique;color: red;background-color: #F6CEE3;"></div> </td>
+		</tr>
+		<tr bgcolor="#F6CEE3">
+			<td colspan="2" style="text-align: center;"><input type="button"
+				id="login" value="Login"> <a href="#"
+				onclick="window.open('/Board_psy/joinForm.do', '회원가입', 'width=400,height=500')">
+					Join </a></td>
+		</tr>
+
+	</table>
+
+	<!-- 	</forSm> -->
+
+	<input type="hidden" id="uri" value="${preAddr}">
+
 <script type="text/javascript">
 	$(function() {
 		$('#login').click(function() {
@@ -23,13 +53,11 @@
 				url : "/Board_psy/login.do",
 				data : data2,
 				success : function(result) {
-					var msg = "";
+					
 					if (result == 'noID') {
-						msg = "등록되지 않은 ID입니다";
-						alert(msg);
+						$('#msg').html("등록되지 않은 ID입니다");
 					} else if (result == 'noPW') {
-						msg = "비밀번호가 올바르지 않습니다";
-						alert(msg);
+						$('#msg').html("비밀번호가 올바르지 않습니다");
 					} else if(result == 'success'){
 						// $('#login').submit();
 						alert("정상적으로 로그인되었습니다.");
@@ -50,33 +78,5 @@
 		$(opener.document).find('#email').append('<td><input type="text" name="email" id="email" value="#email"></td>');
 	});
 </script>
-
-</head>
-<body>
-	<!-- 	<form action="/Board_psy/loginSuccess.do" method="post"> -->
-	<table border="1" style="border-collapse: collapse;">
-		<tr bgcolor="#F6CEE3">
-			<td>이메일</td>
-			<td><input type="text" name="email" id="email"></td>
-		</tr>
-		<tr bgcolor="#F6CEE3">
-			<td>비밀번호</td>
-			<td><input type="password" name="password" id="password"></td>
-		</tr>
-		<tr>
-			<td colspan="2" id="msg"></td>
-		</tr>
-		<tr bgcolor="#F6CEE3">
-			<td colspan="2" style="text-align: center;"><input type="button"
-				id="login" value="Login"> <a href="#"
-				onclick="window.open('/Board_psy/joinForm.do', '회원가입', 'width=400,height=500')">
-					Join </a></td>
-		</tr>
-
-	</table>
-
-	<!-- 	</forSm> -->
-
-	<input type="hidden" id="uri" value="${preAddr}">
 </body>
 </html>
