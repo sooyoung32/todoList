@@ -6,8 +6,7 @@ import org.apache.ibatis.type.Alias;
 
 import kr.co.kware.boardpsy.board.Board;
 
-@Alias("BoardPage")
-public class BoardPage {
+public class BoardPage<T> {
 	
 	private int totalBoardCount;
 	private int startPage;
@@ -18,12 +17,12 @@ public class BoardPage {
 	private int prePage;
 	private int nextPage;
 	private int pageNo; 
-	private List<Board> boardList;
+	private List<T> boardList;
 	
-
+	//TODO 여기에서 페이지 계산 처리. 
 
 	public BoardPage(int totalBoardCount, int startPage, int endPage, int startRow, int endRow, int totalPage,
-			int prePage, int nextPage, int pageNo, List<Board> boardList) {
+			int prePage, int nextPage, int pageNo, List<T> boardList) {
 		super();
 		this.totalBoardCount = totalBoardCount;
 		this.startPage = startPage;
@@ -94,10 +93,10 @@ public class BoardPage {
 	public void setNextPage(int nextPage) {
 		this.nextPage = nextPage;
 	}
-	public List<Board> getBoardList() {
+	public List<T> getBoardList() {
 		return boardList;
 	}
-	public void setBoardList(List<Board> boardList) {
+	public void setBoardList(List<T> boardList) {
 		this.boardList = boardList;
 	}
 
