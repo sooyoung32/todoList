@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,9 +53,9 @@ public class BoardController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("board_list");
 	 
-		for (String xx : ctx.getBeanNamesForType(BoardService.class)) {
-			System.err.println(">>> : " + xx);
-		}
+//		for (String xx : ctx.getBeanNamesForType(BoardService.class)) {
+//			System.err.println(">>> : " + xx);
+//		}
 		int totalBoardCount;
 		int startRow = 0;
 		int endRow = 0;
@@ -82,7 +83,7 @@ public class BoardController {
 			startRow = (page - 1) * NUM_OF_BOARD;
 			endRow = startRow + NUM_OF_BOARD - 1;
 			// 리스트 받기
-			boardList = boardServiceImpl.showBoardList(startRow, endRow, searchKey, searchValue);
+			boardList = boardServiceImpl.showBoardList(startRow, endRow, searchKey, searchValue); //TODO map으로받아와...startRow endRow 계산해주는곳은 한곳에.
 
 			// System.out.println("startRow//"+startRow);
 			// System.out.println("endRow//"+endRow);
@@ -172,13 +173,11 @@ public class BoardController {
 	}
 
 	// 글쓰기 파일업로드실행
-	@RequestMapping(value = "write.do")
+	@RequestMapping(value = "write.do", method =RequestMethod.POST)
 	public String write(Board board, HttpServletRequest request, MultipartFileList multiPartFileList) {
 		int boardNo = boardServiceImpl.getLastBoardNo();
-		// board.getContent().replaceAll("\n", "<br>");
+		// board.getContent().replaceAll("\n\r", "<br>");
 		List<kr.co.kware.boardpsy.file.File> files = fileUpload(multiPartFileList, request, boardNo);
-		System.out.println("업로드파일/" + multiPartFileList);
-		System.out.println("원글번호/" + boardNo);
 		boardServiceImpl.writeBoard(board);
 
 		System.out.println(files);
@@ -208,7 +207,7 @@ public class BoardController {
 			kr.co.kware.boardpsy.file.File voFile;
 			for (MultipartFile multiPartFile : fileListFromClient) {
 
-				if (multiPartFile.getSize() <= 0 || "".equals(multiPartFile.getName())) {
+				if (multiPartFile != null || "".equals(multiPartFile.getName())) {
 					continue;
 				}
 
@@ -233,7 +232,7 @@ public class BoardController {
 					System.out.println("파일명:" + multiPartFile.getOriginalFilename());
 				} catch (IllegalStateException | IOException e) {
 					System.out.println("upload fail!!!!!!! " + e);
-
+					//TODO 파일 notification.. 에러 알림! 2번째 파일만 업로드가 안되면?  	
 				}
 			}
 		}

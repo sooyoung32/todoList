@@ -125,6 +125,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> showBoardList(int startRow, int endRow, String searchKey, String searchValue) {
+		//TODO 매개변수 MAP으로 
 		Map<String, Object> map = new HashMap<>();
 		map.put("startRow", startRow);
 		map.put("endRow", endRow - startRow + 1);
