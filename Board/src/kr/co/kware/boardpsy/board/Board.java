@@ -15,15 +15,17 @@ public class Board extends DBCommon{
 	private String email; 
 	private String title; 
 	private String content;
-	private int family; 
-	private int parent; 
-	private int depth; 
-	private int indent; 
 	private int hitCount; 
 	private Member writer; 
 	private List<File> files; 
 	private List<Comment> comments; 
-	private int flag;
+	private int flag; //TODO 이름 바꾸기 Enum type
+
+	//답글을위한 부가정보.. 
+	private int family; 
+	private int parent; 
+	private int depth; 
+	private int indent; 
 	
 	
 	//getter&setter
