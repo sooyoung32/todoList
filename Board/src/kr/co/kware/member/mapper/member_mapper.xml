@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.kware.member.mapper.MemberMapper">
+
+	<resultMap type="kr.co.kware.member.vo.Member" id="memberResultMap">
+
+		<result column="EMAIL" property="email" />
+		<result column="NAME" property="name" />
+		<result column="PASSWORD" property="password" />
+		<result column="DATE_OF_LOGIN" property="loginDate" />
+		<result column="DATE_OF_WRITING" property="writingDate" />
+		<result column="DATE_OF_MODIFY" property="modifyDate" />
+		<result column="WRITING_IP" property="writingIP" />
+		<result column="MODIFY_IP" property="modifyIP" />
+		<result column="IS_FB" property="isFB" />
+		<result column="FB_TOKEN" property="fbToken" />
+		<result column="FB_USERID" property="fbUserId" />
+	</resultMap>
+
+
+	<insert id="insertMember" parameterType="kr.co.kware.member.vo.Member">
+		INSERT INTO MEMBER VALUES
+		(#{email},#{name},#{password},#{loginDate},#{writingDate},#{modifyDate},#{writingIP},
+		#{modifyIP},#{isFB},#{fbToken},#{fbUserId})
+	</insert>
+
+	<update id="updateMember" parameterType="kr.co.kware.member.vo.Member">
+		UPDATE MEMBER SET IS_FB =#{isFB}, FB_TOKEN=#{fbToken}, FB_USERID=#{fbUserId}, PASSWORD=#{password}, DATE_OF_MODIFY=#{modifyDate},
+		MODIFY_IP=#{modifyIP}, DATE_OF_LOGIN=#{loginDate} WHERE EMAIL =	#{email}
+	</update>
+
+	<delete id="deleteMember">
+		DELETE FROM MEMBER WHERE EMAIL =#{email}
+	</delete>
+
+	<select id="selectMember" resultType="kr.co.kware.member.vo.Member" resultMap="memberResultMap">
+		SELECT * FROM MEMBER WHERE EMAIL=#{email}
+	</select>
+
+	<select id="selectMemberCount" resultMap="memberResultMap">
+		SELECT COUNT(*) FROM MEMBER
+	</select>
+
+	<select id="selectMemberList" resultType="kr.co.kware.member.vo.Member" resultMap="memberResultMap">
+		SELECT * FROM MEMBER
+	</select>
+	
+	<select id="selectFbMember" resultType="kr.co.kware.member.vo.Member" resultMap="memberResultMap">
+		SELECT * FROM MEMBER WHERE FB_USERID = #{fbUserId}
+	</select>
+	
+
+</mapper>

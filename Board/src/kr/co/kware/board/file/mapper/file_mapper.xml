@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.kware.board.file.mapper.FileMapper">
+	
+	<resultMap type="kr.co.kware.board.file.vo.File" id="fileResultMap">
+		<result column="FILE_NO" property="fileNo" />
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="ORIGINAL_NAME" property="originalName" />
+		<result column="SAVED_PATH" property="savedPath" />
+		<result column="FLAG" property="flag" />
+	</resultMap>
+
+	<insert id="insertFile" parameterType="kr.co.kware.board.file.vo.File">
+		INSERT INTO FILE VALUES
+		(#{fileNo}, #{boardNo},#{originalName},#{savedPath},#{flag})
+	</insert>
+
+	<select id="selectFileByBoardNo" resultType="kr.co.kware.board.file.vo.File" resultMap="fileResultMap">
+		SELECT * FROM FILE WHERE BOARD_NO = #{boardNo} AND FLAG = 1
+	</select>
+
+	<select id="selectFileCountByBoardNo" resultMap="fileResultMap">
+		SELECT COUNT(*)
+		FROM FILE WHERE BOARD_NO = #{boardNo}
+	</select>
+
+	<update id="updateFile" parameterType="kr.co.kware.board.file.vo.File">
+		UPDATE FILE SET
+		ORIGINAL_NAME = #{originalName} WHERE FILE_NO=#{fileNo}
+	</update>
+
+	<update id="deleteFile" parameterType="kr.co.kware.board.file.vo.File">
+		UPDATE FILE SET FLAG =
+		#{flag} WHERE FILE_NO = #{fileNo}
+	</update>
+
+	<select id="selectFileByFileNo" resultMap="fileResultMap">
+		SELECT * FROM FILE
+		WHERE FILE_NO = #{fileNo}
+	</select>
+
+
+</mapper>
