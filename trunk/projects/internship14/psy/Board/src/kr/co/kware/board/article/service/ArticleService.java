@@ -1,0 +1,20 @@
+package kr.co.kware.board.article.service;
+
+import java.util.List;
+
+import kr.co.kware.board.article.vo.Article;
+
+public interface ArticleService {
+	
+	public int writeArticle(Article article);
+	public int writeArticleReply(Article article, int articleNo);
+	public Article readArticlebyArticleNo(int articleNo, boolean isHitCount);
+	public int getLastArticleNo();
+	public int modifyArticle(Article updatedArticle, int articleNo, String[] deletedFileList);
+	public int deleteArticle(Article article, int articleNo);
+	public List<Article> showArticleList(int startRow, int endRow, String searchKey, String searchValue);
+	public int countTotalArticleNumber();
+	public int countTotalSearchResult(String searchKey, String searchValue);
+	
+	
+}
