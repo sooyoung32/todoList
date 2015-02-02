@@ -24,17 +24,17 @@
 
 <body>
 	<fmt:requestEncoding value="UTF-8" />
-	<form action="<c:url value="/boardList.do" />" id="form" name="form" method="post">
-		<input type="hidden" name="totalBoardCount" value="${boardPage.totalBoardCount}"> 
-		<input type="hidden" name="page"> <input type="hidden" name="prePage" value="${boardPage.prePage}">
-		<input type="hidden" name="nextPage" value="${boardPage.nextPage}">
+	<form action="<c:url value="/articleList.do" />" id="form" name="form" method="post">
+		<input type="hidden" name="totalArticleCount" value="${articlePage.totalArticleCount}"> 
+		<input type="hidden" name="page"> <input type="hidden" name="prePage" value="${articlePage.prePage}">
+		<input type="hidden" name="nextPage" value="${articlePage.nextPage}">
 
 		<table>
 			<tr>
 				<td class="title_layout"><h1>KWARE 게시판</h1></td>
 			</tr>
 			<tr>
-				<td class="back_layout"><a href="/Board_psy/boardList.do">◀처음으로</a></td>
+				<td class="back_layout"><a href="/Board_psy/articleList.do">◀처음으로</a></td>
 			</tr>
 
 			<tr>
@@ -104,19 +104,19 @@
 
 
 			<tr>
-				<td class="totalBoard_layout">총게시글 수 : ${boardPage.totalBoardCount}</td>
+				<td class="totalBoard_layout">총게시글 수 : ${articlePage.totalArticleCount}</td>
 
 			</tr>
 
 			<tr>
 				<td class="list_layout">
 					<table border="1" style="border-collapse: collapse;width : 1024px;" class="boardList">
-						<c:if test="${empty boardPage.boardList }">
+						<c:if test="${empty articlePage.articleList }">
 							<tr>
 								<td>게시글이 없습니다.</td>
 							</tr>
 						</c:if>
-						<c:if test="${!empty boardPage.boardList }">
+						<c:if test="${!empty articlePage.articleList }">
 
 							<tr align="center">
 								<td width="80px">글번호</td>
@@ -127,37 +127,37 @@
 								<td width="80px">조회수</td>
 							</tr>
 
-							<c:forEach items="${boardPage.boardList}" var="board">
+							<c:forEach items="${articlePage.articleList}" var="article">
 								<tr>
-									<td align="center">${board.boardNo} </td>
-									<td align="center" width="100px">${board.writer.name}</td>
+									<td align="center">${article.articleNo} </td>
+									<td align="center" width="100px">${article.writer.name}</td>
 
 									<td id="boardList_title" width="300px">
-										<c:if test="${board.indent == 0 && board.flag==1}">
-											<a href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${board.title}</a>
+										<c:if test="${article.indent == 0 && article.deletionStatus == 'PRESENT'}">
+											<a href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${article.title}</a>
 										</c:if>
-										<c:if test="${board.indent == 0 && board.flag==0}">
+										<c:if test="${article.indent == 0 && article.deletionStatus=='DELETED'}">
 											<span style="font-style: italic; color: gray; font-size: x-small;">
-												<a	href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">삭제된 글입니다</a>
+												<a	href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">삭제된 글입니다</a>
 											</span>
 										</c:if>
-										<c:if test="${board.indent > 0 && board.flag ==1}">
-											<c:forEach begin="1" end="${board.indent}">&nbsp;&nbsp;</c:forEach>
-											<a href="javascript:fn_gotoBoard('${board.boardNo}')">ㄴ[Re]&nbsp;${board.title}</a>
+										<c:if test="${article.indent > 0 && article.deletionStatus =='PRESENT'}">
+											<c:forEach begin="1" end="${article.indent}">&nbsp;&nbsp;</c:forEach>
+											<a href="javascript:fn_gotoBoard('${article.articleNo}')">ㄴ[Re]&nbsp;${article.title}</a>
 										</c:if> 
-										<c:if test="${board.indent > 0 && board.flag ==0}">
-											<c:forEach begin="1" end="${board.indent}">&nbsp;&nbsp;</c:forEach>
+										<c:if test="${article.indent > 0 && article.deletionStatus =='DELETED'}">
+											<c:forEach begin="1" end="${article.indent}">&nbsp;&nbsp;</c:forEach>
 											<span style="font-style: italic; color: gray; font-size: x-small;"> 
-												<a	href="/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=${boardPage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}"> ㄴ&nbsp;삭제된 글입니다</a>
+												<a	href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}"> ㄴ&nbsp;삭제된 글입니다</a>
 											</span>
 										</c:if>
 									</td>
 									<td align="center" width="100px">
 										<c:choose>
-											<c:when test="${not empty board.files }">
-												<c:forEach items="${board.files}" var="file">
+											<c:when test="${not empty article.files }">
+												<c:forEach items="${article.files}" var="file">
 													<c:choose>
-														<c:when test="${not empty sessionScope.email  && board.flag == 1}">
+														<c:when test="${not empty sessionScope.email  && article.deletionStatus =='PRESENT'}">
 															<a href="/Board_psy/download.do?savedPath=${file.savedPath}"> <img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a>
 														</c:when>
 														<c:otherwise>
@@ -169,12 +169,12 @@
 
 
 											<c:otherwise>
-												${fn:length(board.files)}
+												${fn:length(article.files)}
 											</c:otherwise>
 										</c:choose>
 									</td>
-									<td align="center" width="50px">${fn:length(board.comments)}</td>
-									<td align="center" width="80px">${board.hitCount}</td>
+									<td align="center" width="50px">${fn:length(article.comments)}</td>
+									<td align="center" width="80px">${article.hitCount}</td>
 								</tr>
 
 							</c:forEach>
@@ -184,10 +184,10 @@
 							<tr>
 								<td colspan="6" align="center">
 								<a onclick="javascript:fn_pageMove(1)"> &nbsp; << &nbsp; </a> 
-									<a onclick="javascript:fn_pageMove(${boardPage.prePage})"> &nbsp; < &nbsp;</a> 
-									<c:forEach var="num" begin="${boardPage.startPage}" end="${boardPage.endPage}">
+									<a onclick="javascript:fn_pageMove(${articlePage.prePage})"> &nbsp; < &nbsp;</a> 
+									<c:forEach var="num" begin="${articlePage.startPage}" end="${articlePage.endPage}">
 										<c:choose>
-											<c:when test="${num eq boardPage.pageNo}">
+											<c:when test="${num eq articlePage.pageNo}">
 												<a onclick="javascript:fn_pageMove(${num})" class="choice" style="font-weight: bold;">[${num}]</a>
 											</c:when>
 											<c:otherwise>
@@ -195,8 +195,8 @@
 											</c:otherwise>
 										</c:choose>
 									</c:forEach> 
-									<a onclick="javascript:fn_pageMove(${boardPage.nextPage})">&nbsp; > &nbsp;</a>
-									<a onclick="javascript:fn_pageMove(${boardPage.totalPage})">&nbsp; >> &nbsp;</a>
+									<a onclick="javascript:fn_pageMove(${articlePage.nextPage})">&nbsp; > &nbsp;</a>
+									<a onclick="javascript:fn_pageMove(${articlePage.totalPage})">&nbsp; >> &nbsp;</a>
 								</td>
 							</tr>
 						</c:if>
@@ -216,7 +216,7 @@
 
 		</table>
 		
-		<input type="hidden" name="isHitCount" /> <input type="hidden" name="boardNo" />
+		<input type="hidden" name="isHitCount" /> <input type="hidden" name="articleNo" />
 		
 	</form>
 
@@ -364,10 +364,10 @@ function facebookLogin(){
 		document.form.submit();
 	}
 
-	function fn_gotoBoard(boardNo) {
-		$("input[name='page']").val('${boardPage.pageNo}');
+	function fn_gotoBoard(articleNo) {
+		$("input[name='page']").val('${articlePage.pageNo}');
 		$("input[name='isHitCount']").val('true');
-		$("input[name='boardNo']").val(boardNo);
+		$("input[name='articleNo']").val(articleNo);
 		document.form.action = "/Board_psy/read.do";
 		document.form.submit();
 	}

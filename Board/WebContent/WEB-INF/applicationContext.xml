@@ -6,7 +6,7 @@
 
 <!-- 	<context:annotation-config /> -->
 	
-	<context:component-scan base-package="kr.co.kware.boardpsy">
+	<context:component-scan base-package="kr.co.kware">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
@@ -23,6 +23,7 @@
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 <!-- 		<property name="typeAliasesPackage" value="kr.co.kware.Board_psy" /> -->
+
 		<property name="mapperLocations" value="classpath:kr/co/kware/**/*_mapper.xml" />
 	</bean>
 
@@ -31,7 +32,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="kr.co.kware.boardpsy" />
+		<property name="basePackage" value="kr.co.kware" />
 	</bean>
 
 </beans>
