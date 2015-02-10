@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글 읽기</title>
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/board.css" />" media="all" />
 <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css"  />
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/loginBpopup.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/loginBpopup.css" />" media="all" />
 
 <script src=js/jquery-1.11.2.min.js></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -20,9 +21,9 @@
 
 </head>
 <body>
-<form action="/Board_psy/boardList.do" id="form" name="form" method="post">
+<form action="<c:url value="/articleList.do" />" id="form" name="form" method="post">
 	<input type="hidden" name="page"> 
-	<input type="hidden" name="boardNo" id="boardNo" value="${board.boardNo}"> 
+	<input type="hidden" name="articleNo" id="articleNo" value="${article.articleNo}"> 
 	<input type="hidden" name="email"	id="email" value="${sessionScope.email}"> 
 	<input type="hidden" name="searchValue" id="searchValue" value="${searchValue}"> 
 	<input type="hidden" name="searchKey" id="searchKey" value="${searchKey}">
@@ -55,8 +56,8 @@
 				<table border="1" style="border-collapse: collapse;" width="800px" height="500%">
 					<tr>
 						<td id="read_td">작성자</td>
-						<td id="read_td2">${board.writer.name}
-							<c:if test="${sessionScope.name eq board.writer.name}">
+						<td id="read_td2">${article.writer.name}
+							<c:if test="${sessionScope.name eq article.writer.name}">
 									<input	type="button" id="modify" name="modify" value="수정" align="right">
 									<input type="button" id="delete" name="delete" value="삭제"	align="right">
 							</c:if>
@@ -66,8 +67,8 @@
 					<tr>
 						<td id="read_td">제목</td>
 						<td id="read_td2">
-							<c:if test="${board.flag==1}">${board.title}</c:if> 
-							<c:if test="${board.flag==0}">본 글은 삭제되었습니다</c:if>
+							<c:if test="${article.deletionStatus == 'PRESENT'}">${article.title}</c:if> 
+							<c:if test="${article.deletionStatus=='DELETED'}">본 글은 삭제되었습니다</c:if>
 						</td>
 					</tr>
 						
@@ -76,10 +77,10 @@
 					</tr>
 						
 					<tr>
-						<c:if test="${board.flag==1}">
-							<td colspan="2" id="read_td2">${board.content}</td>
+						<c:if test="${article.deletionStatus == 'PRESENT'}">
+							<td colspan="2" id="read_td2">${article.content}</td>
 						</c:if>
-						<c:if test="${board.flag==0}">
+						<c:if test="${article.deletionStatus=='DELETED'}">
 							<td colspan="2" id="read_td2">본 글은 삭제되었습니다</td>
 						</c:if>
 					</tr>
@@ -91,21 +92,21 @@
 
 		<tr>
 			<td class="file_layout">
-				<c:if test="${board.flag==1 }">
+				<c:if test="${article.deletionStatus == 'PRESENT'}">
 					<table border="1" style="border-collapse: collapse;" width="800px"	height="500%">
 						<tr>
 							<td id="file_td">첨부파일</td>
 						</tr>
 						<tr>
-							<c:if test="${empty board.files}">
+							<c:if test="${empty article.files}">
 								<td id="file_td2">첨부파일이 없습니다<td>
 							</c:if>
-							<c:if test="${!empty board.files}">
-								<c:forEach items="${board.files}" var="file">
-									<c:if test="${file.flag ==1 && !empty sessionScope.email}">
+							<c:if test="${!empty article.files}">
+								<c:forEach items="${article.files}" var="file">
+									<c:if test="${file.deletionStatus == 'PRESENT' && !empty sessionScope.email}">
 										<tr>
 											<td id="file_td2">
-											<a	href="/Board_psy/download.do?savedPath=${file.savedPath}">▶ &nbsp; ${file.originalName}</a><td>
+											<a	href="<c:url value ="/download.do?savedPath=${file.savedPath}" />">▶ &nbsp; ${file.originalName}</a><td>
 										</tr>
 									</c:if>
 									<c:if test="${empty sessionScope.email}">
@@ -123,7 +124,7 @@
 		</tr>
 
 		<tr>
-			<c:if test="${board.flag==0}">
+			<c:if test="${article.deletionStatus=='DELETED'}">
 				<td><span id="file_td2">첨부파일이 없습니다</span></td>
 			</c:if>
 		</tr>
@@ -134,7 +135,7 @@
 		<tr>
 			<td>
 				<div class="fb-like" 
-					data-href="http://localhost:8088/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=1&searchKey=&searchValue=" 
+					data-href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=1&searchKey=&searchValue=" />"
 					data-layout="standard" 
 					data-action="like" 
 					data-colorscheme="light"
@@ -147,7 +148,7 @@
 		<tr>
 			<td>
 				<div class="fb-comments" 
-					data-href="http://localhost:8088/Board_psy/read.do?boardNo=${board.boardNo}&isHitCount=true&page=1&searchKey=&searchValue=" 
+					data-href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=1&searchKey=&searchValue=" />" 
 					data-numposts="5"
 					data-colorscheme="light"></div>
 			</td>
@@ -159,7 +160,7 @@
 		<td class="reply_btn">
 			<table width="800px" height="500%">
 				<tr>
-					<c:if test="${!empty sessionScope.name && board.flag == 1}">
+					<c:if test="${!empty sessionScope.name && article.deletionStatus == 'PRESENT'}">
 						<td style="text-align: right; font-size: medium;">
 							<input	type="button" id="reply" name="reply" value="Reply"></td>
 					</c:if>
@@ -177,7 +178,7 @@
 		<td class="comment_layout">
 			<table border="1" style="border-collapse: collapse;" width="800px"	height="500%">
 		      <tr>
-				<c:if test="${!empty sessionScope.name  && board.flag == 1}">
+				<c:if test="${!empty sessionScope.name  && article.deletionStatus == 'PRESENT'}">
 					<td id="comment_td">${sessionScope.name }</td>
 					<td>
 						<textarea rows="3" cols="88" id="commentText"></textarea>
@@ -197,7 +198,7 @@
 			<div style="width: 800px; height: 350px; overflow: scroll;">
 				<table border="1" style="border-collapse: collapse;" width="800px">
 					<c:choose>
-						<c:when test="${empty board.comments}">
+						<c:when test="${empty article.comments}">
 							<tr>
 								<td	style="padding-left: 1em; font-style: italic; color: gray;">
 									댓글이	없습니다.
@@ -205,9 +206,9 @@
 							</tr>
 						</c:when>
 
-						<c:when test="${!empty board.comments}">
-							<c:forEach items="${board.comments }" var="comment">
-								<c:if test="${comment.flag==1 }">
+						<c:when test="${!empty article.comments}">
+							<c:forEach items="${article.comments }" var="comment">
+								<c:if test="${comment.deletionStatus == 'PRESENT'}">
 									<tr>
 										<td id="comment_td">${comment.writer.name}</td>
 										<td id="comment_td2" class="comment_td2">
@@ -255,10 +256,10 @@
 		success : function(result) {
 			if (result == "E") {
 				alert("먼저 로그인을 해주세요");
-// 				loginOpen = window.open('/Board_psy/loginForm.do', '로그인','width=300, height=200');
+// 				loginOpen = window.open('./loginForm.do', '로그인','width=300, height=200');
 				go_popup();
 			} else if (result == "GO_TO") {
-				location.href = "/Board_psy/replyForm.do?boardNo=${board.boardNo}";
+				location.href = "<c:url value ="/replyForm.do?articleNo=${article.articleNo}" />";
 			} else if (result == "C_WRITE_SUCCESS") {
 				alert("댓글이 입력되었습니다");
 				location.reload(true);
@@ -293,14 +294,14 @@
 			}
 			if ($('#commentText').val() != null) {
 				var data2 = {
-					boardNo : $('#boardNo').val(),
+					articleNo : $('#articleNo').val(),
 					email : $('#email').val(),
 					content : $('#commentText').val(),
 					ajaxYn : 'Y',
 				};
 
 				defaultAjaxDataSet.data = data2;
-				defaultAjaxDataSet.url = "/Board_psy/insertComment.do";
+				defaultAjaxDataSet.url = "<c:url value ="/insertComment.do"/>";
 				$.ajax(defaultAjaxDataSet);
 
 			} else {
@@ -311,19 +312,19 @@
 		$('#reply').click(function() {
 			defaultAjaxDataSet.data = {
 				ajaxYn : "Y",
-				boardNo : $('#boardNo').val()
+				articleNo : $('#articleNo').val()
 			};
-			defaultAjaxDataSet.url = "/Board_psy/ajaxLoginCheck.do";
+			defaultAjaxDataSet.url = "<c:url value ="/ajaxLoginCheck.do" />";
 			$.ajax(defaultAjaxDataSet);
 		});
 
 		
 	var updateAjaxDataSet = {
 			type : "post",
-			url : "/Board_psy/ajaxUpdateLoginCheck.do",
+			url : "<c:url value ="/ajaxUpdateLoginCheck.do" />",
 			data : {
 				ajaxYn : "Y",
-				boardNo : $('#boardNo').val()
+				articleNo : $('#articleNo').val()
 			},
 			error : function() {
 				alert("왜 에러야ㅠㅠ");
@@ -334,10 +335,10 @@
 			updateAjaxDataSet.success = function(result) {
 					if (result.isAjax == 'E') {
 						alert("먼저 로그인을 해주세요");
-// 						loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+// 						loginOpen = window.open(./loginForm.do', '로그인', 'width=300, height=200');
 						go_popup();
 					} else {
-						location.href = "/Board_psy/updateForm.do?boardNo=" + result.boardNo;
+						location.href = "./updateForm.do?articleNo=" + result.articleNo;
 					}
 				};
 			$.ajax(updateAjaxDataSet);	
@@ -349,11 +350,11 @@
 			updateAjaxDataSet.success =  function(result) {
 				if (result.isAjax == 'E') {
 					alert("먼저 로그인을 해주세요");
-					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+					go_popup();
 				} else {
 					var $result = confirm("삭제 하시겠습니까?");
 						if ($result) {
-							location.replace("/Board_psy/delete.do?boardNo=${board.boardNo}");
+							location.replace("<c:url value = "/delete.do?articleNo=${article.articleNo}" />");
 						}
 				}
 			};
@@ -364,7 +365,7 @@
 		$('.cDelete').click(function() {
 			// alert($(this).prev().val() + "//삭제 코멘트번호");
 			defaultAjaxDataSet.data = {commentNo : $(this).prev().val(),ajaxYn : 'Y'};
-			defaultAjaxDataSet.url = "/Board_psy/deleteComment.do";
+			defaultAjaxDataSet.url = "<c:url value = "/deleteComment.do" />";
 			$.ajax(defaultAjaxDataSet);
 
 		});
@@ -403,7 +404,7 @@
 						content : $textarea.val(),
 						ajaxYn : 'Y'
 					};
-						defaultAjaxDataSet.url = "/Board_psy/updateComment.do";
+						defaultAjaxDataSet.url = "<c:url value ="/updateComment.do" />";
 						$.ajax(defaultAjaxDataSet);
 
 					} else {

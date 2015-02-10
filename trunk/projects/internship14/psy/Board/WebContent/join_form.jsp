@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,7 +23,7 @@
 			if ($('#email').val() != null) {
 				$.ajax({
 					type : "post",
-					url : "/Board_psy/dupCheck.do",
+					url : "<c:url value ="/dupCheck.do"/>",
 					data : {
 						email : $('#email').val()
 					},
@@ -56,7 +57,7 @@
 						};
 						$.ajax({
 							type : "post",
-							url : "/Board_psy/join.do",
+							url : "<c:url value =/join.do" />",
 							data : data2,
 							success : function(result) {
 								if (result == "Y") {
@@ -143,10 +144,10 @@
 </script>
 <title>회원가입</title>
 <link type="text/css" rel="stylesheet" type="text/css"
-	href="/Board_psy/css/board.css" media="all" />
+	href="<c:url value ="/css/board.css" /> media="all" />
 </head>
 <body>
-	<!-- <form action="/Board_psy/joinSuccess.do"  method="post" name="joinForm" > -->
+	<!-- <form action="./joinSuccess.do"  method="post" name="joinForm" > -->
 	<table border="1">
 		<tr bgcolor="#F6CEE3">
 			<td>이름</td>

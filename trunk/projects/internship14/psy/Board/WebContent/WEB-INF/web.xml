@@ -57,4 +57,13 @@
 		<error-code>404</error-code>
 		<location>/defaultError.jsp</location>
 	</error-page>
+	
+	<jsp-config>
+		<taglib>
+			<taglib-uri>/tlds/custom-taglib</taglib-uri>
+			<taglib-location>/WEB-INF/tlds/custom-taglib.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+	
+	
 </web-app>

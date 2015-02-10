@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글쓰기</title>
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/board.css" />" media="all" />
 <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css"  />
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/loginBpopup.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/loginBpopup.css" />" media="all" />
 
 <script src=js/jquery-1.11.2.min.js></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -19,7 +19,7 @@
 <script src="js/login.js"></script>
 
 <body>
-	<form action="/Board_psy/write.do" name="form" id="form" method="post" enctype="multipart/form-data">
+	<form action="<c:url value="/write.do" />" name="form" id="form" method="post" enctype="multipart/form-data">
 	<div id="popup" class="Pstyle">
 		<span class="b-close">X</span>
 			<div class="content" style="height: auto; width: auto;">
@@ -85,8 +85,7 @@
 
 			<tr>
 				<td>
-					<table border="1" style="border-collapse: collapse;" width="650px"
-						height="30" id="fileTable">
+					<table border="1" style="border-collapse: collapse;" width="650px"	height="30" id="fileTable">
 					</table>
 				</td>
 			</tr>
@@ -171,7 +170,7 @@
 	function save(){
 		$.ajax({
 			type : "post",
-			url : "/Board_psy/ajaxLoginCheck.do",
+			url : "<c:url value ="/ajaxLoginCheck.do" />",
 			data : {ajaxYn: "Y"},
 			success : function(result) {
 				if(result == "E"){
