@@ -12,18 +12,21 @@ import org.apache.log4j.Logger;
 public class MyPaging<T> extends SimpleTagSupport {
 
 	private Logger logger = Logger.getLogger(MyPaging.class);
-	private int totalRecordCount;
+	private int totalPages;
 	private int numOfRecordPerPage;
-	private int currentPage;
+	private int currPage;
 	private int startPage;
 	private int endPage;
 	private int prePage;
 	private int nextPage;
 	private int finalPage;
 	private int firstPage;
+	private int maxLinks = 10;
 	
-	private Page<T> page;
+	private Page<T> page = new Page<T>();
+	
 	private String uri;
+	
 	
 	private Writer getWriter() {
 		JspWriter out = getJspContext().getOut();
@@ -33,7 +36,9 @@ public class MyPaging<T> extends SimpleTagSupport {
 	@Override
 	public void doTag() throws JspException, IOException {
 		Writer out = getWriter();
-
+		
+		logger.debug("page = "+page);
+		
 		startPage = page.getStartPage();
 		logger.debug("startPage = " + startPage);
 
@@ -43,42 +48,40 @@ public class MyPaging<T> extends SimpleTagSupport {
 		finalPage = page.getFinalPage();
 		logger.debug("finalPage = " + finalPage);
 		
-		totalRecordCount = page.getTotalRecodeCount();
-		logger.debug("totalRecordCount = "+totalRecordCount);
+		totalPages = page.getTotalRecodeCount();
+		logger.debug("totalRecordCount = "+totalPages);
 		
-		boolean isNowFirst = currentPage == 1 ? true : false; // 시작 페이지 (전체)
-		boolean isNowFinal = currentPage == finalPage ? true : false; // 마지막 페이지 (전체)
+		boolean isNowFirst = currPage == 1 ? true : false; // 시작 페이지 (전체)
+		boolean isNowFinal = currPage == finalPage ? true : false; // 마지막 페이지 (전체)
 		
-		for (int i = startPage; i < endPage; i++) {
+		out.write("<div class=\"paginatorList\">");
+	
+		out.write(constructLink(firstPage, "First", "paginatorFirst"));
+		out.write(constructLink(currPage - 1, "Previous", "paginatorPrev"));
 
-			out.write("<div class=\"paginatorList\">");
+		for (int i = startPage; i <= endPage; i++) {
+
 			// out.write("<ul class=\"paginatorList\">");
 			
-			if(isNowFirst){
-				constructLink(1);
-			}else{
-				out.write(constructLink(currentPage - 1, "Previous", "paginatorPrev"));
-			}
 			
 			//if (currentPage > 1)
-//				out.write(constructLink(firstPage, "First", "paginatorFirst"));
 				
 //			for (int i = startPage; i < endPage; i++) {
-			if (i == currentPage){  //i가 현재 페이지라면 a 링크표시 안한다. 
+			if (i == currPage){  //i가 현재 페이지라면 a 링크표시 안한다. 
 				out.write("<span class=\"paginatorCurr" + (isNowFinal && i == endPage ? " paginatorLast" : " ")
-						+ "\">" + "[" + currentPage + "]" + "</span>");
+						+ "\">" + "[" + currPage + "]" + "</span>");
 			}else{
 				out.write(constructLink(i));
 			}
 //			}
 
 			//if (!isNowFinal){
-				out.write(constructLink(currentPage + 1, "Next", "paginatorNext"));
-				out.write(constructLink(finalPage, "Last", "paginatorLast"));
 			//}
 			
-			out.write("</div>");
 		}
+		out.write(constructLink(currPage + 1, "Next", "paginatorNext"));
+		out.write(constructLink(finalPage, "Last", "paginatorLast"));
+		out.write("</div>");
 	}
 	private String constructLink(int page) {
         return constructLink(page, String.valueOf(page), null);
@@ -100,8 +103,69 @@ public class MyPaging<T> extends SimpleTagSupport {
         return link.toString();
     }
  
+    
+    
+    
     public void setUri(String uri) {
         this.uri = uri;
         logger.debug("uri : "+uri);
     }
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
+	public void setTotalPages(int totalRecordCount) {
+		this.totalPages = totalRecordCount;
+	}
+
+	public void setNumOfRecordPerPage(int numOfRecordPerPage) {
+		this.numOfRecordPerPage = numOfRecordPerPage;
+	}
+
+	public void setCurrPage(int currPage) {
+		this.currPage = currPage;
+	}
+
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
+
+	public void setPrePage(int prePage) {
+		this.prePage = prePage;
+	}
+
+	public void setNextPage(int nextPage) {
+		this.nextPage = nextPage;
+	}
+
+	public void setFinalPage(int finalPage) {
+		this.finalPage = finalPage;
+	}
+
+	public void setFirstPage(int firstPage) {
+		this.firstPage = firstPage;
+	}
+
+	public void setMaxLinks(int maxLinks) {
+		this.maxLinks = maxLinks;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+    
+    
+    
+    
+    
+    
 }
