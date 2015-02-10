@@ -14,7 +14,6 @@ public enum DeletionStatus {
 		return value;
 	}
 	
-		
 	public static DeletionStatus valueOf(int value) {
 		switch (value) {
 		case 0:
@@ -28,7 +27,7 @@ public enum DeletionStatus {
 	
 	public static void main(String[] args) {                                                                                                      
 		
-		System.out.println(DeletionStatus.DELETED.value);
+		System.out.println(DeletionStatus.valueOf(0));
 		System.out.println(DeletionStatus.PRESENT.value);
 		
 		

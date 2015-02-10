@@ -10,8 +10,8 @@ public interface CommentMapper {
 	public int insertComment(Comment comment); 
 	public int updateComment(Comment comment);
 	public int deleteComment(Comment comment);
-	public List<Comment> selectCommentListByBoardNo(int boardNo);
-	public int selectCommentCountByBoardNo();
+	public List<Comment> selectCommentListByArticleNo(int articleNo);
+	public int selectCommentCountByArticleNo();
 	public Comment selectCommentByCommentNo(int commentNo);
 	public int selectCommentLastNo();
 	

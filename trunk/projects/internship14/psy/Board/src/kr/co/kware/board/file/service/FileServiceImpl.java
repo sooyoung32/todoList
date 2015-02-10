@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.co.kware.board.file.mapper.FileMapper;
 import kr.co.kware.board.file.vo.File;
+import kr.co.kware.common.dbcommon.DeletionStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,9 +15,9 @@ public class FileServiceImpl implements FileService{
 	private FileMapper fileMapepr;
 	
 	@Override
-	public int insertFile(File fileVO, int boardNo) {
-		fileVO.setBoardNo(boardNo);
-		fileVO.setFlag(1);
+	public int insertFile(File fileVO, int articleNo) {
+		fileVO.setArticleNo(articleNo);
+		fileVO.setDeletionStatus(DeletionStatus.PRESENT);
 		System.err.println("파일서비스구현체 : insert");
 		return fileMapepr.insertFile(fileVO);
 	}
@@ -30,13 +31,13 @@ public class FileServiceImpl implements FileService{
 	public int deleteFile(int fileNo) {
 		File file = fileMapepr.selectFileByFileNo(fileNo);
 		// 파일이 없으면 0 있으면 1
-		file.setFlag(0);
+		file.setDeletionStatus(DeletionStatus.DELETED);
 		return fileMapepr.deleteFile(file);
 	}
 
 	@Override
-	public List<File> getFileByBoardNo(int boardNo) {
-		return fileMapepr.selectFileByBoardNo(boardNo);
+	public List<File> getFileByArticleNo(int articleNo) {
+		return fileMapepr.selectFileByArticleNo(articleNo);
 	}
 
 	@Override

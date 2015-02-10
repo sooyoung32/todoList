@@ -148,12 +148,7 @@ public class Article extends DBCommon{
 //				+ ", hitCount=" + hitCount + ", writer=" + writer + ", files=" + files + ", comments=" + comments
 //				+ ", flag=" + flag + "]";
 //	}
-	
-	
-	
 
-	
-	
 	
 	
 }

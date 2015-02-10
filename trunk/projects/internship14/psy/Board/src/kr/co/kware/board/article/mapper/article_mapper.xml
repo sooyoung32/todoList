@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="DATE_OF_MODIFY" property="modifyDate" />
 		<result column="WRITING_IP" property="writingIP" />
 		<result column="MODIFY_IP" property="modifyIP" />
-		<result column="FLAG" property="deletionStatus" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
+		<result column="FLAG" property="deletionStatus"  typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
 
 
 		<association property="writer" javaType="kr.co.kware.member.vo.Member" column="EMAIL">
@@ -29,11 +29,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</association>
 
 		<collection property="comments" ofType="kr.co.kware.board.comment.vo.Comment" column="BOARD_NO"
-			javaType="ArrayList" select="kr.co.kware.board.comment.mapper.CommentMapper.selectCommentListByBoardNo">
+			javaType="ArrayList" select="kr.co.kware.board.comment.mapper.CommentMapper.selectCommentListByArticleNo">
 		</collection>
 
 		<collection property="files" ofType="kr.co.kware.board.file.vo.File" column="BOARD_NO"
-			javaType="ArrayList" select="kr.co.kware.board.file.mapper.FileMapper.selectFileByBoardNo">
+			javaType="ArrayList" select="kr.co.kware.board.file.mapper.FileMapper.selectFileByArticleNo">
 		</collection>
 
 	</resultMap>
@@ -126,7 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 		</if>
 		ORDER BY B.FAMILY DESC, B.DEPTH ASC
-		LIMIT #{startRow}, #{endRow}
+		LIMIT ${startRow}, ${endRow}
 
 	</select>
 
@@ -156,12 +156,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 	<update id="deleteArticle" parameterType="kr.co.kware.board.article.vo.Article">
-		UPDATE BOARD
-		SET TITLE = #{title}
-		,CONTENT = #{content}
-		,HITCOUNT = #{hitCount}
-		,DATE_OF_MODIFY = #{modifyDate}
-		,MODIFY_IP = #{modifyIP}
+		UPDATE BOARD 
+		SET FLAG = #{deletionStatus}
 		WHERE BOARD_NO = #{articleNo}
 	</update>
 
@@ -188,7 +184,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{email},#{title},#{content},
 		#{family},
 		#{parent},#{depth},#{indent},#{hitCount},
-		#{writingDate},#{modifyDate},#{writingIP},#{modifyIP},#{deletionStatus.value})
+		#{writingDate},#{modifyDate},#{writingIP},#{modifyIP},#{deletionStatus})
 
 		<selectKey resultType="int" keyProperty="articleNo" order="BEFORE">
 			SELECT COALESCE(MAX(BOARD_NO),0) + 1 FROM BOARD
@@ -197,21 +193,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="updateArticle" parameterType="kr.co.kware.board.article.vo.Article">
 		UPDATE BOARD
-		SET
-		HITCOUNT = #{hitCount}
-		,DATE_OF_MODIFY = #{modifyDate}
-		,MODIFY_IP = #{modifyIP}
-		,FLAG = #{deletionStatus.value}
+		SET  TITLE = #{title}
+			,CONTENT = #{content}
+			,HITCOUNT = #{hitCount}
+			,DATE_OF_MODIFY = #{modifyDate}
+			,MODIFY_IP = #{modifyIP}
+			,FLAG = #{deletionStatus}
 		WHERE BOARD_NO = #{articleNo}
 	</update>
 
 	<insert id="insertArticleReply" parameterType="kr.co.kware.board.article.vo.Article">
 		INSERT INTO BOARD (
 		EMAIL,TITLE,CONTENT,FAMILY,PARENT, DEPTH,
-		INDENT,HITCOUNT,DATE_OF_WRITING, DATE_OF_MODIFY, WRITING_IP,MODIFY_IP
+		INDENT,HITCOUNT,DATE_OF_WRITING, DATE_OF_MODIFY, WRITING_IP,MODIFY_IP,FLAG
 		) VALUES
 		(#{email},#{title},#{content},#{family},#{parent},#{depth},
-		#{indent},#{hitCount},#{writingDate},#{modifyDate},#{writingIP},#{modifyIP})
+		#{indent},#{hitCount},#{writingDate},#{modifyDate},#{writingIP},#{modifyIP},#{deletionStatus})
 	</insert>
 
 	<update id="updateArticleDepth" parameterType="kr.co.kware.board.article.vo.Article">

@@ -5,19 +5,20 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
 import kr.co.kware.board.article.service.ArticleService;
-
-
 import kr.co.kware.board.article.vo.Article;
 import kr.co.kware.board.comment.service.CommentService;
 import kr.co.kware.board.comment.vo.Comment;
 import kr.co.kware.board.file.service.FileService;
 import kr.co.kware.board.file.vo.MultipartFileList;
+import kr.co.kware.common.dbcommon.DeletionStatus;
 import kr.co.kware.common.util.pages.Page;
 
 import org.apache.log4j.Logger;
@@ -35,112 +36,68 @@ public class ArticleController {
 
 	@Autowired
 	private ArticleService articleServiceImpl;
-	
+
 	@Autowired
 	private FileService fileServiceImpl;
-	
+
 	@Autowired
 	private CommentService commentServiceImpl;
 
 	private Logger logger = Logger.getLogger(ArticleController.class);
 
 	// 페이지 처리
-	public static final int NUM_OF_BOARD = 15;
 
 	@RequestMapping(value = "articleList.do")
 	public ModelAndView getArticlePage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey,
-			String searchValue) {
+			String searchValue, HttpServletRequest request) {
+		
+		String currentPage = request.getParameter("currentPage");
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("article_list");
-	 
-//		for (String xx : ctx.getBeanNamesForType(BoardService.class)) {
-//			System.err.println(">>> : " + xx);
-//		}
-		int totalArticleCount;
-		int startRow = 0;
-		int endRow = 0;
-		int startPage = 0;
-		int endPage = 0;
-		int totalPage = 0;
-		int prePage = 0;
-		int nextPage = 0;
-		int pageNo = 0;
+
+		int totalArticleCount = 0;
 		List<Article> articleList;
-		
+
+		Page<Article> articlePage = new Page<Article>();
+		articlePage.setCurrentPageNo(page);
+//		articlePage.setPageSize(15);
+				
 		if (searchKey != null && searchValue != null) { // 검색결과가 있을때
 			totalArticleCount = articleServiceImpl.countTotalSearchResult(searchKey, searchValue);
+			articlePage.setTotalRecodeCount(totalArticleCount);
+			
 			mv.addObject("searchKey", searchKey);
 			mv.addObject("searchValue", searchValue);
 
 		} else {
 			totalArticleCount = articleServiceImpl.countTotalArticleNumber();
+			articlePage.setTotalRecodeCount(totalArticleCount);
 		}
-
-		if (totalArticleCount > 0) { // 게시글이 있는 경우
-			pageNo = page;
-
-			// 게시글 순서 0-9, 10-19
-			startRow = (page - 1) * NUM_OF_BOARD;
-			endRow = startRow + NUM_OF_BOARD - 1;
-			// 리스트 받기
-			articleList = articleServiceImpl.showArticleList(startRow, endRow, searchKey, searchValue); //TODO map으로받아와...startRow endRow 계산해주는곳은 한곳에.
-
-			// System.out.println("startRow//"+startRow);
-			// System.out.println("endRow//"+endRow);
-
-			// 총 페이지 : 총 게시글 / 10
-			totalPage = totalArticleCount / NUM_OF_BOARD;
-			if (totalArticleCount % NUM_OF_BOARD != 0) {
-				totalPage++;
-			}
-
-			// 시작 페이지
-			startPage = 1;
-			if (startPage <= 0) {
-				startPage = 1;
-			}
-			endPage = startPage + 9;
-
-			if (endPage > totalPage) {
-				endPage = totalPage;
-			}
-
-			while (pageNo > endPage) {
-				startPage = startPage + 10;
-				endPage = startPage + 9;
-
-				if (endPage > totalPage) {
-					endPage = totalPage;
-				}
-
-			}
-
-			boolean isNowFirst = pageNo == 1 ? true : false; // 시작 페이지 (전체)
-			boolean isNowFinal = pageNo == totalPage ? true : false; // 마지막 페이지 (전체)
-
-			if (isNowFirst) {
-				prePage = 1; // 이전 페이지 번호
-			} else {
-				prePage = (((pageNo - 1) < 1 ? 1 : (pageNo - 1))); // 이전 페이지 번호
-			}
-
-			if (isNowFinal) {
-				nextPage = (totalPage); // 다음 페이지 번호
-			} else {
-				nextPage = (((pageNo + 1) > totalPage ? totalPage : (pageNo + 1))); // 다음 페이지 번호
-			}
-
-			logger.debug("보드리스트 화면입니다!!");
-			Page<Article> articlePage = new Page<Article>(totalArticleCount, startPage, endPage, startRow, endRow, totalPage,
-					prePage, nextPage, pageNo, articleList);
-			mv.addObject("articlePage", articlePage);
-			return mv;
-
-		} else { // 게시글이 없는 경우
-			Page<Article> articlePage = new Page(0, 0, 0, 0, 0, 0, 0, 0, 0, Collections.<Article> emptyList());
-			mv.addObject("articlePage", articlePage);
-			return mv;
-		}
+		
+		int startRow = (page - 1) * articlePage.getPageSize();
+		int endRow = articlePage.getPageSize();
+		
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+		
+		articleList = articleServiceImpl.showArticleList(map);
+		
+		articlePage.setStartRow(startRow);
+		articlePage.setEndRow(endRow);
+		articlePage.setTotalRecodeCount(totalArticleCount);
+		articlePage.setDataList(articleList);
+		
+		request.setAttribute("dataList", articleList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalRecordCount",totalArticleCount);
+        request.setAttribute("recordsPerPage", 15);
+		
+		mv.addObject("articlePage",articlePage);
+		return mv;
 
 	}
 
@@ -160,8 +117,8 @@ public class ArticleController {
 			mv.addObject("page", page);
 		}
 		mv.addObject("article", article);
-		logger.debug("게시글 "+ article);
-		List<Comment> commentList = commentServiceImpl.readCommentListByBoardNo(articleNo);
+		logger.debug("게시글 " + article);
+		List<Comment> commentList = commentServiceImpl.readCommentListByArticleNo(articleNo);
 		mv.addObject("commentList", commentList);
 
 		return mv;
@@ -173,14 +130,14 @@ public class ArticleController {
 	}
 
 	// 글쓰기 파일업로드실행
-	@RequestMapping(value = "write.do", method =RequestMethod.POST)
-	public String write(Article article, HttpServletRequest request, MultipartFileList multiPartFileList) {
+	@RequestMapping(value = "write.do", method = RequestMethod.POST)
+	public String write(Article article, HttpServletRequest request, MultipartFileList multipartFileList) {
 		int articleNo = articleServiceImpl.getLastArticleNo();
 		// article.getContent().replaceAll("\n\r", "<br>");
-		List<kr.co.kware.board.file.vo.File> files = fileUpload(multiPartFileList, request, articleNo);
+		List<kr.co.kware.board.file.vo.File> files = fileUpload(multipartFileList, request, articleNo);
 		articleServiceImpl.writeArticle(article);
 
-		System.out.println(files);
+		logger.debug("글쓰기 컨드롤러 업로든된 파일: " + files);
 		for (kr.co.kware.board.file.vo.File file : files) {
 			fileServiceImpl.insertFile(file, articleNo);
 		}
@@ -189,10 +146,12 @@ public class ArticleController {
 	}
 
 	// 파일 업로드
-	public List<kr.co.kware.board.file.vo.File> fileUpload(MultipartFileList multiPartFileList, HttpServletRequest request, int articleNo) {
+	public List<kr.co.kware.board.file.vo.File> fileUpload(MultipartFileList multipartFileList,
+			HttpServletRequest request, int articleNo) {
 		List<kr.co.kware.board.file.vo.File> voFileList = new ArrayList<>();
-		List<MultipartFile> fileListFromClient = multiPartFileList.getFileList(); // 클라이언트가 전송한 파일
-		System.out.println("업로드 파일리스트//" + fileListFromClient);
+		List<MultipartFile> fileListFromClient = multipartFileList.getFileList(); // 클라이언트가 전송한 파일
+		System.err.println("업로드 파일리스트//" + fileListFromClient);
+		System.err.println("멀티파트파일리스트 : " + multipartFileList + " 글번호 :" + articleNo);
 		List<String> filenames = new ArrayList<>();
 
 		if (fileListFromClient != null && fileListFromClient.size() > 0) {
@@ -203,13 +162,14 @@ public class ArticleController {
 			if (dir.exists() == false) { // 해당 경로에 폴더가 없는 경우 폴더 생성
 				dir.mkdirs();
 			}
-
+			System.err.println("여기 파일 업로드 : " + fileListFromClient);
 			kr.co.kware.board.file.vo.File voFile;
+
 			for (MultipartFile multiPartFile : fileListFromClient) {
 
-				if (multiPartFile != null || "".equals(multiPartFile.getName())) {
-					continue;
-				}
+				// if (multiPartFile != null || "".equals(multiPartFile.getName())) {
+				// continue;
+				// } //TODO 이거...넣으면 파일 업로드가 안되지만 에러도 안난다. 어떻게 처리하지.. 방어적 프로그램?
 
 				String uniqueId = UUID.randomUUID().toString(); // 파일 중복 이름 처리
 				String savedFileName = multiPartFile.getOriginalFilename() + "." + uniqueId;
@@ -217,22 +177,22 @@ public class ArticleController {
 				filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
 
 				File uploadedFile = new File(savedPath); // 서버에 파일 저장.
-
+				System.err.println("파일 업로드? 들어와 : " + uploadedFile);
 				try {
 					multiPartFile.transferTo(uploadedFile); // 업로드 실행.
 
 					voFile = new kr.co.kware.board.file.vo.File();
-					voFile.setBoardNo(articleNo);
+					voFile.setArticleNo(articleNo);
 					voFile.setOriginalName(multiPartFile.getOriginalFilename());
 					voFile.setSavedPath(savedPath);
-					voFile.setFlag(1);
+					voFile.setDeletionStatus(DeletionStatus.PRESENT);
 					voFileList.add(voFile);
 
 					System.out.println("파일 업로드 완료");
 					System.out.println("파일명:" + multiPartFile.getOriginalFilename());
 				} catch (IllegalStateException | IOException e) {
 					System.out.println("upload fail!!!!!!! " + e);
-					//TODO 파일 notification.. 에러 알림! 2번째 파일만 업로드가 안되면?  	
+					// TODO 파일 notification.. 에러 알림! 2번째 파일만 업로드가 안되면?
 				}
 			}
 		}
@@ -268,7 +228,6 @@ public class ArticleController {
 		return "redirect:articleList.do?page=1";
 	}
 
-
 	@RequestMapping(value = "updateForm.do")
 	public ModelAndView updateForm(int articleNo) {
 		Article article = articleServiceImpl.readArticlebyArticleNo(articleNo, false);
@@ -278,8 +237,8 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "update.do", method = RequestMethod.POST)
-	public String update(Article updatedArticle, int articleNo, MultipartFileList multipartFileList, HttpServletRequest request,
-			String[] deletedFileList) throws UnknownHostException {
+	public String update(Article updatedArticle, int articleNo, MultipartFileList multipartFileList,
+			HttpServletRequest request, String[] deletedFileList) throws UnknownHostException {
 
 		logger.debug("-----------------------------------");
 		logger.debug("업데이트된 게시판// " + updatedArticle);
@@ -302,7 +261,7 @@ public class ArticleController {
 
 		List<kr.co.kware.board.file.vo.File> voFileList = fileUpload(multipartFileList, request, articleNo);
 		articleServiceImpl.modifyArticle(updatedArticle, articleNo, deletedFileList);
-		
+
 		// 파일 업데이트
 		for (kr.co.kware.board.file.vo.File voFile : voFileList) {
 			fileServiceImpl.insertFile(voFile, articleNo);

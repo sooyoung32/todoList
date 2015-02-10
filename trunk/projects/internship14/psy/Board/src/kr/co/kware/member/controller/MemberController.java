@@ -37,13 +37,13 @@ public class MemberController {
 	// ajax 데이터 값 map을 통해 여러개 갈 수 있는것을 보여주기위해.
 	@RequestMapping(value = "ajaxUpdateLoginCheck.do")
 	public @ResponseBody
-	Map<Object, Object> ajaxUpdateLoginCheck(int boardNo, HttpServletRequest request) {
+	Map<Object, Object> ajaxUpdateLoginCheck(int articleNo, HttpServletRequest request) {
 		String isAjax = (String) request.getAttribute("result");
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		logger.debug("업데이트에서 에이젝스 값 ////////////////" + isAjax);
 		if (!"E".equals(isAjax)) {
-			map.put("boardNo", boardNo);
+			map.put("articleNo", articleNo);
 		} else {
 			map.put("isAjax", "E");
 			logger.debug("map : " + map);

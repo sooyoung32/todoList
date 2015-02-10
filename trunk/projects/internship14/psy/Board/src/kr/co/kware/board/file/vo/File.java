@@ -1,13 +1,16 @@
 package kr.co.kware.board.file.vo;
 
+import kr.co.kware.common.dbcommon.DeletionStatus;
+
 
 public class File {
 	
 	private int fileNo; 
-	private int boardNo; 
+	private int articleNo; 
 	private String originalName;
 	private String savedPath;
-	private int flag; 
+//	private int flag;
+	private DeletionStatus deletionStatus; 
 	
 	//getter&setter 
 	public int getFileNo() {
@@ -16,11 +19,11 @@ public class File {
 	public void setFileNo(int fileNo) {
 		this.fileNo = fileNo;
 	}
-	public int getBoardNo() {
-		return boardNo;
+	public int getArticleNo() {
+		return articleNo;
 	}
-	public void setBoardNo(int boardNo) {
-		this.boardNo = boardNo;
+	public void setArticleNo(int articleNo) {
+		this.articleNo = articleNo;
 	}
 	public String getOriginalName() {
 		return originalName;
@@ -35,18 +38,38 @@ public class File {
 		this.savedPath = savedPath;
 	}
 	
-	public void setFlag(int flag) {
-		this.flag = flag;
+//	public void setFlag(int flag) {
+//		this.flag = flag;
+//	}
+//	
+//	public int getFlag() {
+//		return flag;
+//	}
+	
+	public DeletionStatus getDeletionStatus() {
+		return deletionStatus;
 	}
 	
-	public int getFlag() {
-		return flag;
+	public void setDeletionStatus(DeletionStatus deletionStatus) {
+		this.deletionStatus = deletionStatus;
 	}
+	
+	
 	@Override
 	public String toString() {
-		return "File [fileNo=" + fileNo + ", boardNo=" + boardNo + ", originalName=" + originalName + ", savedPath="
-				+ savedPath + ", flag=" + flag + "]";
+		return "File [fileNo=" + fileNo + ", boardNo=" + articleNo + ", originalName=" + originalName + ", savedPath="
+				+ savedPath + ", deletionStatus=" + deletionStatus + "]";
 	}
+	
+	
+	
+//	@Override
+//	public String toString() {
+//		return "File [fileNo=" + fileNo + ", boardNo=" + boardNo + ", originalName=" + originalName + ", savedPath="
+//				+ savedPath + ", flag=" + flag + "]";
+//	}
+	
+	
 	
 	
 	
