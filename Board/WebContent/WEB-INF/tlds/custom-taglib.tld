@@ -11,8 +11,14 @@
 
 	<tag>
 		<name>paging</name>
-		<tag-class>kr.co.kware.common.util.pages.Paginator</tag-class>
+		<tag-class>kr.co.kware.common.util.pages.MyPaging</tag-class>
 		<body-content>empty</body-content>
+		<attribute>
+			<name>page</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>kr.co.kware.common.util.pages.Page</type>
+		</attribute>
 		<attribute>
 			<name>uri</name>
 			<required>true</required>

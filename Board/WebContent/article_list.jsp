@@ -200,7 +200,7 @@
 <!-- 								</td> -->
 								<td colspan="6" align="center">
 								<c:url var="searchUri" value="/articleList.do?s=${searchval}&page=##" />
-								<pageTag:paging maxLinks="10" currPage="${articlePage.currentPageNo}" totalPages="${articlePage.totalRecodeCount}" uri="${searchUri}" />
+								<pageTag:paging page="${articlePage}" maxLinks="10" currPage="${articlePage.currentPageNo}" totalPages="${articlePage.totalRecodeCount}" uri="${searchUri}" />
 								</td>
 
 							</tr>
