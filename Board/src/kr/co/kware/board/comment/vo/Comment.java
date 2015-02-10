@@ -1,28 +1,38 @@
 package kr.co.kware.board.comment.vo;
 
 import kr.co.kware.common.dbcommon.DBCommon;
+import kr.co.kware.common.dbcommon.DeletionStatus;
 import kr.co.kware.member.vo.Member;
 
 public class Comment extends DBCommon {
 	
 	private int commentNo; 
-	private int boardNo; 
+	private int articleNo; 
 	private String email; 
 	private String content;
 	private kr.co.kware.member.vo.Member writer;
-	private int flag; 
+//	private int flag; 
+	DeletionStatus deletionStatus;
 	
 	
 	
 	//getter&setter
 	
 	
-	public void setFlag(int flag) {
-		this.flag = flag;
+//	public void setFlag(int flag) {
+//		this.flag = flag;
+//	}
+//	
+//	public int getFlag() {
+//		return flag;
+//	}
+	
+	public void setDeletionStatus(DeletionStatus deletionStatus) {
+		this.deletionStatus = deletionStatus;
 	}
 	
-	public int getFlag() {
-		return flag;
+	public DeletionStatus getDeletionStatus() {
+		return deletionStatus;
 	}
 	
 	public Member getWriter() {
@@ -40,11 +50,11 @@ public class Comment extends DBCommon {
 	public void setCommentNo(int commentNo) {
 		this.commentNo = commentNo;
 	}
-	public int getBoardNo() {
-		return boardNo;
+	public int getArticleNo() {
+		return articleNo;
 	}
-	public void setBoardNo(int boardNo) {
-		this.boardNo = boardNo;
+	public void setArticleNo(int articleNo) {
+		this.articleNo = articleNo;
 	}
 	public String getEmail() {
 		return email;
@@ -61,9 +71,15 @@ public class Comment extends DBCommon {
 
 	@Override
 	public String toString() {
-		return "Comment [commentNo=" + commentNo + ", boardNo=" + boardNo + ", email=" + email + ", content=" + content
-				+ ", writer=" + writer + ", flag=" + flag + "]";
+		return "Comment [commentNo=" + commentNo + ", articleNo=" + articleNo + ", email=" + email + ", content=" + content
+				+ ", writer=" + writer + ", deletionStatus=" + deletionStatus + "]";
 	}
+
+//	@Override
+//	public String toString() {
+//		return "Comment [commentNo=" + commentNo + ", articleNo=" + articleNo + ", email=" + email + ", content=" + content
+//				+ ", writer=" + writer + ", flag=" + flag + "]";
+//	}
 	
 	
 	

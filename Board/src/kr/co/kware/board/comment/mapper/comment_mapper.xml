@@ -7,14 +7,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<resultMap type="kr.co.kware.board.comment.vo.Comment" id="commentResultMap">
 		<result column="COMMENT_NO" property="commentNo" />
-		<result column="BOARD_NO" property="boardNo" />
+		<result column="BOARD_NO" property="articleNo" />
 		<result column="EMAIL" property="email" />
 		<result column="CONTENT" property="content" />
 		<result column="DATE_OF_WRITING" property="writingDate" />
 		<result column="DATE_OF_MODIFY" property="modifyDate" />
 		<result column="WRITING_IP" property="writingIP" />
 		<result column="MODIFY_IP" property="modifyIP" />
-		<result column="FLAG" property="flag" />
+		<result column="FLAG" property="deletionStatus"  typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
 
 		<association property="writer" javaType="kr.co.kware.member.vo.Member" column="EMAIL"
 			select="kr.co.kware.member.mapper.MemberMapper.selectMember" />
@@ -23,19 +23,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="insertComment" parameterType="kr.co.kware.board.comment.vo.Comment">
 		INSERT INTO COMMENT
-		VALUES(#{commentNo},#{boardNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP},
-		#{modifyIP},#{flag})
+		VALUES(#{commentNo},#{articleNo},#{email},#{content},#{writingDate},#{modifyDate},#{writingIP},
+		#{modifyIP},#{deletionStatus})
 	</insert>
 
-	<select id="selectCommentListByBoardNo" resultType="kr.co.kware.board.comment.vo.Comment"
+	<select id="selectCommentListByArticleNo" resultType="kr.co.kware.board.comment.vo.Comment"
 		resultMap="commentResultMap" parameterType="int">
 		SELECT * FROM COMMENT WHERE
-		BOARD_NO = #{boardNo} AND FLAG = 1 ORDER BY COMMENT_NO DESC
+		BOARD_NO = #{articleNo} AND FLAG = 'PRESENT' ORDER BY COMMENT_NO DESC
 	</select>
 
-	<select id="selectCommentCountByBoardNo" resultMap="commentResultMap">
+	<select id="selectCommentCountByArticleNo" resultMap="commentResultMap">
 		SELECT
-		COUNT(*) FROM COMMENT WHERE BOARD_NO=#{boardNo}
+		COUNT(*) FROM COMMENT WHERE BOARD_NO=#{articleNo}
 	</select>
 
 	<select id="selectCommentByCommentNo" resultMap="commentResultMap"
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<update id="deleteComment" parameterType="kr.co.kware.board.comment.vo.Comment">
 		UPDATE COMMENT SET FLAG
-		= #{flag}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE
+		= #{deletionStatus}, DATE_OF_MODIFY=#{modifyDate}, MODIFY_IP=#{modifyIP} WHERE
 		COMMENT_NO=#{commentNo}
 	</update>
 

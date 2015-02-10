@@ -12,7 +12,7 @@ public interface ArticleMapper {
 	public int updateArticle(Article article);
 	public int deleteArticle(Article article);
 	public Article selectArticleByArticleNo(int articleNo);
-	public List<Article> selectArticleList(Map<String, Object> map);
+	public List<Article> selectArticleList(Map<Object, Object> map);
 	public int selectArticleCount();
 	public int insertArticleReply(Article article); 
 	public int updateArticleDepth(Article article);

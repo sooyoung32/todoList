@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 
+
 import kr.co.kware.board.article.mapper.ArticleMapper;
 import kr.co.kware.board.article.vo.Article;
 import kr.co.kware.common.dbcommon.DeletionStatus;
@@ -33,7 +34,8 @@ public class ArticleServiceImpl implements ArticleService {
 			int lastNo = articleMapper.selectLastNo();
 			article.setFamily(lastNo);
 //			article.setFlag(1);
-			article.setDeletionStatus(DeletionStatus.valueOf(1));
+			article.setDeletionStatus(DeletionStatus.PRESENT);
+			logger.debug("DeletionStatus.PRESENT: "+DeletionStatus.PRESENT);
 			article.setParent(0);
 			article.setDepth(0);
 			article.setIndent(0);
@@ -123,9 +125,8 @@ public class ArticleServiceImpl implements ArticleService {
 			}
 			
 			//article.setFlag(0); //flag가 0이면 글 열람 불가
-			article.setDeletionStatus(DeletionStatus.valueOf(0));
-			
-			System.out.println("업데이트된 게시글//" + article);
+			article.setDeletionStatus(DeletionStatus.DELETED);
+			logger.debug("삭제된 게시글//" + article);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -133,13 +134,7 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<Article> showArticleList(int startRow, int endRow, String searchKey, String searchValue) {
-		//TODO 매개변수 MAP으로 
-		Map<String, Object> map = new HashMap<>();
-		map.put("startRow", startRow);
-		map.put("endRow", endRow - startRow + 1);
-		map.put("searchKey", searchKey);
-		map.put("searchValue", searchValue);
+	public List<Article> showArticleList(Map<Object, Object> map) {
 		return articleMapper.selectArticleList(map);
 	}
 

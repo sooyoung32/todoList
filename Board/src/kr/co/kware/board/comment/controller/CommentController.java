@@ -33,7 +33,7 @@ public class CommentController {
 
 	@RequestMapping(value = "insertComment.do", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public String writeComment(Comment comment, int boardNo, String email, HttpServletRequest request)
+	public String writeComment(Comment comment, int articleNo, String email, HttpServletRequest request)
 			throws UnknownHostException {
 		
 		logger.debug("코멘트 컨트롤러");
@@ -42,7 +42,7 @@ public class CommentController {
 		
 		if(isAjax(request)){
 			return "E";
-		}else if (commentServiceImpl.writeComment(comment, boardNo, email) == 1){
+		}else if (commentServiceImpl.writeComment(comment, articleNo, email) == 1){
 			return "C_WRITE_SUCCESS";
 		} else {
 			return  "C_WRITE_FAIL";
