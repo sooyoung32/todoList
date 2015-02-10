@@ -2,11 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="pageTag" uri="/tlds/custom-taglib"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link type="text/css" rel="stylesheet" type="text/css" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" type="text/css" href="./css/board.css" media="all" />
 
 
 <title>게시판 목록 </title>
@@ -25,7 +26,7 @@
 <body>
 	<fmt:requestEncoding value="UTF-8" />
 	<form action="<c:url value="/articleList.do" />" id="form" name="form" method="post">
-		<input type="hidden" name="totalArticleCount" value="${articlePage.totalArticleCount}"> 
+		<input type="hidden" name="totalArticleCount" value="${articlePage.totalRecodeCount}"> 
 		<input type="hidden" name="page"> <input type="hidden" name="prePage" value="${articlePage.prePage}">
 		<input type="hidden" name="nextPage" value="${articlePage.nextPage}">
 
@@ -34,7 +35,7 @@
 				<td class="title_layout"><h1>KWARE 게시판</h1></td>
 			</tr>
 			<tr>
-				<td class="back_layout"><a href="/Board_psy/articleList.do">◀처음으로</a></td>
+				<td class="back_layout"><a href="<c:url value="/articleList.do" />">◀처음으로</a></td>
 			</tr>
 
 			<tr>
@@ -75,8 +76,6 @@
 									새 비밀번호 확인 :<input type="password" name="confirmNewPW" id="confirmNewPW" ><br>
 									<input type="button" name="changePW" id="changePW" value="변경하기">
 								</div>
-								
-								
 								<input type="button" name="withdrawUser" id="withdrawUser" value="회원탈퇴" >
 								<input type="button" name="myWriting" id="myWriting" value="내가쓴글조회" >
 					</c:when>
@@ -104,19 +103,19 @@
 
 
 			<tr>
-				<td class="totalBoard_layout">총게시글 수 : ${articlePage.totalArticleCount}</td>
+				<td class="totalBoard_layout">총게시글 수 : ${articlePage.totalRecodeCount}</td>
 
 			</tr>
 
 			<tr>
 				<td class="list_layout">
 					<table border="1" style="border-collapse: collapse;width : 1024px;" class="boardList">
-						<c:if test="${empty articlePage.articleList }">
+						<c:if test="${empty articlePage.dataList }">
 							<tr>
 								<td>게시글이 없습니다.</td>
 							</tr>
 						</c:if>
-						<c:if test="${!empty articlePage.articleList }">
+						<c:if test="${!empty articlePage.dataList }">
 
 							<tr align="center">
 								<td width="80px">글번호</td>
@@ -127,28 +126,28 @@
 								<td width="80px">조회수</td>
 							</tr>
 
-							<c:forEach items="${articlePage.articleList}" var="article">
+							<c:forEach items="${articlePage.dataList}" var="article">
 								<tr>
 									<td align="center">${article.articleNo} </td>
 									<td align="center" width="100px">${article.writer.name}</td>
 
 									<td id="boardList_title" width="300px">
 										<c:if test="${article.indent == 0 && article.deletionStatus == 'PRESENT'}">
-											<a href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">${article.title}</a>
+											<a href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.currentPageNo}&searchKey=${searchKey}&searchValue=${searchValue}"/>">${article.title}</a>
 										</c:if>
 										<c:if test="${article.indent == 0 && article.deletionStatus=='DELETED'}">
 											<span style="font-style: italic; color: gray; font-size: x-small;">
-												<a	href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}">삭제된 글입니다</a>
+												<a	href="<c:url value="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.currentPageNo}&searchKey=${searchKey}&searchValue=${searchValue}"/>">삭제된 글입니다</a>
 											</span>
 										</c:if>
 										<c:if test="${article.indent > 0 && article.deletionStatus =='PRESENT'}">
 											<c:forEach begin="1" end="${article.indent}">&nbsp;&nbsp;</c:forEach>
-											<a href="javascript:fn_gotoBoard('${article.articleNo}')">ㄴ[Re]&nbsp;${article.title}</a>
+											<a href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.currentPageNo}&searchKey=${searchKey}&searchValue=${searchValue}"/>">ㄴ[Re]&nbsp;${article.title}</a>
 										</c:if> 
 										<c:if test="${article.indent > 0 && article.deletionStatus =='DELETED'}">
 											<c:forEach begin="1" end="${article.indent}">&nbsp;&nbsp;</c:forEach>
 											<span style="font-style: italic; color: gray; font-size: x-small;"> 
-												<a	href="/Board_psy/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.pageNo}&searchKey=${searchKey}&searchValue=${searchValue}"> ㄴ&nbsp;삭제된 글입니다</a>
+												<a	href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=${articlePage.currentPageNo}&searchKey=${searchKey}&searchValue=${searchValue}"/>"> ㄴ&nbsp;삭제된 글입니다</a>
 											</span>
 										</c:if>
 									</td>
@@ -158,10 +157,10 @@
 												<c:forEach items="${article.files}" var="file">
 													<c:choose>
 														<c:when test="${not empty sessionScope.email  && article.deletionStatus =='PRESENT'}">
-															<a href="/Board_psy/download.do?savedPath=${file.savedPath}"> <img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px"></a>
+															<a href="<c:url value ="/download.do?savedPath=${file.savedPath}"/>"> <img alt="${file.originalName}" src="<c:url value="/img/file.jpg" />" width="20px" height="20px"></a>
 														</c:when>
 														<c:otherwise>
-															<img alt="${file.originalName}" src="/Board_psy/img/file.jpg" width="20px" height="20px">
+															<img alt="${file.originalName}" src="<c:url value="/img/file.jpg" />" width="20px" height="20px">
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>
@@ -182,22 +181,28 @@
 							
 							
 							<tr>
+							
+<!-- 								<td colspan="6" align="center"> -->
+<!-- 								<a onclick="javascript:fn_pageMove(1)"> &nbsp; << &nbsp; </a>  -->
+<%-- 									<a onclick="javascript:fn_pageMove(${articlePage.prePage})"> &nbsp; < &nbsp;</a>  --%>
+<%-- 									<c:forEach var="num" begin="${articlePage.startPage}" end="${articlePage.endPage}"> --%>
+<%-- 										<c:choose> --%>
+<%-- 											<c:when test="${num eq articlePage.currentPageNo}"> --%>
+<%-- 												<a onclick="javascript:fn_pageMove(${num})" class="choice" style="font-weight: bold;" >[${num}]</a> --%>
+<%-- 											</c:when> --%>
+<%-- 											<c:otherwise> --%>
+<%-- 												<a onclick="javascript:fn_pageMove(${num})">[${num}]</a> --%>
+<%-- 											</c:otherwise> --%>
+<%-- 										</c:choose> --%>
+<%-- 									</c:forEach>  --%>
+<%-- 									<a onclick="javascript:fn_pageMove(${articlePage.nextPage})">&nbsp; > &nbsp;</a> --%>
+<%-- 									<a onclick="javascript:fn_pageMove(${articlePage.finalPage})">&nbsp; >> &nbsp;</a> --%>
+<!-- 								</td> -->
 								<td colspan="6" align="center">
-								<a onclick="javascript:fn_pageMove(1)"> &nbsp; << &nbsp; </a> 
-									<a onclick="javascript:fn_pageMove(${articlePage.prePage})"> &nbsp; < &nbsp;</a> 
-									<c:forEach var="num" begin="${articlePage.startPage}" end="${articlePage.endPage}">
-										<c:choose>
-											<c:when test="${num eq articlePage.pageNo}">
-												<a onclick="javascript:fn_pageMove(${num})" class="choice" style="font-weight: bold;">[${num}]</a>
-											</c:when>
-											<c:otherwise>
-												<a onclick="javascript:fn_pageMove(${num})">[${num}]</a>
-											</c:otherwise>
-										</c:choose>
-									</c:forEach> 
-									<a onclick="javascript:fn_pageMove(${articlePage.nextPage})">&nbsp; > &nbsp;</a>
-									<a onclick="javascript:fn_pageMove(${articlePage.totalPage})">&nbsp; >> &nbsp;</a>
+								<c:url var="searchUri" value="/articleList.do?s=${searchval}&page=##" />
+								<pageTag:paging maxLinks="10" currPage="${articlePage.currentPageNo}" totalPages="${articlePage.totalRecodeCount}" uri="${searchUri}" />
 								</td>
+
 							</tr>
 						</c:if>
 					</table>
@@ -221,6 +226,27 @@
 	</form>
 
 <script type="text/javascript">
+
+$('.paging a').each(function() {
+    if ($(this).attr('href') != '#') {
+        var hrefURI = $(this).attr('href');
+        var params = hrefURI.substring(hrefURI.indexOf('?'));
+         
+        $(this).click(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/articlellist.do' + params,
+                type: 'post',
+                dataType: 'html',
+                success: function(data) {
+                    $('#resultArea').html(data);
+                }
+            });
+        });
+    }
+});
+
+
 
 function facebookLogin(){
 	FB.login(function(response){
@@ -308,7 +334,7 @@ function facebookLogin(){
 			        		});
 			            },
 			            "Kware": function () {
-			            	location.href = "/Board_psy/logout.do";
+			            	location.href = "<c:url value ="/logout.do" />";
 			    	        alert("KwareBoard에서 로그아웃되었습니다");
 			                $(this).dialog('close');
 			            }
@@ -320,18 +346,18 @@ function facebookLogin(){
 				function() {
 					$.ajax({
 						type : "post",
-						url : "/Board_psy/ajaxLoginCheck.do",
+						url : "<c:url value="/ajaxLoginCheck.do" />",
 						data : {
 							ajaxYn : "Y"
 						},
 						success : function(result) {
 							if (result == "E") {
 								alert("먼저 로그인을 해주세요");
-// 								loginOpen = window.open('/Board_psy/loginForm.do', '로그인','width=300, height=200');
+// 								loginOpen = window.open('./loginForm.do', '로그인','width=300, height=200');
 								go_popup();
 								
 							} else if (result == "GO_TO") {
-								location.replace("/Board_psy/writeForm.do");
+								location.replace("<c:url value ="/writeForm.do" />");
 							}
 						},
 						error : function() {
@@ -365,10 +391,10 @@ function facebookLogin(){
 	}
 
 	function fn_gotoBoard(articleNo) {
-		$("input[name='page']").val('${articlePage.pageNo}');
+		$("input[name='page']").val('${articlePage.currentPageNo}');
 		$("input[name='isHitCount']").val('true');
 		$("input[name='articleNo']").val(articleNo);
-		document.form.action = "/Board_psy/read.do";
+		document.form.action = "<c:url value ="/read.do"/>";
 		document.form.submit();
 	}
 	

@@ -6,9 +6,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글쓰기</title>
 </head>
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/board.css" />" media="all" />
 <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css"  />
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/loginBpopup.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/loginBpopup.css" />" media="all" />
 
 <script src=js/jquery-1.11.2.min.js></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -18,7 +18,7 @@
 <script src="js/object.js"></script>
 <script src="js/login.js"></script>
 <body>
-	<form action="/Board_psy/reply.do" id="form" name="form" method="post" enctype="multipart/form-data">
+	<form action="<c:url value ="/reply.do" />" id="form" name="form" method="post" enctype="multipart/form-data">
 <div id="popup" class="Pstyle">
 		<span class="b-close">X</span>
 			<div class="content" style="height: auto; width: auto;">
@@ -39,7 +39,7 @@
 	</div>
 		<table>
 			<tr>
-				<td style="font-style: italic; color: gray;">${boardNo} 글의 답글</td>
+				<td style="font-style: italic; color: gray;">${articleNo} 글의 답글</td>
 			</tr>
 
 			<tr>
@@ -107,7 +107,7 @@
 
 
 		</table>
-		<input type="hidden" id="boardNo" name="boardNo" value="${boardNo }">
+		<input type="hidden" id="articleNo" name="articleNo" value="${articleNo }">
 		<input type="hidden" value="${sessionScope.email}" name="email"
 			id="email ">
 	</form>
@@ -155,13 +155,13 @@
 	function save(){
 		$.ajax({
 			type : "post",
-			url : "/Board_psy/ajaxLoginCheck.do",
+			url : "<c:url value ="/ajaxLoginCheck.do" />",
 			data : {ajaxYn: "Y"},
 			success : function(result) {
 				if(result == "E"){
 					alert("먼저 로그인을 해주세요"); 
-//						location.replace("/Board_psy/boardList.do");
-// 					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+//						location.replace("./articleList.do");
+// 					loginOpen = window.open('./loginForm.do', '로그인', 'width=300, height=200');
 					go_popup();
 				}else if (result == "GO_TO") {
 					if($('input[name*=title]').val()==""){

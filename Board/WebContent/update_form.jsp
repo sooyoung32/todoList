@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>글 수정</title>
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/board.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/board.css" />" media="all" />
 <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css"  />
-<link type="text/css" rel="stylesheet" href="/Board_psy/css/loginBpopup.css" media="all" />
+<link type="text/css" rel="stylesheet" href="<c:url value ="/css/loginBpopup.css" />" media="all" />
 
 <script src=js/jquery-1.11.2.min.js></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -19,14 +19,14 @@
 </head>
 <body>
 
-	<form action="/Board_psy/update.do" id="form" name="form"  method="post" enctype="multipart/form-data">
+	<form action="<c:url value ="/update.do" />" id="form" name="form"  method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
-				<td class="back_layout"><a href="/Board_psy/boardList.do">◀게시판 목록</a></td>
+				<td class="back_layout"><a href="<c:url value ="/articleList.do" />">◀게시판 목록</a></td>
 			</tr>
 			<tr>
 				<td style="text-align: right">
-<%-- 				<a href="/Board_psy/updateForm.do?boardNo=${board.boardNo}">  --%>
+<%-- 				<a href="./updateForm.do?articleNo=${article.articleNo}">  --%>
 				<input type="button" id="modify2" name="modify" value="Modify" align="right">
 <!-- 				</a> -->
 				</td>
@@ -43,16 +43,16 @@
 					<table border="1" style="border-collapse: collapse;" width="650px" height="500%">
 						<tr>
 							<td id="read_td">작성자</td>
-							<td>${board.writer.name}</td>
+							<td>${article.writer.name}</td>
 						</tr>
 
 						<tr>
 							<td id="read_td">제목</td>
-							<td><input type="text" id="title" name="title" size="80" value="${board.title}"></td>
+							<td><input type="text" id="title" name="title" size="80" value="${article.title}"></td>
 						</tr>
 						<tr>
 							<td id="read_td">내용</td>
-							<td><textarea rows="10" cols="80" name="content" id="content">${board.content}</textarea></td>
+							<td><textarea rows="10" cols="80" name="content" id="content">${article.content}</textarea></td>
 						</tr>
 
 					</table>
@@ -71,15 +71,15 @@
 						</tr>
 
 						<tr>
-							<c:if test="${empty board.files}">
+							<c:if test="${empty article.files}">
 								<td>첨부파일이 없습니다</td>
 							</c:if>
 						</tr>
 
-						<c:if test="${!empty board.files}">
-							<c:forEach items="${board.files}" var="file">
+						<c:if test="${!empty article.files}">
+							<c:forEach items="${article.files}" var="file">
 								<tr>
-									<td><c:if test="${file.flag==1}">
+									<td><c:if test="${file.deletionStatus == 'PRESENT'}">
 							   ${file.originalName} -- ${file.fileNo}
 							<input type="hidden" id="fileNo" value="${file.fileNo}">
 											<input type="button" class="deleteFile" value="삭제">
@@ -123,14 +123,14 @@
 				<td class="comment_list">
 					<table border="1" style="border-collapse: collapse;" width="650px" height="500%">
 						<c:choose>
-							<c:when test="${empty board.comments}">
+							<c:when test="${empty article.comments}">
 								<tr>
 									<td>댓글이 없습니다.</td>
 								</tr>
 							</c:when>
 
-							<c:when test="${!empty board.comments}">
-								<c:forEach items="${board.comments }" var="comment">
+							<c:when test="${!empty article.comments}">
+								<c:forEach items="${article.comments }" var="comment">
 									<tr>
 										<td id="comment_td">${comment.writer.name}</td>
 										<td id="comment_td2">${comment.content}</td>
@@ -145,7 +145,7 @@
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="boardNo" id="boardNo" value="${board.boardNo}"> <input type="hidden" name="email" id="email" value="${sessionScope.email}">
+		<input type="hidden" name="articleNo" id="articleNo" value="${article.articleNo}"> <input type="hidden" name="email" id="email" value="${sessionScope.email}">
 	</form>
 	
 	
@@ -200,12 +200,13 @@
 	$('#modify2').click(function(){
 		$.ajax({
 			type : "post",
-			url : "/Board_psy/ajaxLoginCheck.do",
+			url : "<c:url value ="/ajaxLoginCheck.do"/>",
 			data : {ajaxYn: "Y"},
 			success : function(result) {
 				if(result == "E"){
 					alert("먼저 로그인을 해주세요"); 
-					loginOpen = window.open('/Board_psy/loginForm.do', '로그인', 'width=300, height=200');
+// 					loginOpen = window.open('./loginForm.do', '로그인', 'width=300, height=200');
+					go_popup();
 // 					return false;
 				}else if (result == "GO_TO") {
 					
