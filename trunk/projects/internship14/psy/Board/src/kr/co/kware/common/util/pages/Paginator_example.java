@@ -11,9 +11,9 @@ import org.apache.log4j.Logger;
 
 import kr.co.kware.board.article.vo.Article;
 
-public class Paginator extends SimpleTagSupport {
+public class Paginator_example extends SimpleTagSupport {
 	
-	private Logger logger = Logger.getLogger(Paginator.class);
+	private Logger logger = Logger.getLogger(Paginator_example.class);
 	private String uri;
 	private int currentPage; 
 	private int totalPages; //ÃÑ°Ô½Ã±Û ¼ö 
@@ -30,9 +30,7 @@ public class Paginator extends SimpleTagSupport {
 		Writer out = getWriter();
 		
 		boolean lastPage = currentPage == totalPages;
-//		int startPage = page.getStartPage();
 		int startPage = Math.max(currentPage - maxLinks / 2, 1);
-//		int endPage = page.getEndPage();
         int endPage = startPage + maxLinks;
       
         if (endPage > totalPages + 1) {

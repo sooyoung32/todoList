@@ -51,8 +51,6 @@ public class ArticleController {
 	public ModelAndView getArticlePage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey,
 			String searchValue, HttpServletRequest request) {
 		
-		String currentPage = request.getParameter("currentPage");
-		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("article_list");
 
@@ -76,7 +74,8 @@ public class ArticleController {
 		}
 		
 		int startRow = (page - 1) * articlePage.getPageSize();
-		int endRow = articlePage.getPageSize();
+		int endRow = articlePage.getPageSize(); //페이지 사이즈 
+		
 		
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put("startRow", startRow);
@@ -91,11 +90,6 @@ public class ArticleController {
 		articlePage.setTotalRecodeCount(totalArticleCount);
 		articlePage.setDataList(articleList);
 		
-		request.setAttribute("dataList", articleList);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalRecordCount",totalArticleCount);
-        request.setAttribute("recordsPerPage", 15);
-		
 		mv.addObject("articlePage",articlePage);
 		return mv;
 
@@ -103,6 +97,7 @@ public class ArticleController {
 
 	@RequestMapping(value = "read.do")
 	public ModelAndView readArticle(int articleNo, boolean isHitCount, int page, String searchKey, String searchValue) {
+		
 		Article article = articleServiceImpl.readArticlebyArticleNo(articleNo, true);
 
 		String content = article.getContent();// teaxArea 줄바꿈 처리
@@ -150,9 +145,9 @@ public class ArticleController {
 			HttpServletRequest request, int articleNo) {
 		List<kr.co.kware.board.file.vo.File> voFileList = new ArrayList<>();
 		List<MultipartFile> fileListFromClient = multipartFileList.getFileList(); // 클라이언트가 전송한 파일
-		System.err.println("업로드 파일리스트//" + fileListFromClient);
-		System.err.println("멀티파트파일리스트 : " + multipartFileList + " 글번호 :" + articleNo);
-		List<String> filenames = new ArrayList<>();
+//		System.err.println("업로드 파일리스트//" + fileListFromClient);
+//		System.err.println("멀티파트파일리스트 : " + multipartFileList + " 글번호 :" + articleNo);
+//		List<String> filenames = new ArrayList<>();
 
 		if (fileListFromClient != null && fileListFromClient.size() > 0) {
 			// 파일 전송받음.
@@ -174,7 +169,7 @@ public class ArticleController {
 				String uniqueId = UUID.randomUUID().toString(); // 파일 중복 이름 처리
 				String savedFileName = multiPartFile.getOriginalFilename() + "." + uniqueId;
 				String savedPath = path + "/" + savedFileName; // 저장될 파일 경로
-				filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
+//				filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
 
 				File uploadedFile = new File(savedPath); // 서버에 파일 저장.
 				System.err.println("파일 업로드? 들어와 : " + uploadedFile);
@@ -204,7 +199,6 @@ public class ArticleController {
 	// 답글쓰기
 	@RequestMapping(value = "replyForm.do")
 	public ModelAndView writeReplyForm(int articleNo) {
-		System.out.println(articleNo + "/articleNo");
 		Article article = articleServiceImpl.readArticlebyArticleNo(articleNo, false);
 
 		ModelAndView mv = new ModelAndView("reply_form");
@@ -260,7 +254,7 @@ public class ArticleController {
 		}
 
 		List<kr.co.kware.board.file.vo.File> voFileList = fileUpload(multipartFileList, request, articleNo);
-		articleServiceImpl.modifyArticle(updatedArticle, articleNo, deletedFileList);
+		articleServiceImpl.modifyArticle(updatedArticle, articleNo);
 
 		// 파일 업데이트
 		for (kr.co.kware.board.file.vo.File voFile : voFileList) {

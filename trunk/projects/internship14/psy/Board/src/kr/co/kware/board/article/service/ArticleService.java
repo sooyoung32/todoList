@@ -11,7 +11,7 @@ public interface ArticleService {
 	public int writeArticleReply(Article article, int articleNo);
 	public Article readArticlebyArticleNo(int articleNo, boolean isHitCount);
 	public int getLastArticleNo();
-	public int modifyArticle(Article updatedArticle, int articleNo, String[] deletedFileList);
+	public int modifyArticle(Article updatedArticle, int articleNo);
 	public int deleteArticle(Article article, int articleNo);
 //	public List<Article> showArticleList(int startRow, int endRow, String searchKey, String searchValue);
 	public List<Article> showArticleList(Map<Object, Object> map);

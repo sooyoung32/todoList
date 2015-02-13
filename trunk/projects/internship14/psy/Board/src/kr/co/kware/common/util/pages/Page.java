@@ -12,6 +12,7 @@ public class Page<T> {
  	private int startRow; 			//한 페이지에 보여줄 시작 글 번호 
 	private int endRow;				//                   마지막 글 번호
 	private int finalPage;			//마지막 페이지 
+	private int firstPage;			//처음 페이지 
 	private int prePage;			//전 페이지
 	private int nextPage;			//다음 페이지 
 	private int currentPageNo;      //페이지 번호
@@ -88,7 +89,15 @@ public class Page<T> {
 	public void setDataList(List<T> dataList) {
 		this.dataList = dataList;
 	}
-
+	
+	public void setFirstPage(int firstPage) {
+		this.firstPage = firstPage;
+	}
+	
+	public int getFirstPage() {
+		return firstPage;
+	}
+	
 
 	@Override
 	public String toString() {
@@ -119,6 +128,7 @@ public class Page<T> {
 		}
 		
 		// 시작 페이지
+		firstPage = 1;
 		startPage = 1;
 		if (startPage <= 0) {
 			startPage = 1;
@@ -139,7 +149,7 @@ public class Page<T> {
 			
 		}
 		
-		boolean isNowFirst = currentPageNo == 1 ? true : false; // 시작 페이지 (전체)
+		boolean isNowFirst = currentPageNo == firstPage ? true : false; // 시작 페이지 (전체)
 		boolean isNowFinal = currentPageNo == finalPage ? true : false; // 마지막 페이지 (전체)
 		
 		if (isNowFirst) {
