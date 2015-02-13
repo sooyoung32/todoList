@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -131,9 +130,9 @@
 		
 		<tr><td style="padding: 0.5em;"></td></tr>
 					
-	<c:if test="${!empty sessionScope.email}">
+	<c:if test="${not empty sessionScope.email}">
 		<tr>
-			<td>
+			<td><div id="fb-root">
 				<div class="fb-like" 
 					data-href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=1&searchKey=&searchValue=" />"
 					data-layout="standard" 
@@ -148,9 +147,11 @@
 		<tr>
 			<td>
 				<div class="fb-comments" 
-					data-href="<c:url value ="/read.do?articleNo=${article.articleNo}&isHitCount=true&page=1&searchKey=&searchValue=" />" 
-					data-numposts="5"
-					data-colorscheme="light"></div>
+					 data-href="<c:url value ='/read.do?articleNo=${article.articleNo}&isHitCount=true&page=1&searchKey=&searchValue=' />" 
+					 data-numposts="5" 
+					 data-colorscheme="light">
+				</div>
+				<div id="fb-root"></div>
 			</td>
 		</tr>
 	</c:if>
@@ -250,7 +251,7 @@
   js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=829852567056773&version=v2.0";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
- 
+	
 	var defaultAjaxDataSet = {
 		type : "post",
 		success : function(result) {
@@ -259,7 +260,7 @@
 // 				loginOpen = window.open('./loginForm.do', '로그인','width=300, height=200');
 				go_popup();
 			} else if (result == "GO_TO") {
-				location.href = "<c:url value ="/replyForm.do?articleNo=${article.articleNo}" />";
+				location.href = "<c:url value ='/replyForm.do?articleNo=${article.articleNo}'/>";
 			} else if (result == "C_WRITE_SUCCESS") {
 				alert("댓글이 입력되었습니다");
 				location.reload(true);
@@ -354,7 +355,7 @@
 				} else {
 					var $result = confirm("삭제 하시겠습니까?");
 						if ($result) {
-							location.replace("<c:url value = "/delete.do?articleNo=${article.articleNo}" />");
+							location.replace("<c:url value = '/delete.do?articleNo=${article.articleNo}'/>");
 						}
 				}
 			};

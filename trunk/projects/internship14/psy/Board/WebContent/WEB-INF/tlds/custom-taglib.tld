@@ -32,42 +32,11 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<name>totalPages</name>
+			<name>totalRecodeCount</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>int</type>
 		</attribute>
-		<attribute>
-			<name>maxLinks</name>
-			<rtexprvalue>true</rtexprvalue>
-			<type>int</type>
-		</attribute>
-
-<!-- <attribute> -->
-<!--             <name>name</name> -->
-<!--             <required>true</required> -->
-<!--             <rtexprvalue>false</rtexprvalue> -->
-<!--         </attribute> -->
-<!--         <attribute> -->
-<!--             <name>totalRecordCount</name> -->
-<!--             <required>true</required> -->
-<!--             <rtexprvalue>true</rtexprvalue> -->
-<!--         </attribute> -->
-<!--         <attribute> -->
-<!--             <name>recordsPerPage</name> -->
-<!--             <required>true</required> -->
-<!--             <rtexprvalue>true</rtexprvalue> -->
-<!--         </attribute> -->
-<!--         <attribute> -->
-<!--             <name>currentPage</name> -->
-<!--             <required>false</required> -->
-<!--             <rtexprvalue>true</rtexprvalue> -->
-<!--         </attribute> -->
-<!--         <attribute> -->
-<!--             <name>indexPerPage</name> -->
-<!--             <required>false</required> -->
-<!--             <rtexprvalue>true</rtexprvalue> -->
-<!--         </attribute> -->
 
 	</tag>
 
