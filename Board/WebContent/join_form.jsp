@@ -57,7 +57,7 @@
 						};
 						$.ajax({
 							type : "post",
-							url : "<c:url value =/join.do" />",
+							url : "<c:url value ="/join.do" />",
 							data : data2,
 							success : function(result) {
 								if (result == "Y") {

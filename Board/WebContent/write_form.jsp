@@ -76,7 +76,7 @@
 
 			<tr>
 				<td	style="padding: 0.5em; font-size: x-small; font-style: italic; color: gray;">
-					파일은 최대 50M까지 업로드 가능합니다</td>
+					파일은 최대 5M까지 업로드 가능합니다</td>
 			</tr>
 
 			<tr>
