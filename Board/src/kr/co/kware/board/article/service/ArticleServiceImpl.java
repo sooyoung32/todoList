@@ -94,7 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public int modifyArticle(Article updatedArticle, int articleNo, String[] deletedFileList) {
+	public int modifyArticle(Article updatedArticle, int articleNo) {
 		Article article = articleMapper.selectArticleByArticleNo(articleNo);
 
 		// ±Û ¼öÁ¤
