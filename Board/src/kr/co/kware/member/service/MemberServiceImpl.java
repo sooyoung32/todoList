@@ -80,7 +80,6 @@ public class MemberServiceImpl implements MemberService{
 		} else {
 			member.setLoginDate(new Date());
 			modifyMember(member, password);
-			System.out.println(modifyMember(member, password));
 			return "success";
 		}
 	}
