@@ -199,7 +199,8 @@
 <%-- 									<a onclick="javascript:fn_pageMove(${articlePage.finalPage})">&nbsp; >> &nbsp;</a> --%>
 <!-- 								</td> -->
 								<td colspan="6" align="center">
-								<c:url var="searchPageUri" value="/articleList.do?searchPage=${searchPage}&page=##" />
+<%-- 								<c:url var="searchPageUri" value="/articleList.do?searchPage=${searchPage}&page=##" /> --%>
+									<c:url var="searchPageUri" value="/articleList.do?searchKey=${searchKey}&searchValue=${searchValue}&page=##" />
 								<pageTag:paging page="${articlePage}" currPage="${articlePage.currentPageNo}" totalRecodeCount="${articlePage.totalRecodeCount}" uri="${searchPageUri}" />
 								</td>
 
