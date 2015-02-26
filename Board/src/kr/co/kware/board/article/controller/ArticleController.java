@@ -50,7 +50,7 @@ public class ArticleController {
 	@RequestMapping(value = "articleList.do")
 	public ModelAndView getArticlePage(@RequestParam(value = "page", defaultValue = "1") int page, String searchKey,
 			String searchValue, HttpServletRequest request) {
-		
+
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("article_list");
 
@@ -59,12 +59,13 @@ public class ArticleController {
 
 		Page<Article> articlePage = new Page<Article>();
 		articlePage.setCurrentPageNo(page);
-//		articlePage.setPageSize(15);
-				
+		// articlePage.setPageSize(15);
+
+		logger.debug("검색 값 = " + searchValue + " 검색 조건 = " + searchKey);
 		if (searchKey != null && searchValue != null) { // 검색결과가 있을때
 			totalArticleCount = articleServiceImpl.countTotalSearchResult(searchKey, searchValue);
 			articlePage.setTotalRecodeCount(totalArticleCount);
-			
+
 			mv.addObject("searchKey", searchKey);
 			mv.addObject("searchValue", searchValue);
 
@@ -72,32 +73,31 @@ public class ArticleController {
 			totalArticleCount = articleServiceImpl.countTotalArticleNumber();
 			articlePage.setTotalRecodeCount(totalArticleCount);
 		}
-		
+
 		int startRow = (page - 1) * articlePage.getPageSize();
-		int endRow = articlePage.getPageSize(); //페이지 사이즈 
-		
-		
+		int endRow = articlePage.getPageSize(); // 페이지 사이즈
+
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put("startRow", startRow);
 		map.put("endRow", endRow);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-		
+
 		articleList = articleServiceImpl.showArticleList(map);
-		
+
 		articlePage.setStartRow(startRow);
 		articlePage.setEndRow(endRow);
 		articlePage.setTotalRecodeCount(totalArticleCount);
 		articlePage.setDataList(articleList);
-		
-		mv.addObject("articlePage",articlePage);
+
+		mv.addObject("articlePage", articlePage);
 		return mv;
 
 	}
 
 	@RequestMapping(value = "read.do")
 	public ModelAndView readArticle(int articleNo, boolean isHitCount, int page, String searchKey, String searchValue) {
-		
+
 		Article article = articleServiceImpl.readArticlebyArticleNo(articleNo, true);
 
 		String content = article.getContent();// teaxArea 줄바꿈 처리
@@ -130,8 +130,11 @@ public class ArticleController {
 		int articleNo = articleServiceImpl.getLastArticleNo();
 		// article.getContent().replaceAll("\n\r", "<br>");
 		List<kr.co.kware.board.file.vo.File> files = fileUpload(multipartFileList, request, articleNo);
+		String ip = getClientIP(request);
+		System.err.println("ip : "+ip);
+		article.setWritingIP(ip);
 		articleServiceImpl.writeArticle(article);
-
+		
 		logger.debug("글쓰기 컨드롤러 업로든된 파일: " + files);
 		for (kr.co.kware.board.file.vo.File file : files) {
 			fileServiceImpl.insertFile(file, articleNo);
@@ -145,9 +148,9 @@ public class ArticleController {
 			HttpServletRequest request, int articleNo) {
 		List<kr.co.kware.board.file.vo.File> voFileList = new ArrayList<>();
 		List<MultipartFile> fileListFromClient = multipartFileList.getFileList(); // 클라이언트가 전송한 파일
-//		System.err.println("업로드 파일리스트//" + fileListFromClient);
-//		System.err.println("멀티파트파일리스트 : " + multipartFileList + " 글번호 :" + articleNo);
-//		List<String> filenames = new ArrayList<>();
+		// System.err.println("업로드 파일리스트//" + fileListFromClient);
+		// System.err.println("멀티파트파일리스트 : " + multipartFileList + " 글번호 :" + articleNo);
+		// List<String> filenames = new ArrayList<>();
 
 		if (fileListFromClient != null && fileListFromClient.size() > 0) {
 			// 파일 전송받음.
@@ -157,7 +160,7 @@ public class ArticleController {
 			if (dir.exists() == false) { // 해당 경로에 폴더가 없는 경우 폴더 생성
 				dir.mkdirs();
 			}
-			System.err.println("여기 파일 업로드 : " + fileListFromClient);
+			
 			kr.co.kware.board.file.vo.File voFile;
 
 			for (MultipartFile multiPartFile : fileListFromClient) {
@@ -169,10 +172,10 @@ public class ArticleController {
 				String uniqueId = UUID.randomUUID().toString(); // 파일 중복 이름 처리
 				String savedFileName = multiPartFile.getOriginalFilename() + "." + uniqueId;
 				String savedPath = path + "/" + savedFileName; // 저장될 파일 경로
-//				filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
+				// filenames.add(multiPartFile.getOriginalFilename() + "." + uniqueId);
 
 				File uploadedFile = new File(savedPath); // 서버에 파일 저장.
-				System.err.println("파일 업로드? 들어와 : " + uploadedFile);
+//				System.err.println("파일 업로드? 들어와 : " + uploadedFile);
 				try {
 					multiPartFile.transferTo(uploadedFile); // 업로드 실행.
 
@@ -217,7 +220,9 @@ public class ArticleController {
 		for (kr.co.kware.board.file.vo.File voFile : voFileList) {
 			fileServiceImpl.insertFile(voFile, replyArticleNo);
 		}
-
+		String ip = getClientIP(request);
+		article.setModifyIP(ip);
+		System.err.println("수정: " +ip);
 		articleServiceImpl.writeArticleReply(article, articleNo);
 		return "redirect:articleList.do?page=1";
 	}
@@ -254,6 +259,8 @@ public class ArticleController {
 		}
 
 		List<kr.co.kware.board.file.vo.File> voFileList = fileUpload(multipartFileList, request, articleNo);
+		String ip = getClientIP(request);
+		updatedArticle.setModifyIP(ip);
 		articleServiceImpl.modifyArticle(updatedArticle, articleNo);
 
 		// 파일 업데이트
@@ -265,10 +272,32 @@ public class ArticleController {
 	}
 
 	@RequestMapping(value = "delete.do")
-	public String delete(int articleNo) throws UnknownHostException {
+	public String delete(int articleNo, HttpServletRequest request) throws UnknownHostException {
 		Article updatedArticle = articleServiceImpl.readArticlebyArticleNo(articleNo, false);
+		String ip = getClientIP(request);
+		updatedArticle.setModifyIP(ip);
 		articleServiceImpl.deleteArticle(updatedArticle, articleNo);
 		return "redirect:articleList.do?page=1";
+	}
+
+	public String getClientIP(HttpServletRequest request) {
+
+		String ip = request.getHeader("X-FORWARDED-FOR");
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("WL-Proxy-Client-IP"); // 웹로직
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getRemoteAddr();
+		}
+		
+		return ip;
+
 	}
 
 }

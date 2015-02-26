@@ -32,38 +32,25 @@ public class CommentServiceImpl implements CommentService {
 		comment.setArticleNo(articleNo);
 		comment.setDeletionStatus(DeletionStatus.PRESENT);
 		comment.setWritingDate(new Date());
-		try {
-			comment.setWritingIP(InetAddress.getLocalHost().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
 		return commentMapper.insertComment(comment);
 	}
 
 	@Override
-	public int modifyComment(String content, int commentNo) {
+	public int modifyComment(String content, int commentNo, String ip) {
 		Comment comment = commentMapper.selectCommentByCommentNo(commentNo);
 		comment.setContent(content);
 		comment.setModifyDate(new Date());
-		try {
-			comment.setModifyIP(InetAddress.getLocalHost().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		comment.setModifyIP(ip);
 		return commentMapper.updateComment(comment);
 	}
 	
 	
 	@Override
-	public int deleteComment(int commentNo) {
+	public int deleteComment(int commentNo, String ip) {
 		Comment comment = commentMapper.selectCommentByCommentNo(commentNo);
 		comment.setDeletionStatus(DeletionStatus.DELETED);
 		comment.setModifyDate(new Date());
-		try {
-			comment.setModifyIP(InetAddress.getLocalHost().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		comment.setModifyIP(ip);
 		return commentMapper.deleteComment(comment);
 	}
 

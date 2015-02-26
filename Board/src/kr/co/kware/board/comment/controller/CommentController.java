@@ -39,6 +39,8 @@ public class CommentController {
 		logger.debug("코멘트 컨트롤러");
 		int commentNo = commentServiceImpl.getLastCommnetNo();
 		comment.setCommentNo(commentNo);
+		String ip = getClientIP(request);
+		comment.setWritingIP(ip);
 		
 		if(isAjax(request)){
 			return "E";
@@ -52,11 +54,12 @@ public class CommentController {
 	@RequestMapping(value = "deleteComment.do")
 	@ResponseBody
 	public String deleteComment(int commentNo, HttpServletRequest request) throws UnknownHostException {
-
+		
+		String ip = getClientIP(request);
 		logger.debug("삭제 코멘트번호//" + commentNo);
 		if(isAjax(request)){
 			return "E";
-		}else if (commentServiceImpl.deleteComment(commentNo) == 1) {
+		}else if (commentServiceImpl.deleteComment(commentNo, ip) == 1) {
 			return "C_DELETE_SUCCESS";
 		} else {
 			return "C_DELETE_FAIL";
@@ -66,15 +69,37 @@ public class CommentController {
 	@RequestMapping(value = "updateComment.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateComment(int commentNo, String content, HttpServletRequest request) throws UnknownHostException {
-
+		
+		String ip = getClientIP(request);
+		
+		
 		if(isAjax(request)){
 			return "E";
-		}else if (commentServiceImpl.modifyComment(content, commentNo) == 1) {
+		}else if (commentServiceImpl.modifyComment(content, commentNo, ip) == 1) {
 			return "C_UPDATE_SUCCESS";
 		} else {
 			return "C_UPDATE_FAIL";
 		}
 
 	}
+	
+	public String getClientIP(HttpServletRequest request) {
 
+		String ip = request.getHeader("X-FORWARDED-FOR");
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("WL-Proxy-Client-IP"); // 웹로직
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getRemoteAddr();
+		}
+		
+		return ip;
+
+	}
 }

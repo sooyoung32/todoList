@@ -23,12 +23,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public int joinMember(Member member) {
-		try {
-			member.setWritingDate(new Date());
-			member.setWritingIP(InetAddress.getLocalHost().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		member.setWritingDate(new Date());
 		return memberMapper.insertMember(member);
 	}
 
@@ -36,11 +31,6 @@ public class MemberServiceImpl implements MemberService{
 	public int modifyMember(Member member, String password) {
 		member.setPassword(password);
 		member.setModifyDate(new Date());
-		try {
-			member.setModifyIP(InetAddress.getLocalHost().toString());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
 		logger.debug("멤버 서비스 페북 업데이트 : "+member);
 		return memberMapper.updateMember(member);
 	}

@@ -149,6 +149,7 @@ public class MemberController {
 		member.setEmail(email);
 		member.setPassword(password);
 		member.setName(name);
+		member.setWritingIP(getClientIP(request));
 		member.setIsFB("N");
 		System.out.println("member//" + member);
 		int result = memberServiceImpl.joinMember(member);
@@ -183,6 +184,7 @@ public class MemberController {
 			member.setFbUserId(fbUserId);
 			member.setIsFB("Y");
 			member.setLoginDate(new Date());
+			member.setModifyIP(getClientIP(request));
 			logger.debug("멤버 비밀번호 : " + member.getPassword());
 			memberServiceImpl.modifyMember(member, member.getPassword());
 		}
@@ -204,6 +206,26 @@ public class MemberController {
 		session.removeAttribute("userId");
 		logger.debug("여기오는건가.. " + request.getSession());
 		return "logout";
+	}
+	
+	public String getClientIP(HttpServletRequest request) {
+
+		String ip = request.getHeader("X-FORWARDED-FOR");
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("WL-Proxy-Client-IP"); // 웹로직
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getRemoteAddr();
+		}
+		
+		return ip;
+
 	}
 
 }

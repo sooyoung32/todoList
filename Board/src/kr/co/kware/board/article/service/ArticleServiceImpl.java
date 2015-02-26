@@ -30,49 +30,43 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public int writeArticle(Article article) {
-		try {
-			int lastNo = articleMapper.selectLastNo();
-			article.setFamily(lastNo);
+		int lastNo = articleMapper.selectLastNo();
+		System.err.println(article);
+		System.err.println("여기여기여기여기여기");
+		article.setFamily(lastNo);
 //			article.setFlag(1);
-			article.setDeletionStatus(DeletionStatus.PRESENT);
-			logger.debug("DeletionStatus.PRESENT: "+DeletionStatus.PRESENT);
-			article.setParent(0);
-			article.setDepth(0);
-			article.setIndent(0);
-			article.setHitCount(0);
-			article.setWritingDate(new Date());
-			article.setModifyDate(null);
-			article.setWritingIP(InetAddress.getLocalHost().toString());
-			article.setModifyIP(null);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		article.setDeletionStatus(DeletionStatus.PRESENT);
+		logger.debug("DeletionStatus.PRESENT: "+DeletionStatus.PRESENT);
+		article.setParent(0);
+		article.setDepth(0);
+		article.setIndent(0);
+		article.setHitCount(0);
+		article.setWritingDate(new Date());
+		article.setModifyDate(null);
+//		article.setWritingIP(InetAddress.getLocalHost().toString());
+		article.setModifyIP(null);
 		return articleMapper.insertArticle(article);
 	}
 
 	@Override
 	public int writeArticleReply(Article article, int articleNo) {
 		Article originArticle = articleMapper.selectArticleByArticleNo(articleNo);
-		try {
-			logger.debug("원글 가져오기/" + originArticle);
-			article.setFamily(originArticle.getFamily());
-			article.setParent(originArticle.getArticleNo());
-			article.setDepth(originArticle.getDepth() + 1);
-			articleMapper.updateArticleDepth(article);
-			logger.debug("원글 step//" + originArticle.getDepth());
-			logger.debug("새글 step//" + article.getDepth());
-			article.setIndent(originArticle.getIndent() + 1);
-			article.setWritingDate(new Date());
-			article.setModifyDate(null);
-			article.setWritingIP(InetAddress.getLocalHost().toString());
-			article.setModifyIP(null);
-			article.setHitCount(0);
+		logger.debug("원글 가져오기/" + originArticle);
+		article.setFamily(originArticle.getFamily());
+		article.setParent(originArticle.getArticleNo());
+		article.setDepth(originArticle.getDepth() + 1);
+		articleMapper.updateArticleDepth(article);
+		logger.debug("원글 step//" + originArticle.getDepth());
+		logger.debug("새글 step//" + article.getDepth());
+		article.setIndent(originArticle.getIndent() + 1);
+		article.setWritingDate(new Date());
+		article.setModifyDate(null);
+//			article.setWritingIP(InetAddress.getLocalHost().toString());
+		article.setModifyIP(null);
+		article.setHitCount(0);
 //			article.setFlag(1);
-			article.setDeletionStatus(DeletionStatus.valueOf(1));
-			logger.debug("답글/" + article);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		article.setDeletionStatus(DeletionStatus.valueOf(1));
+		logger.debug("답글/" + article);
 		return articleMapper.insertArticle(article);
 	}
 
@@ -97,18 +91,14 @@ public class ArticleServiceImpl implements ArticleService {
 	public int modifyArticle(Article updatedArticle, int articleNo) {
 		Article article = articleMapper.selectArticleByArticleNo(articleNo);
 
-		// 글 수정
-		try {
-			article.setTitle(updatedArticle.getTitle());
-			article.setContent(updatedArticle.getContent());
-			article.setModifyDate(new Date());
-			article.setModifyIP(InetAddress.getLocalHost().toString());
-			boolean isHitCount = false;
-			if (!isHitCount) {
-				article.setHitCount(article.getHitCount());
-			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		article.setTitle(updatedArticle.getTitle());
+		article.setContent(updatedArticle.getContent());
+		article.setModifyDate(new Date());
+		article.setModifyIP(updatedArticle.getModifyIP());
+//			article.setModifyIP(InetAddress.getLocalHost().toString());
+		boolean isHitCount = false;
+		if (!isHitCount) {
+			article.setHitCount(article.getHitCount());
 		}
 		return articleMapper.updateArticle(article);
 	}
@@ -116,20 +106,16 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public int deleteArticle(Article updatedArticle, int articleNo) {
 		Article article = articleMapper.selectArticleByArticleNo(articleNo);
-		try {
-			article.setModifyDate(new Date());
-			article.setModifyIP(InetAddress.getLocalHost().toString());
-			boolean isHitCount = false;
-			if (!isHitCount) {
-				article.setHitCount(article.getHitCount());
-			}
-			
-			//article.setFlag(0); //flag가 0이면 글 열람 불가
-			article.setDeletionStatus(DeletionStatus.DELETED);
-			logger.debug("삭제된 게시글//" + article);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+		article.setModifyDate(new Date());
+//			article.setModifyIP(InetAddress.getLocalHost().toString());
+		boolean isHitCount = false;
+		if (!isHitCount) {
+			article.setHitCount(article.getHitCount());
 		}
+		
+		//article.setFlag(0); //flag가 0이면 글 열람 불가
+		article.setDeletionStatus(DeletionStatus.DELETED);
+		logger.debug("삭제된 게시글//" + article);
 		return articleMapper.deleteArticle(article);
 	}
 
