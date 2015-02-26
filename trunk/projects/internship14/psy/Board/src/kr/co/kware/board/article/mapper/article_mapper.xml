@@ -66,25 +66,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT COUNT(*) FROM BOARD WHERE PARENT = #{parent}
 	</select>
 
-	<!-- <select id="selectBoardList" resultMap="articleResultMap" -->
-	<!-- parameterType="Map" resultType="Board"> -->
-	<!-- SELECT -->
-	<!-- B.BOARD_NO, -->
-	<!-- M.NAME, -->
-	<!-- B.TITLE, -->
-	<!-- B.FAMILY, -->
-	<!-- B.PARENT, -->
-	<!-- B.DEPTH, -->
-	<!-- B.INDENT, -->
-	<!-- B.HITCOUNT, -->
-	<!-- B.FLAG -->
-	<!-- FROM BOARD B -->
-	<!-- LEFT OUTER JOIN MEMBER M ON B.EMAIL = M.EMAIL -->
-	<!-- ORDER BY B.FAMILY DESC, -->
-	<!-- B.DEPTH ASC -->
-	<!-- LIMIT #{startRow}, #{endRow} -->
-	<!-- </select> -->
-
 	<select id="selectArticleList" resultMap="articleResultMap"	parameterType="Map" resultType="kr.co.kware.board.article.vo.Article">
 
 		SELECT
