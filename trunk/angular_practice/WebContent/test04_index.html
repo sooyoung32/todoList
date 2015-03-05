@@ -26,8 +26,9 @@
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12">
+			
 			<table class="table table-striped table-hover">
-				<thead>
+						<thead>
 					<tr>
 						<th>#</th>
 						<th>이름</th>
@@ -49,24 +50,27 @@
 						배열요소의 인덱스 값을 가지고 올 수 있다.
 						 0부터 시작하기 때문에 +1을 하여 1부터 시작하도록 작성한다. -->
 		
-						<td><input type="text" ng-model="user.name"></td>
+						<td><input type="text" ng-model="user.name" ng-disabled="!user.edit"></td>
 		
 						<!-- ng-model을 통하여 해당 <input> 요소와 사용자 객체의 name속성과 데이터 바인딩을 하였다. 
 						자세한 내용은 이어지는 “양방향 데이터바인딩”에서 자세히 다루도록 하겠다. -->
 	
-						<td><input type="email" ng-model="user.email"></td>
-						<td><input type="date" ng-model="user.regDate"></td>
+						<td><input type="email" ng-model="user.email" ng-disabled="!user.edit"></td>
+						<td><input type="date" ng-model="user.regDate" ng-disabled="!user.edit"></td>
 		
 						<td class="center">
-							<button class="btn btn-danger" type="button">
-								<i class='icon-white icon-pencil'>입력</i>
+							<button class="btn btn-danger" type="button" ng-click="edit(user)" ng-show="!user.edit">
+								<i class='icon-white icon-pencil'>수정</i>
 							</button>
-							<button class="btn btn-info" type="button">
+							<button class="btn btn-info" type="button" ng-click="complete(user)" ng-show="!user.edit">
 								<i class='icon-white icon-ok'>OK</i>
+							</button>
+							<button class="btn btn-info box" type="button" ng-click="insert()" >
+ 								<i class='icon-white icon-plus'>입력</i>
 							</button>
 						</td>
 						<td class="center">
-							<button class="btn btn-danger" type="button">
+							<button class="btn btn-danger" type="button" ng-click="del($index)">
 								<i class='icon-white icon-trash'>삭제</i>
 							</button>
 						</td>
@@ -81,14 +85,24 @@
 			</tbody>
 	</table>
 	
-	{{userList}}
-	
 <script>
 	function mainCtrl($scope) {
 		$scope.userList = [
 		                   	{name:'수영', email:'sooyoung32@gmail.com', regDate:'2015-03-05'}
 		                   ]
-		
+		$scope.insert = function() {
+			$scope.userList.push({edit:true});
+		}
+		$scope.complete = function (user) {
+			  user.edit = false;
+			};
+		$scope.edit= function (user) {
+				 user.edit = true;
+			};
+		$scope.del = function (index) {
+				 $scope.userList.splice(index, 1);
+			//배열요소에서 해당 인덱스에 해당하는 값을 삭제한다.
+		}
 	}
 
 </script>	
