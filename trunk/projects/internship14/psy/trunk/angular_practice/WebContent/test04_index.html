@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/angular.min.js"></script>
+<title>Insert title here</title>
+</head>
+<body ng-controller="mainCtrl">
+	<div class="searchBox">
+	<div class="row-fluid borBox">
+		<div class="from-horizontal centerOnPage" style="margin-left: -203px;">
+			<ul class="input-append">
+				<input type="text" placeholder="이름" size="16">
+				<button class="btn btn-info box" type="button">
+					<i class="icon-white icon-plus"></i>
+				</button>
+			
+			</ul>
+		</div>
+	</div>
+
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>이름</th>
+						<th>E-Mail</th>
+						<th>가입날짜</th>
+						<th>수정</th>
+						<th>삭제</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr ng-repeat="user in userList">
+							<!-- AngularJS의 ng-repeat은 속성값으로 for in 루프처럼 작성하는 특별한 표현식을 값으로 주어야 한다.
+							 해당 표현식은 userList 배열의 배열요소만큼 <tr> 요소와 요소내부를 반복하여 표현한다. 
+							 <tr> 요소와 <tr>요소 내부에서 각 배열요소는 user로 참조할 수 있다. -->
+		
+						<td>{{ $index+1 }}</td>
+		
+						<!-- $index는 ng-repeat이 적용된 요소에서 사용할 수 있는 특별한 이름이다. 
+						배열요소의 인덱스 값을 가지고 올 수 있다.
+						 0부터 시작하기 때문에 +1을 하여 1부터 시작하도록 작성한다. -->
+		
+						<td><input type="text" ng-model="user.name"></td>
+		
+						<!-- ng-model을 통하여 해당 <input> 요소와 사용자 객체의 name속성과 데이터 바인딩을 하였다. 
+						자세한 내용은 이어지는 “양방향 데이터바인딩”에서 자세히 다루도록 하겠다. -->
+	
+						<td><input type="email" ng-model="user.email"></td>
+						<td><input type="date" ng-model="user.regDate"></td>
+		
+						<td class="center">
+							<button class="btn btn-danger" type="button">
+								<i class='icon-white icon-pencil'>입력</i>
+							</button>
+							<button class="btn btn-info" type="button">
+								<i class='icon-white icon-ok'>OK</i>
+							</button>
+						</td>
+						<td class="center">
+							<button class="btn btn-danger" type="button">
+								<i class='icon-white icon-trash'>삭제</i>
+							</button>
+						</td>
+					</tr>
+	
+					<tr ng-show="!userList.length">
+						<!-- AngularJS는 ng-show를 제공하여 ng-show 속성값의 표현식의 계산된 결과가 true이면 
+						해당 요소의 CSS의 display 속성을 none으로 한다. -->
+						<td colspan="6" style="text-align: center">
+						<span class="text-warning">데이터가 없습니다.</span></td>
+					</tr>
+			</tbody>
+	</table>
+	
+	{{userList}}
+	
+<script>
+	function mainCtrl($scope) {
+		$scope.userList = [
+		                   	{name:'수영', email:'sooyoung32@gmail.com', regDate:'2015-03-05'}
+		                   ]
+		
+	}
+
+</script>	
+	
+</body>
+</html>
