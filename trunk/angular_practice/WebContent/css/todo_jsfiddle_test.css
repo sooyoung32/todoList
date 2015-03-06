@@ -1,10 +1,12 @@
 @CHARSET "UTF-8";
+
 body {
 	font-size: 14px;
 	background: #eeeeee;
 	color: #333333;
 	width: 520px;
 	margin: 0 auto;
+	font-family: 나눔고딕;
 }
 
 #todoapp {
@@ -94,8 +96,10 @@ body {
 	line-height: 37px;
 }
 
-.todo-count {
+.todo-count ng-binding {
     float:left;    
+    text-align: center;
+    color: #F78181;
 }
 
 .todo-count .count{

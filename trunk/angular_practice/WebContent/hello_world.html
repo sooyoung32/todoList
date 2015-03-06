@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script src="js/angular.min.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body ng-app="world">
+
+<ul ng-controller="WorldCtrl">
+	<li ng-repeat="country in countries">
+		{{country.name}} has population of {{country.population}}
+		{{worldsPercentage(country.population)}} % of the Wolrd's population
+	</li>
+	<hr>
+		World's population : {{population}} millions
+
+</ul>
+
+
+
+<script>
+
+	angular.module('world',[]).controller("WorldCtrl", ["$scope", function($scope) {
+		$scope.population = 7000;
+		$scope.countries = [
+		                       {name: 'France', population : 63.1},
+		                       {name: 'United Kingdom', population : 61.8}
+		                    
+		                    ];
+		$scope.worldsPercentage = function(countryPopulation) {
+			return (countryPopulation/$scope.population)*100;
+			
+		}
+		
+	}])
+
+</script>
+</body>
+</html>
