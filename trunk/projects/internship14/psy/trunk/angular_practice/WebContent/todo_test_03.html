@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link href="css/todo_test_03.css">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+<link href="css/todo_test_03.css" >
+<script src="js/angular.min.js"></script>
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -11,18 +11,17 @@
 
 <body>
 
-<div ng-app>
+<div ng-app="Todo">
   <div id="todoapp" ng-controller="TodoCtrl">
     <header>
         <h1>Todos by Angular.js</h1>
-        <input id="new-todo" type="text" ng-model="todoText"  size="30"
-        placeholder="What needs to be done?" ng-keyup="addTodo()"/>
+        <input id="new-todo" type="text" ng-model="todoText"  size="30"  placeholder="What needs to be done?" ng-keyup="addTodo()"/>
     </header>
 
     <section id="main" style="display: block;">
+       
         <div ng-show="isTodo()">
-          <input id="toggle-all" type="checkbox" ng-model="markAll"
-            ng-click="toggleMarkAll()"/>
+          <input id="toggle-all" type="checkbox" ng-model="markAll"  ng-click="toggleMarkAll()"/>
           <label for="toggle-all">Mark all as complete</label>
         </div>
         
@@ -32,8 +31,7 @@
               <input type="checkbox" ng-model="todo.done"/>
               <span class="done-{{todo.done}}" >{{todo.text}}</span>
             </div>
-            <input class="edit" type="text" ng-model="todo.text"
-              ng-keyup="editOnEnter(todo)"/>
+<!--             <input class="edit" type="text" ng-model="todo.text"  ng-keyup="editOnEnter(todo)"/> -->
           </li>
         </ul>
     </section>
@@ -51,7 +49,7 @@
 
 <script>
 
-function TodoCtrl($scope) {
+angular.module('Todo',[]).controller('TodoCtrl',['$scope', function($scope) {
 	  $scope.todos = [];
 	  $scope.markAll = false;
 	    
@@ -102,8 +100,7 @@ function TodoCtrl($scope) {
 	      if (!todo.done) $scope.todos.push(todo);
 	    });
 	  };
-	    
-	}
+}])
 
 </script>
 
