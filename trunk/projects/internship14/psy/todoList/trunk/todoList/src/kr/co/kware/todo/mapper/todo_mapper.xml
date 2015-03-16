@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.kware.todo.mapper.TodoMapper">
+
+<resultMap type="kr.co.kware.todo.vo.Todo" id="todoResultMap">
+	<result column="TODO_ID" property="todoId"/>
+	<result column="CONTENT" property="content"/>
+	<result column="HASDONE" property="hasDone"/>
+	<result column="DATE" property="date"/>
+</resultMap>
+
+<insert id="insertTodo" parameterType="kr.co.kware.todo.vo.Todo">
+	INSERT INTO TODO (TODO_ID, CONTENT, HASDONE, DATE) VALUES (#{todoId}, #{content}, #{hasDone}, #{date})
+</insert>
+
+<update id="updateTodo" parameterType="kr.co.kware.todo.vo.Todo">
+	UPDATE TODO
+	            SET CONTENT = #{content}
+	               ,DATE = #{date}
+	         WHERE TODO_ID = #{todoId}
+</update>
+
+<delete id="deleteTodo" parameterType="int">
+	DELETE FROM TODO WHERE TODO_ID = #{todoId}
+</delete>
+
+<select id="selectTodoList" resultMap="todoResultMap">
+	SELECT * FROM TODO ORDER BY TODO_ID DESC
+</select>
+
+<select id="selectTodoItem" resultMap="todoResultMap">
+	SELECT * FROM TODO WHERE TODO_ID = #{todoId} 
+</select>
+
+<select id="countHasNotBeenDone" resultType="int">
+	SELECT COUNT(*) FROM TODO WHERE HASDONE ="false"
+</select>
+
+<update id="updateHasDone"  parameterType="kr.co.kware.todo.vo.Todo">
+UPDATE TODO
+	            SET CONTENT = #{content}
+	               ,DATE = #{date}
+	               ,HASDONE = #{hasDone} 
+	         WHERE TODO_ID = #{todoId}
+</update>
+</mapper>
